@@ -303,3 +303,6 @@
 .trend-demographic-pills{display:flex;flex-wrap:wrap;gap:6px}.trend-demographic-pills span{font-size:10px;font-weight:700;padding:6px 8px;border:1px solid #e3eaf5;background:#fff;border-radius:9px;color:#5f718a}
 .overview-data-note{display:flex;gap:8px;align-items:flex-start;margin:16px 2px 0;color:#7c899d;font-size:10px;line-height:1.7}.overview-data-note span{color:#4e91d9;font-weight:900}
 @media(max-width:760px){.overview-trends-heading{align-items:flex-start;flex-direction:column}.overview-trend-cards{grid-template-columns:1fr}.overview-trend-card{min-height:120px}.trend-explore-link{width:100%;text-align:center}}
+
+/* Four insight cards on the Overview page */
+.overview-trend-cards{grid-template-columns:repeat(4,minmax(0,1fr))}.company-trend-card .trend-issue-name{overflow-wrap:anywhere}.company-rank-metric{display:flex;align-items:baseline;gap:6px;color:#74839a;font-size:11px}.company-rank-metric span:first-child{font-size:20px;font-weight:850;color:#172747}.company-trend-card{background:linear-gradient(145deg,#fff,#f4f0ff)!important}@media(max-width:1000px){.overview-trend-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.overview-trend-cards{grid-template-columns:1fr}}
