@@ -201,3 +201,13 @@
 .about-hero .about-highlight{max-width:1000px!important;margin-top:24px!important;padding:20px 24px!important}
 @media(min-width:1100px){.about-hero h1{max-width:1020px!important}.about-hero .about-lead{max-width:1000px!important}}
 @media(max-width:760px){.about-hero{padding:22px!important}.about-hero h1{font-size:clamp(33px,8.5vw,46px)!important;letter-spacing:-.8px!important}.about-hero .about-highlight{max-width:100%!important}}
+
+/* Keep the entire About tab inside the central red-marked content bounds */
+.about-main.wrap{width:calc(100% - 150px)!important;max-width:1500px!important;margin-left:auto!important;margin-right:auto!important;padding-top:24px!important;box-sizing:border-box!important}
+.about-hero{width:100%!important;max-width:100%!important;box-sizing:border-box!important;padding:clamp(24px,3vw,40px)!important}
+.about-hero h1{max-width:100%!important;font-size:clamp(34px,4.2vw,58px)!important;letter-spacing:-1.5px!important;line-height:1.07!important;overflow-wrap:normal!important}
+.about-hero .about-lead{max-width:100%!important}
+.about-hero .about-highlight{max-width:100%!important;width:100%!important;box-sizing:border-box!important}
+.about-block,.about-cta,.legal-note{width:100%!important;max-width:100%!important;box-sizing:border-box!important}
+@media(max-width:900px){.about-main.wrap{width:calc(100% - 48px)!important}}
+@media(max-width:600px){.about-main.wrap{width:calc(100% - 28px)!important;padding-top:16px!important}.about-hero{padding:20px!important}.about-hero h1{font-size:clamp(32px,8.6vw,44px)!important;letter-spacing:-.7px!important}}
