@@ -5,111 +5,104 @@ const ISSUE_LABELS = {
   "unpaid-salary": "Unpaid or delayed salary", "work-pressure": "Work pressure & burnout",
   "job-insecurity": "Job insecurity", "salary-growth": "Salary growth", other: "Other struggles"
 };
+const STORAGE_KEY = "btp-ui-demo-stories";
 const numberFormat = new Intl.NumberFormat("en-IN");
 const byId = id => document.getElementById(id);
-
-async function api(path, options = {}) {
-  const response = await fetch(path, { ...options, headers: { "Content-Type": "application/json", ...(options.headers || {}) } });
-  const body = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(body.error || "Could not complete the request.");
-  return body;
+function readStories() {
+  try {
+    const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(value) ? value : [];
+  } catch { return []; }
 }
-function setText(id, value) {
-  const element = byId(id);
-  if (element) element.textContent = numberFormat.format(value ?? 0);
+function writeStories(stories) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(stories)); return true; }
+  catch { return false; }
 }
-function renderStats(data) {
-  setText("visits-today", data.visitsToday);
-  setText("stories-today", data.storiesToday);
-  setText("stories-total", data.totalStories);
-  for (const [category, count] of Object.entries(data.categoryCounts || {})) {
-    const element = byId(`count-${category}`);
-    if (element) element.innerHTML = `${numberFormat.format(count)} <small>reports</small>`;
-  }
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 }
 function formatDate(iso) {
   try { return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeZone: "Asia/Kolkata" }).format(new Date(iso)); }
   catch { return "Recently"; }
 }
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+function setText(id, value) {
+  const element = byId(id);
+  if (element) element.textContent = value;
 }
-function renderStories(stories) {
+function updateStats(stories) {
+  setText("visits-today", "—");
+  setText("stories-today", String(stories.filter(story => new Date(story.createdAt).toDateString() === new Date().toDateString()).length));
+  setText("stories-total", String(stories.length));
+  const counts = {};
+  stories.forEach(story => (story.categoryIds || []).forEach(category => counts[category] = (counts[category] || 0) + 1));
+  Object.keys(ISSUE_LABELS).forEach(category => {
+    const element = byId(`count-${category}`);
+    if (element) element.innerHTML = `${numberFormat.format(counts[category] || 0)} <small>demo reports</small>`;
+  });
+}
+function renderStories() {
   const container = byId("stories-list");
   if (!container) return;
+  const filter = byId("story-filter")?.value || "";
+  const stories = readStories().filter(story => !filter || (story.categoryIds || []).includes(filter));
   if (!stories.length) {
-    container.innerHTML = `<div class="empty-state"><span class="empty-icon">✳</span><h3>No reports in this view yet</h3><p>As employees share their experiences, reports will appear here.</p><a href="#share-story" class="text-link">Share your experience ↗</a></div>`;
+    container.innerHTML = `<div class="empty-state"><span class="empty-icon">✳</span><h3>No browser demo reports yet</h3><p>Try a submission to preview how stories will appear. It will stay in this browser and won't be sent to a server.</p><a href="#share-story" class="text-link">Try the demo form ↗</a></div>`;
     return;
   }
-  container.innerHTML = stories.map(story => {
+  container.innerHTML = stories.slice().reverse().map(story => {
     const labels = (story.categoryIds || []).map(id => `<span class="story-tag">${escapeHTML(ISSUE_LABELS[id] || id)}</span>`).join("");
-    return `<article class="story-card"><div class="story-card-head"><span class="anonymous-label"><span class="anon-avatar">A</span> Anonymous employee</span><time>${escapeHTML(formatDate(story.createdAt))}</time></div><div class="story-tags">${labels}</div><p class="story-copy">${escapeHTML(story.text)}</p><div class="story-card-foot"><span>Employee-reported experience</span><span class="story-id">#${escapeHTML(String(story.id).slice(0, 6).toUpperCase())}</span></div></article>`;
+    return `<article class="story-card"><div class="story-card-head"><span class="anonymous-label"><span class="anon-avatar">D</span> Browser demo</span><time>${escapeHTML(formatDate(story.createdAt))}</time></div><div class="story-tags">${labels}</div><p class="story-copy">${escapeHTML(story.text)}</p><div class="story-card-foot"><span>Saved only in this browser</span><span class="story-id">DEMO</span></div></article>`;
   }).join("");
 }
-async function refreshStats() {
-  try { renderStats(await api("/api/stats")); }
-  catch {
-    for (const id of ["visits-today", "stories-today", "stories-total"]) byId(id).textContent = "—";
-  }
+function showDemoNotice() {
+  const notice = document.createElement("div");
+  notice.className = "demo-notice";
+  notice.setAttribute("role", "status");
+  notice.innerHTML = "<strong>Prototype mode:</strong> submissions are saved only in this browser. They are not uploaded, shared publicly, or collected into a central dashboard.";
+  const header = document.querySelector(".site-header");
+  if (header) header.insertAdjacentElement("afterend", notice);
 }
-async function refreshStories() {
-  try {
-    const category = byId("story-filter")?.value || "";
-    const result = await api(`/api/stories${category ? `?category=${encodeURIComponent(category)}` : ""}`);
-    renderStories(result.stories);
-  } catch {
-    const container = byId("stories-list");
-    if (container) container.innerHTML = `<div class="empty-state"><h3>Stories are temporarily unavailable</h3><p>Please refresh the page in a moment.</p></div>`;
-  }
-}
-
-document.addEventListener("DOMContentLoaded", async () => {
-  byId("year").textContent = new Date().getFullYear();
+document.addEventListener("DOMContentLoaded", () => {
+  setText("year", String(new Date().getFullYear()));
+  showDemoNotice();
   const textArea = byId("story-text");
-  textArea?.addEventListener("input", () => { byId("char-count").textContent = `${textArea.value.length} / 3000`; });
-
+  const form = byId("story-form");
+  const message = byId("form-message");
+  const submit = byId("submit-story");
+  const refresh = () => { const stories = readStories(); updateStats(stories); renderStories(); };
+  textArea?.addEventListener("input", () => setText("char-count", `${textArea.value.length} / 3000`));
   document.querySelectorAll(".issue-card").forEach(card => {
     card.addEventListener("click", () => {
-      const category = card.dataset.category;
-      const checkbox = document.querySelector(`input[name="category"][value="${CSS.escape(category)}"]`);
+      const checkbox = document.querySelector(`input[name="category"][value="${CSS.escape(card.dataset.category)}"]`);
       if (checkbox) checkbox.checked = !checkbox.checked;
-      byId("share-story").scrollIntoView({ behavior: "smooth", block: "start" });
+      byId("share-story")?.scrollIntoView({ behavior: "smooth", block: "start" });
       if (checkbox) checkbox.focus({ preventScroll: true });
     });
   });
-  byId("story-filter")?.addEventListener("change", refreshStories);
-
-  // A page visit is counted without cookies or a persistent visitor identifier.
-  try { await api("/api/visit", { method: "POST", body: "{}" }); } catch {}
-  await Promise.all([refreshStats(), refreshStories()]);
-
-  byId("story-form")?.addEventListener("submit", async event => {
+  byId("story-filter")?.addEventListener("change", renderStories);
+  form?.addEventListener("submit", event => {
     event.preventDefault();
-    const message = byId("form-message");
-    const submit = byId("submit-story");
     const categories = [...document.querySelectorAll('input[name="category"]:checked')].map(input => input.value);
-    const text = textArea.value.trim();
+    const text = textArea?.value.trim() || "";
     if (!categories.length) { message.className = "form-message error"; message.textContent = "Please select at least one issue."; return; }
-    if (text.length < 20) { message.className = "form-message error"; message.textContent = "Please share at least 20 characters."; textArea.focus(); return; }
-    if (!byId("consent").checked) { message.className = "form-message error"; message.textContent = "Please confirm you understand the public submission terms."; return; }
+    if (text.length < 20) { message.className = "form-message error"; message.textContent = "Please share at least 20 characters."; textArea?.focus(); return; }
+    if (!byId("consent")?.checked) { message.className = "form-message error"; message.textContent = "Please confirm you understand the demo submission terms."; return; }
     submit.disabled = true;
-    submit.innerHTML = "Submitting…";
-    message.className = "form-message";
-    message.textContent = "";
-    try {
-      await api("/api/stories", { method: "POST", body: JSON.stringify({ categoryIds: categories, text }) });
-      byId("story-form").reset();
-      byId("char-count").textContent = "0 / 3000";
-      message.className = "form-message success";
-      message.textContent = "Your story has been published anonymously. Thank you for contributing to the employee-reported picture.";
-      await Promise.all([refreshStats(), refreshStories()]);
-      byId("stories").scrollIntoView({ behavior: "smooth", block: "start" });
-    } catch (error) {
+    const story = { id: `demo-${Date.now()}`, categoryIds: categories, text, createdAt: new Date().toISOString() };
+    const stories = readStories();
+    stories.push(story);
+    if (!writeStories(stories)) {
       message.className = "form-message error";
-      message.textContent = error.message;
-    } finally {
+      message.textContent = "This browser couldn't save the demo. Check local storage settings and try again.";
       submit.disabled = false;
-      submit.innerHTML = 'Submit anonymously <span aria-hidden="true">↗</span>';
+      return;
     }
+    form.reset();
+    setText("char-count", "0 / 3000");
+    message.className = "form-message success";
+    message.textContent = "Demo saved in this browser only. It has not been uploaded or published publicly.";
+    refresh();
+    submit.disabled = false;
   });
+  refresh();
 });
