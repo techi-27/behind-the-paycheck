@@ -1,0 +1,12 @@
+{
+  "name": "behind-the-paycheck",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Anonymous IT employee reality index for India",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": { "node": ">=20" }
+}

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172747">
+  <meta name="description" content="An anonymous, employee-reported snapshot of the challenges faced by India's IT workforce.">
+  <title>Behind the Paycheck — India's IT Employee Reality Index</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Behind the Paycheck index">
+      <span class="brand-mark">B</span>
+      <span>Behind the <strong>Paycheck</strong></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="/" class="nav-link active">Index</a>
+      <a href="/about.html" class="nav-link">About</a>
+      <a href="#reality" class="nav-link nav-cta">Explore the data <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="live-dot"></span> INDIA'S IT EMPLOYEE REALITY INDEX</div>
+        <h1>Behind every salary,<br><span>there is a story.</span></h1>
+        <p class="hero-lead">Loans. Family responsibilities. Layoffs. Notice periods. Offers that never arrive. This is a space to make the realities of IT employees visible — one anonymous report at a time.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#share-story">Share your experience <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="#reality">See what employees report <span aria-hidden="true">↓</span></a>
+        </div>
+        <p class="privacy-note"><span aria-hidden="true">◈</span> No account. No profile. Please leave out names and identifying details.</p>
+      </div>
+      <div class="hero-art" aria-label="Illustration representing the hidden pressure behind work">
+        <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+        <div class="art-card art-card-main">
+          <div class="art-top"><span class="art-dot"></span><span>THE OTHER SIDE OF WORK</span><span class="art-menu">•••</span></div>
+          <div class="art-big-quote">“</div>
+          <p class="art-quote">My payslip shows my salary. It doesn't show everything I carry.</p>
+          <div class="art-rule"></div>
+          <div class="art-bottom"><span>AN EMPLOYEE'S EXPERIENCE</span><span class="art-anon">ANONYMOUS</span></div>
+        </div>
+        <div class="floating-tag tag-top"><span class="tag-icon">₹</span><span><b>Money pressure</b><small>More than a number</small></span></div>
+        <div class="floating-tag tag-bottom"><span class="tag-icon tag-coral">⌛</span><span><b>Notice period</b><small>Waiting for a new start</small></span></div>
+        <div class="art-spark spark-one">✳</div><div class="art-spark spark-two">✳</div>
+      </div>
+    </section>
+
+    <section class="stats-strip wrap" aria-label="Community activity">
+      <div class="stat-cell"><span class="stat-label">PAGE VISITS TODAY</span><strong id="visits-today">—</strong><span class="stat-foot">Visits, not unique people</span></div>
+      <div class="stat-cell"><span class="stat-label">REPORTS TODAY</span><strong id="stories-today">—</strong><span class="stat-foot">Employee submissions</span></div>
+      <div class="stat-cell"><span class="stat-label">REPORTS COLLECTED</span><strong id="stories-total">—</strong><span class="stat-foot">All-time submissions</span></div>
+      <div class="stat-cell stat-note"><span class="stat-label">WHY THESE NUMBERS?</span><p>Every count is based on reports submitted here. They show what people report — not a verified count of all IT employees facing an issue.</p></div>
+    </section>
+
+    <section class="reality-section section wrap" id="reality">
+      <div class="section-heading">
+        <div><div class="eyebrow">THE REALITY CHECK</div><h2>What are IT employees facing?</h2><p>Select an issue to explore the reports shared by employees.</p></div>
+        <span class="data-chip"><span class="live-dot"></span> Report-based data</span>
+      </div>
+      <div class="issue-grid" id="issue-grid">
+        <button class="issue-card" data-category="loans"><span class="issue-icon icon-blue">₹</span><span class="issue-title">Loans &amp; EMIs</span><span class="issue-desc">Debt, repayments and financial pressure</span><span class="issue-count" id="count-loans">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="family"><span class="issue-icon icon-peach">♡</span><span class="issue-title">Family responsibilities</span><span class="issue-desc">Household costs and caring for family</span><span class="issue-count" id="count-family">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="tax"><span class="issue-icon icon-lilac">%</span><span class="issue-title">Tax &amp; take-home pay</span><span class="issue-desc">Tax burden and salary after deductions</span><span class="issue-count" id="count-tax">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="unemployment"><span class="issue-icon icon-mint">↗</span><span class="issue-title">Unemployment &amp; layoffs</span><span class="issue-desc">Job loss and finding the next role</span><span class="issue-count" id="count-unemployment">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="notice-period"><span class="issue-icon icon-blue">◷</span><span class="issue-title">Notice period</span><span class="issue-desc">Three-month notice blocking a move</span><span class="issue-count" id="count-notice-period">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="immediate-joining"><span class="issue-icon icon-peach">⇥</span><span class="issue-title">Immediate joining pressure</span><span class="issue-desc">New employers requiring an early start</span><span class="issue-count" id="count-immediate-joining">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="offer-letter"><span class="issue-icon icon-lilac">▤</span><span class="issue-title">Offer letter issues</span><span class="issue-desc">Delayed, withheld or withdrawn offers</span><span class="issue-count" id="count-offer-letter">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="unpaid-salary"><span class="issue-icon icon-mint">◫</span><span class="issue-title">Unpaid or delayed salary</span><span class="issue-desc">Salary not paid on time or in full</span><span class="issue-count" id="count-unpaid-salary">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="work-pressure"><span class="issue-icon icon-peach">⌁</span><span class="issue-title">Work pressure &amp; burnout</span><span class="issue-desc">Long hours, stress and exhaustion</span><span class="issue-count" id="count-work-pressure">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="job-insecurity"><span class="issue-icon icon-blue">△</span><span class="issue-title">Job insecurity</span><span class="issue-desc">Fear of losing work or sudden changes</span><span class="issue-count" id="count-job-insecurity">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="salary-growth"><span class="issue-icon icon-lilac">↗</span><span class="issue-title">Salary growth</span><span class="issue-desc">Low increments and stalled progression</span><span class="issue-count" id="count-salary-growth">— <small>reports</small></span></button>
+        <button class="issue-card" data-category="other"><span class="issue-icon icon-mint">＋</span><span class="issue-title">Other struggles</span><span class="issue-desc">An experience not covered above</span><span class="issue-count" id="count-other">— <small>reports</small></span></button>
+      </div>
+      <div class="section-footnote">One report can select multiple issues, so category counts may add up to more than the total number of reports.</div>
+    </section>
+
+    <section class="share-section" id="share-story">
+      <div class="wrap share-layout">
+        <div class="share-intro">
+          <div class="eyebrow eyebrow-light">YOUR EXPERIENCE MATTERS</div>
+          <h2>What are you going through?</h2>
+          <p>There is no account to create and no profile to fill in. Select the issues that apply and tell your story in your own words.</p>
+          <ul class="share-points">
+            <li><span>✓</span> No name, email or phone number requested</li>
+            <li><span>✓</span> Share only what you feel comfortable sharing</li>
+            <li><span>✓</span> Your report adds to the issue counts</li>
+          </ul>
+        </div>
+        <form class="story-form" id="story-form">
+          <div class="form-head"><span class="form-step">ANONYMOUS SUBMISSION</span><span class="required-note">* Required</span></div>
+          <fieldset>
+            <legend>Which issues are you facing? <span>*</span></legend>
+            <p class="field-help">Select all that apply.</p>
+            <div class="checkbox-grid">
+              <label><input type="checkbox" name="category" value="loans"><span>Loans &amp; EMIs</span></label>
+              <label><input type="checkbox" name="category" value="family"><span>Family responsibilities</span></label>
+              <label><input type="checkbox" name="category" value="tax"><span>Tax &amp; take-home pay</span></label>
+              <label><input type="checkbox" name="category" value="unemployment"><span>Unemployment &amp; layoffs</span></label>
+              <label><input type="checkbox" name="category" value="notice-period"><span>Three-month notice period</span></label>
+              <label><input type="checkbox" name="category" value="immediate-joining"><span>Immediate joining pressure</span></label>
+              <label><input type="checkbox" name="category" value="offer-letter"><span>Offer letter issues</span></label>
+              <label><input type="checkbox" name="category" value="unpaid-salary"><span>Unpaid or delayed salary</span></label>
+              <label><input type="checkbox" name="category" value="work-pressure"><span>Work pressure &amp; burnout</span></label>
+              <label><input type="checkbox" name="category" value="job-insecurity"><span>Job insecurity</span></label>
+              <label><input type="checkbox" name="category" value="salary-growth"><span>Salary growth</span></label>
+              <label><input type="checkbox" name="category" value="other"><span>Other</span></label>
+            </div>
+          </fieldset>
+          <div class="form-field">
+            <label for="story-text">Your story <span>*</span></label>
+            <textarea id="story-text" name="text" minlength="20" maxlength="3000" required placeholder="Share what happened and how it affects you. Please don't include names, company-confidential information, phone numbers, or other identifying details."></textarea>
+            <div class="textarea-meta"><span>Minimum 20 characters · Maximum 3,000</span><span id="char-count">0 / 3000</span></div>
+          </div>
+          <label class="consent-row"><input type="checkbox" id="consent" required><span>I understand my story will be published publicly and may be used in aggregate statistics. I have removed names and identifying details.</span></label>
+          <button class="button button-primary button-submit" id="submit-story" type="submit">Submit anonymously <span aria-hidden="true">↗</span></button>
+          <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+          <p class="form-disclaimer">Please don't post personal data, confidential company information, threats or unsupported allegations about identifiable people. Submissions are public. This website does not promise that content can never be copied by others.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="stories-section section wrap" id="stories">
+      <div class="section-heading">
+        <div><div class="eyebrow">EMPLOYEE VOICES</div><h2>Experiences shared here</h2><p>Anonymous reports from the community.</p></div>
+        <label class="filter-label">Filter by issue
+          <select id="story-filter">
+            <option value="">All issues</option>
+            <option value="loans">Loans &amp; EMIs</option><option value="family">Family responsibilities</option>
+            <option value="tax">Tax &amp; take-home pay</option><option value="unemployment">Unemployment &amp; layoffs</option>
+            <option value="notice-period">Notice period</option><option value="immediate-joining">Immediate joining pressure</option>
+            <option value="offer-letter">Offer letter issues</option><option value="unpaid-salary">Unpaid or delayed salary</option>
+            <option value="work-pressure">Work pressure &amp; burnout</option><option value="job-insecurity">Job insecurity</option>
+            <option value="salary-growth">Salary growth</option><option value="other">Other</option>
+          </select>
+        </label>
+      </div>
+      <div class="stories-list" id="stories-list"><div class="empty-state"><span class="empty-icon">✳</span><h3>The first story starts with you</h3><p>As people share their experiences, anonymous reports will appear here.</p><a href="#share-story" class="text-link">Share your experience ↗</a></div></div>
+      <p class="stories-note">Stories are self-reported and may not be independently verified. Counts reflect submissions, not a representative survey of India's IT workforce.</p>
+    </section>
+
+    <section class="purpose-band wrap">
+      <div class="purpose-icon">◎</div><div><h2>Make the invisible visible.</h2><p>Our aim is to build a transparent, employee-reported picture of the challenges facing India's IT workforce — so conversations with employers and policymakers can start with evidence.</p></div><a class="button button-outline" href="/about.html">About the project <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner"><a class="brand footer-brand" href="/"><span class="brand-mark">B</span><span>Behind the <strong>Paycheck</strong></span></a><p>Built to make employee-reported realities visible.</p><div class="footer-links"><a href="/about.html">About</a><a href="/about.html#privacy">Privacy</a><a href="/about.html#methodology">Data methodology</a></div><span class="copyright">© <span id="year"></span> Behind the Paycheck</span></div>
+  </footer>
+  <script src="/app.js" defer></script>
+</body>
+</html>
