@@ -77,6 +77,26 @@
       <div class="section-footnote">Demo counts are stored only in this browser. One demo submission can select multiple issues.</div>
     </section>
 
+    <section class="employer-section section wrap" id="employer-index">
+      <div class="section-heading">
+        <div><div class="eyebrow">EMPLOYER PRACTICES</div><h2>Where are employees reporting friction?</h2><p>Explore patterns employees report during hiring, interviews and employment.</p></div>
+        <span class="data-chip"><span class="live-dot"></span> Local demo rankings</span>
+      </div>
+      <div class="employer-categories">
+        <article class="employer-category"><span class="issue-icon icon-blue">◷</span><div><h3>Notice period vs. immediate joining</h3><p>Three-month notice periods clashing with 10–15 day joining demands.</p></div></article>
+        <article class="employer-category"><span class="issue-icon icon-peach">₹</span><div><h3>Budget and offer mismatch</h3><p>Compensation discussed early that differs from the final offer.</p></div></article>
+        <article class="employer-category"><span class="issue-icon icon-lilac">↩</span><div><h3>No interview outcome</h3><p>No update after several interview rounds or follow-up attempts.</p></div></article>
+        <article class="employer-category"><span class="issue-icon icon-mint">▤</span><div><h3>Documents requested too early</h3><p>Extensive personal or employment documents requested before interviews or an offer.</p></div></article>
+        <article class="employer-category"><span class="issue-icon icon-blue">⌛</span><div><h3>Unpaid extra hours</h3><p>Repeated overtime or work outside agreed hours without additional compensation.</p></div></article>
+        <article class="employer-category"><span class="issue-icon icon-peach">%</span><div><h3>Very low or zero hikes</h3><p>Little or no annual salary increase, including very small percentage hikes.</p></div></article>
+      </div>
+      <div class="leaderboard-panel">
+        <div class="leaderboard-head"><div><span class="eyebrow">EMPLOYEE-REPORTED SIGNALS</span><h3>Company report ranking</h3><p>Ranked by the number of local demo reports for the selected issue.</p></div><label class="filter-label">Rank companies by <select id="company-issue-filter"><option value="notice-joining">Notice vs. joining demand</option><option value="offer-mismatch">Budget / offer mismatch</option><option value="no-feedback">No interview feedback</option><option value="documents-early">Early document requests</option><option value="unpaid-overtime">Unpaid extra hours</option><option value="low-hike">Zero or very low hikes</option></select></label></div>
+        <div id="company-leaderboard" class="company-leaderboard"><div class="leaderboard-empty"><strong>No company rankings yet</strong><p>Use the form below to preview how employee-reported rankings work. Demo reports stay only in this browser and are not visible to other visitors.</p></div></div>
+        <p class="stories-note">These rankings are not live public findings. A public leaderboard requires a shared database, moderation, duplicate-report controls, clear methodology and a fair process for companies to flag errors or respond. Counts represent reports, not verified findings or a definitive judgement about an employer.</p>
+      </div>
+    </section>
+
     <section class="share-section" id="share-story">
       <div class="wrap share-layout">
         <div class="share-intro">
@@ -95,6 +115,12 @@
             <legend>Which issues are you facing? <span>*</span></legend>
             <p class="field-help">Select all that apply.</p>
             <div class="checkbox-grid">
+              <label><input type="checkbox" name="category" value="notice-joining"><span>3-month notice vs. 10–15 day joining</span></label>
+              <label><input type="checkbox" name="category" value="offer-mismatch"><span>Discussed budget differs from offer</span></label>
+              <label><input type="checkbox" name="category" value="no-feedback"><span>No outcome after interview rounds</span></label>
+              <label><input type="checkbox" name="category" value="documents-early"><span>Too many documents requested early</span></label>
+              <label><input type="checkbox" name="category" value="unpaid-overtime"><span>Extra hours without extra pay</span></label>
+              <label><input type="checkbox" name="category" value="low-hike"><span>Zero or very low salary hike</span></label>
               <label><input type="checkbox" name="category" value="loans"><span>Loans &amp; EMIs</span></label>
               <label><input type="checkbox" name="category" value="family"><span>Family responsibilities</span></label>
               <label><input type="checkbox" name="category" value="tax"><span>Tax &amp; take-home pay</span></label>
@@ -109,6 +135,11 @@
               <label><input type="checkbox" name="category" value="other"><span>Other</span></label>
             </div>
           </fieldset>
+          <div class="form-field company-field">
+            <label for="company-name">Company name (optional)</label>
+            <input id="company-name" name="company" type="text" maxlength="100" autocomplete="organization" placeholder="Enter company name only if you are comfortable">
+            <p class="field-help">For this prototype, the name is saved only in this browser. Describe your own experience, not rumours. Do not include individual employees' names.</p>
+          </div>
           <div class="form-field">
             <label for="story-text">Your story <span>*</span></label>
             <textarea id="story-text" name="text" minlength="20" maxlength="3000" required placeholder="Share what happened and how it affects you. Please don't include names, company-confidential information, phone numbers, or other identifying details."></textarea>
@@ -131,6 +162,9 @@
             <option value="loans">Loans &amp; EMIs</option><option value="family">Family responsibilities</option>
             <option value="tax">Tax &amp; take-home pay</option><option value="unemployment">Unemployment &amp; layoffs</option>
             <option value="notice-period">Notice period</option><option value="immediate-joining">Immediate joining pressure</option>
+            <option value="notice-joining">Notice vs. joining demand</option><option value="offer-mismatch">Budget / offer mismatch</option>
+            <option value="no-feedback">No interview feedback</option><option value="documents-early">Early document requests</option>
+            <option value="unpaid-overtime">Unpaid extra hours</option><option value="low-hike">Zero or very low hikes</option>
             <option value="offer-letter">Offer letter issues</option><option value="unpaid-salary">Unpaid or delayed salary</option>
             <option value="work-pressure">Work pressure &amp; burnout</option><option value="job-insecurity">Job insecurity</option>
             <option value="salary-growth">Salary growth</option><option value="other">Other</option>
