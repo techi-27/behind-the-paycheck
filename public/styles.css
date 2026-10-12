@@ -143,3 +143,8 @@
 #story-text{min-height:112px!important;max-height:150px!important;line-height:1.7!important;resize:vertical!important}
 #line-guidance{color:#426da7!important;font-weight:700!important}
 .issue-selection-toolbar span{transition:background .15s ease,color .15s ease}
+
+/* Index spacing polish after removing the prototype banner */
+.choice-main{padding-top:clamp(26px,3.2vw,42px)!important}
+.choice-hero{margin-top:0!important}
+@media(max-width:720px){.choice-main{padding-top:24px!important}}
