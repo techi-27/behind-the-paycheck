@@ -309,3 +309,35 @@
 
 /* Polished top-three company ranking card */
 .company-trend-card{background:radial-gradient(ellipse at top right,rgba(125,145,255,.14),transparent 58%),linear-gradient(145deg,#fff 0%,#f6f5ff 100%)!important;border-color:#dfe3fb!important;position:relative;overflow:hidden}.company-card-top{display:flex;justify-content:space-between;align-items:center;gap:8px}.company-top-badge{padding:5px 9px;border-radius:999px;background:#e9eaff;color:#5358ac;font-size:9px;font-weight:850;letter-spacing:.08em}.company-card-title{font-size:19px;line-height:1.25;letter-spacing:-.035em;color:#172747;margin:13px 0 5px}.company-card-subtitle{font-size:11px;line-height:1.5;color:#7c8aa2;margin:0 0 15px}.overview-company-ranking{display:grid;gap:8px;margin:0 0 15px}.overview-company-row{display:grid;grid-template-columns:27px minmax(0,1fr) auto;align-items:center;gap:9px;padding:9px 10px;background:rgba(255,255,255,.82);border:1px solid #e5e7f7;border-radius:12px;min-width:0}.overview-company-rank{width:25px;height:25px;border-radius:8px;display:grid;place-items:center;background:#eef0fb;color:#53618a;font-size:11px;font-weight:850}.overview-company-rank.rank-1{background:linear-gradient(135deg,#ffca68,#ff9868);color:#633d16}.overview-company-rank.rank-2{background:#e4eaf7;color:#526a94}.overview-company-rank.rank-3{background:#f7e6d8;color:#97633f}.overview-company-name{font-size:12px;font-weight:800;color:#263653;overflow-wrap:anywhere}.overview-company-count{font-size:12px;font-weight:850;color:#263653;white-space:nowrap}.overview-company-count small{font-size:9px;font-weight:600;color:#8290a6}.company-ranking-empty{padding:14px;border:1px dashed #d8def1;border-radius:11px;background:rgba(255,255,255,.7);font-size:11px;line-height:1.5;color:#7887a0}.company-trend-card>small{display:block;margin-top:auto;line-height:1.5}
+
+
+/* Refined overview metrics: cohesive cards, clearer hierarchy, less empty space */
+.overview-trend-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;align-items:stretch}
+.overview-trend-card{position:relative;min-width:0;min-height:0;padding:22px 20px 18px;border:1px solid #e4eaf4;border-radius:20px;background:linear-gradient(155deg,#fff 0%,#f9fbff 100%);box-shadow:0 8px 26px rgba(25,45,78,.045);display:flex;flex-direction:column;align-items:flex-start;gap:10px;overflow:hidden}
+.overview-trend-card:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(180deg,#ff6b62,#ffb45b);opacity:.9}
+.overview-trend-card .trend-card-label{font-size:10px;line-height:1.4;letter-spacing:.095em;font-weight:800;color:#7786a0;text-transform:uppercase}
+.overview-trend-card>strong{display:block;font-size:clamp(25px,2.3vw,34px);line-height:1.16;letter-spacing:-.045em;color:#172747;overflow-wrap:anywhere}
+.overview-trend-card .trend-issue-name{font-size:clamp(18px,1.55vw,23px);letter-spacing:-.035em;line-height:1.28;min-height:2.5em}
+.overview-trend-card>small{font-size:11px;line-height:1.5;color:#8290a5;margin-top:auto;padding-top:10px}
+.trend-mini-line{height:36px;display:flex;align-items:flex-end;gap:6px;margin:0 0 4px}
+.trend-mini-line i{display:block;width:15px;height:var(--bar-height,20px);border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#ff7465,#ffb65d)}
+.trend-mini-line i:nth-child(1){--bar-height:13px}.trend-mini-line i:nth-child(2){--bar-height:21px}.trend-mini-line i:nth-child(3){--bar-height:15px}.trend-mini-line i:nth-child(4){--bar-height:30px}.trend-mini-line i:nth-child(5){--bar-height:20px}.trend-mini-line i:nth-child(6){--bar-height:25px}.trend-mini-line i:nth-child(7){--bar-height:16px}
+.trend-bar-stack{display:flex;align-items:flex-end;gap:7px;height:40px}
+.trend-bar-stack i{display:block;width:16px;height:30px;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#ff7766,#ffb84f)}
+.trend-bar-stack i:nth-child(2){height:23px;background:linear-gradient(180deg,#71b2f1,#478bd8)}.trend-bar-stack i:nth-child(3){height:17px;background:linear-gradient(180deg,#65cbb0,#37a78d)}
+.trend-demographic-pills{display:flex;flex-wrap:wrap;gap:7px;max-width:100%}
+.trend-demographic-pills span{display:inline-flex;align-items:center;padding:7px 9px;border-radius:10px;border:1px solid #e1e8f5;background:#fff;color:#61718d;font-size:10px;font-weight:700;line-height:1.25}
+.company-trend-card{background:radial-gradient(ellipse at top right,rgba(131,133,255,.13),transparent 58%),linear-gradient(150deg,#fff 0%,#f5f4ff 100%)!important;border-color:#e0e3f8!important}
+.company-trend-card:before{background:linear-gradient(180deg,#8a8cf5,#5ca6df)}
+.company-card-top{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.company-top-badge{flex-shrink:0;padding:5px 8px;border-radius:999px;background:#e8e9ff;color:#5658a8;font-size:9px;font-weight:850;letter-spacing:.08em}
+.company-card-title{font-size:18px;line-height:1.25;letter-spacing:-.035em;color:#172747;margin:3px 0 0}
+.company-card-subtitle{font-size:11px;line-height:1.45;color:#7c8aa2;margin:0}
+.overview-company-ranking{width:100%;display:grid;gap:7px;margin:2px 0 0}
+.overview-company-row{display:grid;grid-template-columns:25px minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 9px;background:rgba(255,255,255,.86);border:1px solid #e5e7f7;border-radius:11px;min-width:0}
+.overview-company-rank{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:#eef0fb;color:#53618a;font-size:10px;font-weight:850}
+.overview-company-rank.rank-1{background:linear-gradient(135deg,#ffca68,#ff9868);color:#633d16}.overview-company-rank.rank-2{background:#e4eaf7;color:#526a94}.overview-company-rank.rank-3{background:#f7e6d8;color:#97633f}
+.overview-company-name{font-size:11px;font-weight:800;color:#263653;overflow-wrap:anywhere}.overview-company-count{font-size:11px;font-weight:850;color:#263653;white-space:nowrap}.overview-company-count small{font-size:9px;font-weight:600;color:#8290a6}
+.company-ranking-empty{width:100%;box-sizing:border-box;padding:12px;border:1px dashed #d8def1;border-radius:11px;background:rgba(255,255,255,.72);font-size:11px;line-height:1.5;color:#7887a0}
+@media(max-width:1100px){.overview-trend-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.overview-trend-card{min-height:185px}.overview-trend-card .trend-issue-name{min-height:0}}
+@media(max-width:620px){.overview-trend-cards{grid-template-columns:1fr;gap:12px}.overview-trend-card{min-height:0;padding:19px}.overview-trend-card>small{margin-top:0}.overview-trend-card .trend-issue-name{min-height:0}}
