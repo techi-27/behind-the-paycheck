@@ -2,10 +2,14 @@ const ISSUE_LABELS = {
   loans: "Loans & EMIs", family: "Family responsibilities", tax: "Tax & take-home pay",
   unemployment: "Unemployment & layoffs", "notice-period": "Notice period",
   "immediate-joining": "Immediate joining pressure", "offer-letter": "Offer letter issues",
+  "notice-joining": "Notice period vs. joining demand", "offer-mismatch": "Budget / offer mismatch",
+  "no-feedback": "No interview outcome", "documents-early": "Early document requests",
+  "unpaid-overtime": "Unpaid extra hours", "low-hike": "Zero or very low salary hike",
   "unpaid-salary": "Unpaid or delayed salary", "work-pressure": "Work pressure & burnout",
   "job-insecurity": "Job insecurity", "salary-growth": "Salary growth", other: "Other struggles"
 };
 const STORAGE_KEY = "btp-ui-demo-stories";
+const EMPLOYER_ISSUES = ["notice-joining", "offer-mismatch", "no-feedback", "documents-early", "unpaid-overtime", "low-hike"];
 const numberFormat = new Intl.NumberFormat("en-IN");
 const byId = id => document.getElementById(id);
 function readStories() {
@@ -40,6 +44,27 @@ function updateStats(stories) {
     if (element) element.innerHTML = `${numberFormat.format(counts[category] || 0)} <small>demo reports</small>`;
   });
 }
+function renderCompanyLeaderboard() {
+  const container = byId("company-leaderboard");
+  if (!container) return;
+  const issue = byId("company-issue-filter")?.value || EMPLOYER_ISSUES[0];
+  const stories = readStories();
+  const counts = new Map();
+  stories.forEach(story => {
+    const company = String(story.company || "").trim();
+    if (!company || !(story.categoryIds || []).includes(issue)) return;
+    const key = company.toLocaleLowerCase("en-IN");
+    const current = counts.get(key) || { name: company, count: 0 };
+    current.count += 1;
+    counts.set(key, current);
+  });
+  const ranked = [...counts.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  if (!ranked.length) {
+    container.innerHTML = '<div class="leaderboard-empty"><strong>No company rankings for this issue yet</strong><p>Submit a browser demo report with a company name and this issue selected to preview the ranking. This is not a shared public leaderboard.</p></div>';
+    return;
+  }
+  container.innerHTML = ranked.map((item, index) => `<div class="company-rank-row"><span class="rank-number">${index + 1}</span><span class="rank-company"><strong>${escapeHTML(item.name)}</strong><small>Employee-reported demo entries</small></span><span class="rank-count"><strong>${numberFormat.format(item.count)}</strong><small>reports</small></span></div>`).join("");
+}
 function renderStories() {
   const container = byId("stories-list");
   if (!container) return;
@@ -69,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = byId("story-form");
   const message = byId("form-message");
   const submit = byId("submit-story");
-  const refresh = () => { const stories = readStories(); updateStats(stories); renderStories(); };
+  const refresh = () => { const stories = readStories(); updateStats(stories); renderStories(); renderCompanyLeaderboard(); };
   textArea?.addEventListener("input", () => setText("char-count", `${textArea.value.length} / 3000`));
   document.querySelectorAll(".issue-card").forEach(card => {
     card.addEventListener("click", () => {
@@ -80,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
   byId("story-filter")?.addEventListener("change", renderStories);
+  byId("company-issue-filter")?.addEventListener("change", renderCompanyLeaderboard);
   form?.addEventListener("submit", event => {
     event.preventDefault();
     const categories = [...document.querySelectorAll('input[name="category"]:checked')].map(input => input.value);
@@ -88,7 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (text.length < 20) { message.className = "form-message error"; message.textContent = "Please share at least 20 characters."; textArea?.focus(); return; }
     if (!byId("consent")?.checked) { message.className = "form-message error"; message.textContent = "Please confirm you understand the demo submission terms."; return; }
     submit.disabled = true;
-    const story = { id: `demo-${Date.now()}`, categoryIds: categories, text, createdAt: new Date().toISOString() };
+    const company = byId("company-name")?.value.trim() || "";
+    const story = { id: `demo-${Date.now()}`, categoryIds: categories, text, company, createdAt: new Date().toISOString() };
     const stories = readStories();
     stories.push(story);
     if (!writeStories(stories)) {
