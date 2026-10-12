@@ -76,7 +76,8 @@ function renderStories() {
   }
   container.innerHTML = stories.slice().reverse().map(story => {
     const labels = (story.categoryIds || []).map(id => `<span class="story-tag">${escapeHTML(ISSUE_LABELS[id] || id)}</span>`).join("");
-    return `<article class="story-card"><div class="story-card-head"><span class="anonymous-label"><span class="anon-avatar">D</span> Browser demo</span><time>${escapeHTML(formatDate(story.createdAt))}</time></div><div class="story-tags">${labels}</div><p class="story-copy">${escapeHTML(story.text)}</p><div class="story-card-foot"><span>Saved only in this browser</span><span class="story-id">DEMO</span></div></article>`;
+    const companyLine = story.company ? `<p class="story-company">Company mentioned: ${escapeHTML(story.company)} · local demo only</p>` : "";
+    return `<article class="story-card"><div class="story-card-head"><span class="anonymous-label"><span class="anon-avatar">D</span> Browser demo</span><time>${escapeHTML(formatDate(story.createdAt))}</time></div><div class="story-tags">${labels}</div>${companyLine}<p class="story-copy">${escapeHTML(story.text)}</p><div class="story-card-foot"><span>Saved only in this browser</span><span class="story-id">DEMO</span></div></article>`;
   }).join("");
 }
 function showDemoNotice() {
