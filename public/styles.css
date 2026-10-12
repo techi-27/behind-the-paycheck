@@ -193,3 +193,11 @@
 .about-block{width:100%!important;max-width:none!important;box-sizing:border-box!important}
 .about-cta,.legal-note{width:100%!important;max-width:none!important;box-sizing:border-box!important}
 @media(max-width:760px){.about-main.wrap{width:calc(100% - 24px)!important;padding-top:18px!important}.about-hero{padding:22px!important}.about-hero h1{font-size:clamp(33px,8.5vw,46px)!important;letter-spacing:-.8px!important}}
+
+/* About page desktop content width: keep text within the user's marked central area */
+.about-hero{padding:clamp(28px,3.5vw,44px)!important}
+.about-hero h1{max-width:1050px!important;font-size:clamp(36px,4.3vw,60px)!important;line-height:1.06!important;letter-spacing:-1.8px!important}
+.about-hero .about-lead{max-width:1000px!important;font-size:clamp(16px,1.3vw,18px)!important;line-height:1.8!important}
+.about-hero .about-highlight{max-width:1000px!important;margin-top:24px!important;padding:20px 24px!important}
+@media(min-width:1100px){.about-hero h1{max-width:1020px!important}.about-hero .about-lead{max-width:1000px!important}}
+@media(max-width:760px){.about-hero{padding:22px!important}.about-hero h1{font-size:clamp(33px,8.5vw,46px)!important;letter-spacing:-.8px!important}.about-hero .about-highlight{max-width:100%!important}}
