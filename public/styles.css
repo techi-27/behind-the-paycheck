@@ -398,3 +398,47 @@
  .overview-trend-card>small{margin-top:0}
  .overview-trends{padding:18px;border-radius:18px}
 }
+
+
+/* Final alignment pass: equal-height metric cards and no colored edge strips */
+.overview-trend-cards{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  align-items:stretch;
+  gap:14px;
+}
+.overview-trend-card{
+  box-sizing:border-box;
+  height:100%;
+  min-height:245px !important;
+  align-self:stretch;
+  border:1px solid #e3eaf4 !important;
+  border-left:1px solid #e3eaf4 !important;
+  padding:19px 17px 16px;
+  background:#fff !important;
+}
+.overview-trend-card:before{display:none !important;content:none !important}
+.overview-trend-card:first-child,
+.overview-trend-card:nth-child(2),
+.overview-trend-card:nth-child(3),
+.overview-trend-card.company-trend-card{
+  background:#fff !important;
+}
+.overview-trend-card .trend-card-label{min-height:2.8em;display:block}
+.overview-trend-card .trend-issue-name{min-height:2.8em;display:block}
+.overview-trend-card>small{margin-top:auto;padding-top:8px}
+.company-trend-card .company-card-top{min-height:2.8em}
+.company-trend-card .company-card-title{min-height:2.8em}
+.company-trend-card .company-card-subtitle{min-height:3em}
+@media(max-width:1100px){
+ .overview-trend-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .overview-trend-card{min-height:220px !important}
+}
+@media(max-width:620px){
+ .overview-trend-cards{grid-template-columns:1fr}
+ .overview-trend-card{height:auto;min-height:0 !important}
+ .overview-trend-card .trend-card-label,
+ .overview-trend-card .trend-issue-name,
+ .company-trend-card .company-card-top,
+ .company-trend-card .company-card-title,
+ .company-trend-card .company-card-subtitle{min-height:0}
+}
