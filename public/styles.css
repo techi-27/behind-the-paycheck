@@ -442,3 +442,9 @@
  .company-trend-card .company-card-title,
  .company-trend-card .company-card-subtitle{min-height:0}
 }
+
+/* Sample-data preview mode controls */
+.sample-mode-link{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;border:1px solid #d9e4f3;border-radius:10px;background:#fff;color:#315f99;font-size:11px;font-weight:800;text-decoration:none}
+.sample-mode-link:hover{background:#f4f8ff;border-color:#b9cde8}
+.dashboard-hero-pills{flex-wrap:wrap}
+@media(max-width:640px){.sample-mode-link{width:100%;box-sizing:border-box}}
