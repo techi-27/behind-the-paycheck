@@ -49,16 +49,16 @@
     </section>
 
     <section class="stats-strip wrap" aria-label="Community activity">
-      <div class="stat-cell"><span class="stat-label">PAGE VISITS TODAY</span><strong id="visits-today">—</strong><span class="stat-foot">Visits, not unique people</span></div>
-      <div class="stat-cell"><span class="stat-label">REPORTS TODAY</span><strong id="stories-today">—</strong><span class="stat-foot">Employee submissions</span></div>
-      <div class="stat-cell"><span class="stat-label">REPORTS COLLECTED</span><strong id="stories-total">—</strong><span class="stat-foot">All-time submissions</span></div>
-      <div class="stat-cell stat-note"><span class="stat-label">WHY THESE NUMBERS?</span><p>Every count is based on reports submitted here. They show what people report — not a verified count of all IT employees facing an issue.</p></div>
+      <div class="stat-cell"><span class="stat-label">PAGE VISITS</span><strong id="visits-today">—</strong><span class="stat-foot">Not tracked in prototype</span></div>
+      <div class="stat-cell"><span class="stat-label">DEMO REPORTS</span><strong id="stories-today">—</strong><span class="stat-foot">Saved in this browser</span></div>
+      <div class="stat-cell"><span class="stat-label">DEMO TOTAL</span><strong id="stories-total">—</strong><span class="stat-foot">This browser only</span></div>
+      <div class="stat-cell stat-note"><span class="stat-label">PROTOTYPE DATA</span><p>These are local demo counts only. Submissions are not uploaded or shared with other visitors.</p></div>
     </section>
 
     <section class="reality-section section wrap" id="reality">
       <div class="section-heading">
         <div><div class="eyebrow">THE REALITY CHECK</div><h2>What are IT employees facing?</h2><p>Select an issue to explore the reports shared by employees.</p></div>
-        <span class="data-chip"><span class="live-dot"></span> Report-based data</span>
+        <span class="data-chip"><span class="live-dot"></span> Browser demo data</span>
       </div>
       <div class="issue-grid" id="issue-grid">
         <button class="issue-card" data-category="loans"><span class="issue-icon icon-blue">₹</span><span class="issue-title">Loans &amp; EMIs</span><span class="issue-desc">Debt, repayments and financial pressure</span><span class="issue-count" id="count-loans">— <small>reports</small></span></button>
@@ -74,7 +74,7 @@
         <button class="issue-card" data-category="salary-growth"><span class="issue-icon icon-lilac">↗</span><span class="issue-title">Salary growth</span><span class="issue-desc">Low increments and stalled progression</span><span class="issue-count" id="count-salary-growth">— <small>reports</small></span></button>
         <button class="issue-card" data-category="other"><span class="issue-icon icon-mint">＋</span><span class="issue-title">Other struggles</span><span class="issue-desc">An experience not covered above</span><span class="issue-count" id="count-other">— <small>reports</small></span></button>
       </div>
-      <div class="section-footnote">One report can select multiple issues, so category counts may add up to more than the total number of reports.</div>
+      <div class="section-footnote">Demo counts are stored only in this browser. One demo submission can select multiple issues.</div>
     </section>
 
     <section class="share-section" id="share-story">
@@ -86,7 +86,7 @@
           <ul class="share-points">
             <li><span>✓</span> No name, email or phone number requested</li>
             <li><span>✓</span> Share only what you feel comfortable sharing</li>
-            <li><span>✓</span> Your report adds to the issue counts</li>
+            <li><span>✓</span> Adds to this browser demo only</li>
           </ul>
         </div>
         <form class="story-form" id="story-form">
@@ -114,7 +114,7 @@
             <textarea id="story-text" name="text" minlength="20" maxlength="3000" required placeholder="Share what happened and how it affects you. Please don't include names, company-confidential information, phone numbers, or other identifying details."></textarea>
             <div class="textarea-meta"><span>Minimum 20 characters · Maximum 3,000</span><span id="char-count">0 / 3000</span></div>
           </div>
-          <label class="consent-row"><input type="checkbox" id="consent" required><span>I understand my story will be published publicly and may be used in aggregate statistics. I have removed names and identifying details.</span></label>
+          <label class="consent-row"><input type="checkbox" id="consent" required><span>I understand this is a prototype. My submission is saved only in this browser and is not sent to a server. I have removed names and identifying details.</span></label>
           <button class="button button-primary button-submit" id="submit-story" type="submit">Submit anonymously <span aria-hidden="true">↗</span></button>
           <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
           <p class="form-disclaimer">Please don't post personal data, confidential company information, threats or unsupported allegations about identifiable people. Submissions are public. This website does not promise that content can never be copied by others.</p>
