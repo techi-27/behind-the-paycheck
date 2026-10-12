@@ -1,5 +1,5 @@
 const ISSUE_LABELS = {
-  loans: "Loans & EMIs", family: "Family responsibilities", tax: "Tax & take-home pay",
+  loans: "Loans & EMIs", family: "Family responsibilities", tax: "Tax & take-home pay", "health-costs": "Healthcare expenses", "housing-costs": "Rent & housing costs", caregiving: "Caregiving responsibilities", "unexpected-expenses": "Unexpected expenses", "mental-load": "Personal stress & wellbeing", "personal-uncertainty": "Uncertainty about the future", "other-it": "Other IT workplace struggles",
   unemployment: "Unemployment & layoffs", "notice-period": "Notice period",
   "immediate-joining": "Immediate joining pressure", "offer-letter": "Offer letter issues",
   "notice-joining": "Notice period vs. joining demand", "offer-mismatch": "Budget / offer mismatch",
