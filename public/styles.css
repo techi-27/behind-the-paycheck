@@ -235,3 +235,32 @@
 .privacy-section p{margin:8px 0}
 .privacy-caveat{padding:12px 14px;border-radius:12px;background:#fff;border:1px solid #dcefe5;font-weight:600}
 @media(max-width:760px){.experience-grid{grid-template-columns:1fr}.support-section{grid-template-columns:1fr;gap:18px}.privacy-section{grid-template-columns:1fr;gap:10px}.index-stories,.support-section,.privacy-section{padding:20px;border-radius:19px}}
+
+/* Readability pass for Index editorial sections: restore card hierarchy and spacing */
+.choice-main{padding-top:clamp(26px,4vw,48px)!important}
+.choice-hero>p{max-width:850px!important;line-height:1.8!important}
+.privacy-note{margin:24px 0 30px!important;padding:14px 18px!important;border:1px solid #e4eaf4!important;border-radius:14px!important;background:#fff!important;color:#526985!important;font-size:15px!important;line-height:1.65!important}
+.index-stories{margin:26px 0!important;padding:clamp(24px,3.2vw,38px)!important;background:linear-gradient(135deg,#fff 0%,#fbfcff 65%,#f2f7ff 100%)!important}
+.index-stories .eyebrow,.support-section .eyebrow,.privacy-section .eyebrow{display:block!important;margin-bottom:10px!important;font-size:10px!important;letter-spacing:1.5px!important;font-weight:800!important;color:#667992!important;line-height:1.5!important}
+.index-stories h2,.support-section h2,.privacy-section h2{font-size:clamp(26px,3vw,35px)!important;line-height:1.2!important;margin:6px 0 12px!important}
+.section-intro{font-size:14px!important;line-height:1.75!important;margin-bottom:24px!important}
+.experience-grid{gap:16px!important}
+.experience-card{min-width:0!important;padding:22px!important;border-radius:18px!important;box-shadow:0 6px 18px rgba(23,39,71,.035)!important}
+.experience-label{display:block!important;line-height:1.6!important;overflow-wrap:anywhere!important}
+.experience-card h3{font-size:18px!important;line-height:1.45!important;margin:12px 0 9px!important;overflow-wrap:break-word!important}
+.experience-card p{font-size:14px!important;line-height:1.75!important}
+.support-section{margin:24px 0!important;padding:clamp(24px,3.2vw,38px)!important;align-items:start!important}
+.support-copy{min-width:0!important}
+.support-copy p{font-size:14px!important;line-height:1.8!important;margin:12px 0!important}
+.support-transparency{padding:14px 16px!important;line-height:1.75!important;border-radius:0 12px 12px 0!important}
+.support-qr-panel{min-width:0!important;align-self:center!important}
+.qr-placeholder{width:100%!important;max-width:245px!important;min-height:220px!important;padding:24px!important;line-height:1.65!important}
+.qr-placeholder strong{line-height:1.5!important}
+.qr-placeholder span:last-child{line-height:1.65!important;overflow-wrap:anywhere!important}
+.support-small{font-size:12px!important;line-height:1.7!important}
+.privacy-section{margin:24px 0!important;padding:clamp(22px,3vw,34px)!important;align-items:start!important}
+.privacy-section>div:last-child{min-width:0!important}
+.privacy-section p{font-size:14px!important;line-height:1.8!important;margin:12px 0!important;overflow-wrap:break-word!important}
+.privacy-caveat{padding:14px 16px!important;font-weight:500!important;line-height:1.75!important}
+.choice-bottom{margin-top:26px!important}
+@media(max-width:760px){.choice-main{padding-top:20px!important}.index-stories,.support-section,.privacy-section{padding:20px!important;margin:16px 0!important}.experience-card{padding:18px!important}.support-section{gap:20px!important}.qr-placeholder{min-height:190px!important}.privacy-note{font-size:14px!important;margin:18px 0 22px!important}}
