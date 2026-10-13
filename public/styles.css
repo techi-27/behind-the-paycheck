@@ -687,3 +687,24 @@ body:has(.dashboard-charts) .demographic-panel,
 body:has(.dashboard-charts) .trend-panel{padding:clamp(20px,2.5vw,30px)!important}
 body:has(.dashboard-charts) .dashboard-hero{border-radius:22px!important}
 @media(max-width:640px){body:has(.dashboard-charts) .sample-insight-grid>article,body:has(.dashboard-charts) .chart-panel,body:has(.dashboard-charts) .dashboard-panel,body:has(.dashboard-charts) .core-product-section,body:has(.dashboard-charts) .stories-panel{border-radius:17px!important}}
+
+
+/* v35: About page - enforce the full rounded gradient outline on every content panel */
+body:has(.about-main) .about-hero,
+body:has(.about-main) .about-highlight,
+body:has(.about-main) .about-block,
+body:has(.about-main) .about-cta,
+body:has(.about-main) .legal-note{
+  border:1.5px solid transparent!important;
+  border-radius:22px!important;
+  background-clip:padding-box,border-box!important;
+  background-origin:border-box!important;
+  box-shadow:0 8px 24px rgba(23,39,71,.045)!important;
+}
+body:has(.about-main) .about-hero{background:linear-gradient(145deg,#fff 0%,#f5f8ff 100%) padding-box,var(--btp-card-gradient) border-box!important;padding:clamp(26px,4vw,44px)!important}
+body:has(.about-main) .about-highlight{background:linear-gradient(145deg,#fff 0%,#fff5f2 100%) padding-box,var(--btp-card-gradient) border-box!important;margin-bottom:32px!important}
+body:has(.about-main) .about-block{background:linear-gradient(145deg,#fff 0%,#fbfcff 100%) padding-box,var(--btp-card-gradient) border-box!important;padding:clamp(22px,2.5vw,30px)!important;margin:16px 0!important;grid-template-columns:50px minmax(0,1fr)!important;gap:20px!important}
+body:has(.about-main) .about-cta{background:linear-gradient(112deg,#172747 0%,#244c79 58%,#4b91d7 100%) padding-box,var(--btp-card-gradient) border-box!important;padding:clamp(24px,3.5vw,38px)!important}
+body:has(.about-main) .about-cta h2,body:has(.about-main) .about-cta p{color:#fff!important}
+body:has(.about-main) .legal-note{background:linear-gradient(145deg,#fffaf1 0%,#fff 100%) padding-box,var(--btp-card-gradient) border-box!important;padding:18px 20px!important}
+@media(max-width:640px){body:has(.about-main) .about-hero,body:has(.about-main) .about-highlight,body:has(.about-main) .about-block,body:has(.about-main) .about-cta,body:has(.about-main) .legal-note{border-radius:17px!important}body:has(.about-main) .about-block{grid-template-columns:30px minmax(0,1fr)!important;gap:12px!important}}
