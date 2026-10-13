@@ -564,3 +564,10 @@
 .experience-gold{background:linear-gradient(145deg,#fff 0%,#fff8e9 100%)!important;border-color:#f1e6cb!important}
 .experience-mint{background:linear-gradient(145deg,#fff 0%,#eefaf6 100%)!important;border-color:#d7eee6!important}
 @media(max-width:650px){.choice-bottom{align-items:flex-start!important;flex-direction:column!important;gap:18px!important}.choice-bottom .button{width:100%;justify-content:center;box-sizing:border-box}.choice-link{font-size:11px!important}}
+
+
+/* v29: carry the coral-to-blue accent around every side of both choice cards */
+.choice-card{border:1.5px solid transparent!important;background-clip:padding-box!important;position:relative!important;isolation:isolate!important}
+.choice-card:before{content:""!important;position:absolute!important;inset:0!important;padding:1.5px!important;border-radius:inherit!important;background:linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%)!important;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)!important;-webkit-mask-composite:xor!important;mask-composite:exclude!important;pointer-events:none!important;z-index:2!important}
+.choice-card:after{height:0!important;display:none!important}
+.choice-card:hover:before{background:linear-gradient(125deg,#ff5159 0%,#c95f91 48%,#347fca 100%)!important}
