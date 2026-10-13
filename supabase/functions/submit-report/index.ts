@@ -19,7 +19,7 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  if(!company)return json({error:"Company name is required for IT employee reports"},400,origin);
  const stages=["applying","interview","offer","notice-period","joining","working","layoff"],types=["service","product","gcc","startup"],bands=["0-2","3-5","6-10","10+"],cities=["Bengaluru","Hyderabad","Pune","Chennai","Mumbai","Delhi NCR","Kolkata","Noida","Gurugram","Kochi","Ahmedabad","Other"],outcomes=["resolved","lost-job","left-company","ongoing"];
  if(typeof stage!=="string"||!stages.includes(stage))return json({error:"Choose the stage where this happened."},400,origin);
- if(typeof event_month!=="string"||!/^(\\d{4})-(0[1-9]|1[0-2])$/.test(event_month)||event_month<"2000-01"||event_month>new Date().toISOString().slice(0,7))return json({error:"Choose a valid event month and year, not a future month."},400,origin);
+ if(typeof event_month!=="string"||!/^(\d{4})-(0[1-9]|1[0-2])$/.test(event_month)||event_month<"2000-01"||event_month>new Date().toISOString().slice(0,7))return json({error:"Choose a valid event month and year, not a future month."},400,origin);
  if(company_type!=null&&!types.includes(company_type))return json({error:"Invalid company type."},400,origin);
  if(experience_band!=null&&!bands.includes(experience_band))return json({error:"Invalid experience band."},400,origin);
  if(city!=null&&!cities.includes(city))return json({error:"Invalid city selection."},400,origin);
