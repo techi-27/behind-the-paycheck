@@ -11,14 +11,14 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  if(Number(req.headers.get("content-length")||"0")>12000)return json({error:"Request too large"},413,origin);
  let b:any;try{b=await req.json()}catch{return json({error:"Invalid JSON"},400,origin)}if(!b||typeof b!=="object"||Array.isArray(b))return json({error:"Invalid request body"},400,origin);
  const {report_group,story_text,issue_ids,gender,experience_range,company_name,client_token}=b;
- if(!["personal","it"].includes(report_group))return json({error:"Invalid report type"},400,origin);
+ if(report_group!=="it")return json({error:"Only IT employee experiences are accepted"},400,origin);
  if(typeof story_text!=="string"||story_text.trim().length<20||story_text.trim().length>600)return json({error:"Report text must be between 20 and 600 characters"},400,origin);
  if(!Array.isArray(issue_ids)||issue_ids.length<1||issue_ids.length>3||issue_ids.some((x:any)=>typeof x!=="string"||x.length>100)||new Set(issue_ids).size!==issue_ids.length)return json({error:"Choose between one and three distinct issue categories"},400,origin);
  if(!enumValue(gender,["woman","man","non-binary","prefer-not-to-say"]))return json({error:"Invalid gender selection"},400,origin);
  if(!enumValue(experience_range,["0-1","1-3","3-5","5-8","8+","prefer-not-to-say"]))return json({error:"Invalid experience selection"},400,origin);
  if(typeof client_token!=="string"||!/^[0-9a-f-]{36}$/i.test(client_token))return json({error:"Submission token missing. Refresh and try again."},400,origin);
  let company:string|null=null;if(company_name!==undefined&&company_name!==null){if(typeof company_name!=="string"||company_name.trim().length>100)return json({error:"Invalid company name"},400,origin);company=company_name.trim().replace(/\s+/g," ")||null}
- if(report_group==="it"&&!company)return json({error:"Company name is required for IT workplace reports"},400,origin);
+ if(!company)return json({error:"Company name is required for IT employee reports"},400,origin);
  const db=ctx.supabaseAdmin,tokenHash=await hashToken(client_token);
  const old=await db.from("submission_guard").select("created_at").eq("client_token_hash",tokenHash).eq("report_group",report_group).maybeSingle();
  if(old.error){console.error("Submission guard lookup failed:",old.error.message);return json({error:"Submission protection unavailable"},503,origin)}
