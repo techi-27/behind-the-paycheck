@@ -730,3 +730,26 @@ body:has(.sample-insight-grid) .sample-insight-grid>article:nth-child(2){
     linear-gradient(145deg,#fff 0%,#fff5f2 100%) padding-box,
     linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%) border-box!important;
 }
+
+
+/* v37: correct target is the dashboard's three top-level statistic cards */
+body:has(.dashboard-stats) .dashboard-stats>div{
+  border:2px solid transparent!important;
+  border-radius:26px!important;
+  background:
+    linear-gradient(145deg,#fff 0%,#fff7f4 100%) padding-box,
+    linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%) border-box!important;
+  overflow:hidden!important;
+  box-shadow:0 10px 26px rgba(23,39,71,.055)!important;
+}
+body:has(.dashboard-stats) .dashboard-stats>div:nth-child(2){
+  background:
+    linear-gradient(145deg,#fff 0%,#fff5f2 100%) padding-box,
+    linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%) border-box!important;
+}
+body:has(.dashboard-stats) .dashboard-stats>div:nth-child(3){
+  background:
+    linear-gradient(145deg,#fff 0%,#f2f7ff 100%) padding-box,
+    linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%) border-box!important;
+}
+body:has(.dashboard-stats) .dashboard-stats>div:after{display:none!important}
