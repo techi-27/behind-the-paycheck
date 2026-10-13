@@ -571,3 +571,30 @@
 .choice-card:before{content:""!important;position:absolute!important;inset:0!important;padding:1.5px!important;border-radius:inherit!important;background:linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%)!important;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)!important;-webkit-mask-composite:xor!important;mask-composite:exclude!important;pointer-events:none!important;z-index:2!important}
 .choice-card:after{height:0!important;display:none!important}
 .choice-card:hover:before{background:linear-gradient(125deg,#ff5159 0%,#c95f91 48%,#347fca 100%)!important}
+
+
+/* v30: consistent rounded coral-pink-blue gradient outlines across cards and tabs site-wide */
+:root{--btp-gradient:linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%)}
+.choice-card,.overview-trend-card,.experience-card,.section-card,.support-section,.privacy-section,.choice-bottom,
+.chart-panel,.dashboard-panel,.core-product-section,.policy-profile,.policy-tracker-item,.story-card,
+.feedback-context,.privacy-card,.select-issue-card,.selection-switch a,.tracker-filter,.story-tag,
+.company-leaderboard-panel,.support-qr-panel{
+  border:1.5px solid transparent!important;
+  background-image:linear-gradient(#fff,#fff),var(--btp-gradient)!important;
+  background-origin:border-box!important;
+  background-clip:padding-box,border-box!important;
+  border-radius:inherit;
+}
+.choice-card.personal-choice{background-image:linear-gradient(145deg,#fff 0%,#fff4f2 100%),var(--btp-gradient)!important}
+.choice-card.it-choice{background-image:linear-gradient(145deg,#fff 0%,#f2f7ff 100%),var(--btp-gradient)!important}
+.overview-trend-card:first-child{background-image:linear-gradient(145deg,#fff 0%,#fff7f5 100%),var(--btp-gradient)!important}
+.overview-trend-card:nth-child(2){background-image:linear-gradient(145deg,#fff 0%,#fff9ed 100%),var(--btp-gradient)!important}
+.overview-trend-card:nth-child(3){background-image:linear-gradient(145deg,#fff 0%,#f3f8ff 100%),var(--btp-gradient)!important}
+.overview-trend-card.company-trend-card{background-image:linear-gradient(145deg,#fff 0%,#f6f4ff 100%),var(--btp-gradient)!important}
+.experience-coral{background-image:linear-gradient(145deg,#fff 0%,#fff3f1 100%),var(--btp-gradient)!important}
+.experience-blue{background-image:linear-gradient(145deg,#fff 0%,#f1f6ff 100%),var(--btp-gradient)!important}
+.experience-gold{background-image:linear-gradient(145deg,#fff 0%,#fff8e9 100%),var(--btp-gradient)!important}
+.experience-mint{background-image:linear-gradient(145deg,#fff 0%,#eefaf6 100%),var(--btp-gradient)!important}
+.choice-bottom{background-image:linear-gradient(112deg,#172747 0%,#244c79 58%,#4b91d7 100%),var(--btp-gradient)!important}
+.selection-switch a.selected,.tracker-filter.is-active,.select-issue-card:has(input:checked){background-image:linear-gradient(#f2f6ff,#f2f6ff),var(--btp-gradient)!important}
+.selection-switch a:not(.selected),.tracker-filter{background-image:linear-gradient(#fff,#fff),var(--btp-gradient)!important}
