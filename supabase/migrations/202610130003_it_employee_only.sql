@@ -2,6 +2,7 @@
 -- Run this migration in Supabase after deploying the updated Edge Functions.
 -- Historical personal reports remain stored privately for audit/history but are excluded from public trends.
 update public.issues set active = false where report_group = 'personal';
+update public.issues set report_group = 'it', label = 'Other IT job or workplace issue', active = true where id = 'other-it';
 
 -- Add specific IT job-search and compensation categories for more useful trends.
 insert into public.issues (id, report_group, label, active) values
