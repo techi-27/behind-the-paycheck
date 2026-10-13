@@ -708,3 +708,25 @@ body:has(.about-main) .about-cta{background:linear-gradient(112deg,#172747 0%,#2
 body:has(.about-main) .about-cta h2,body:has(.about-main) .about-cta p{color:#fff!important}
 body:has(.about-main) .legal-note{background:linear-gradient(145deg,#fffaf1 0%,#fff 100%) padding-box,var(--btp-card-gradient) border-box!important;padding:18px 20px!important}
 @media(max-width:640px){body:has(.about-main) .about-hero,body:has(.about-main) .about-highlight,body:has(.about-main) .about-block,body:has(.about-main) .about-cta,body:has(.about-main) .legal-note{border-radius:17px!important}body:has(.about-main) .about-block{grid-template-columns:30px minmax(0,1fr)!important;gap:12px!important}}
+
+
+/* v36: full rounded gradient outline for Explore Reports summary metric cards */
+body:has(.sample-insight-grid) .sample-insight-grid>article{
+  border:2px solid transparent!important;
+  border-radius:26px!important;
+  background:
+    linear-gradient(145deg,#fff 0%,#fff7f4 100%) padding-box,
+    linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%) border-box!important;
+  overflow:hidden!important;
+  box-shadow:0 10px 26px rgba(23,39,71,.055)!important;
+}
+body:has(.sample-insight-grid) .sample-insight-grid>article:nth-child(3n){
+  background:
+    linear-gradient(145deg,#fff 0%,#f2f7ff 100%) padding-box,
+    linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%) border-box!important;
+}
+body:has(.sample-insight-grid) .sample-insight-grid>article:nth-child(2){
+  background:
+    linear-gradient(145deg,#fff 0%,#fff5f2 100%) padding-box,
+    linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%) border-box!important;
+}
