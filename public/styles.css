@@ -612,3 +612,25 @@
 .support-section,.privacy-section,.choice-bottom,.chart-panel,.dashboard-panel,.core-product-section,
 .company-leaderboard-panel{border-radius:24px!important}
 .choice-card:before{border-radius:inherit!important}
+
+
+/* v32: bring About and Explore Reports sections into the same rounded gradient design */
+.about-hero,.about-block,.about-cta,.legal-note,
+.sample-insight-grid>article,.dashboard-hero,.chart-panel,.dashboard-panel,.stories-panel,
+.company-leaderboard-panel,.demographic-trends,.report-trend,.chart-empty{
+  border:1.5px solid transparent!important;
+  background-image:linear-gradient(#fff,#fff),var(--btp-gradient)!important;
+  background-origin:border-box!important;
+  background-clip:padding-box,border-box!important;
+  border-radius:22px!important;
+}
+.about-hero{background-image:linear-gradient(145deg,#fff 0%,#f4f7ff 100%),var(--btp-gradient)!important;padding:clamp(24px,4vw,46px)!important}
+.about-block{background-image:linear-gradient(145deg,#fff 0%,#fbfcff 100%),var(--btp-gradient)!important;padding:24px!important;margin:14px 0!important;box-shadow:0 8px 22px rgba(23,39,71,.035)}
+.about-cta{background-image:linear-gradient(112deg,#172747 0%,#244c79 58%,#4b91d7 100%),var(--btp-gradient)!important;padding:clamp(22px,3.5vw,38px)!important}
+.about-cta h2,.about-cta p{color:#fff!important}
+.sample-insight-grid>article{background-image:linear-gradient(145deg,#fff 0%,#f7f9ff 100%),var(--btp-gradient)!important;padding:20px!important}
+.chart-panel,.dashboard-panel,.stories-panel,.company-leaderboard-panel{padding:clamp(18px,2.2vw,28px)!important}
+.chart-panel-donut{align-self:start!important;height:fit-content!important;min-height:0!important}
+.policy-profile,.policy-tracker-item,.story-card{border-radius:16px!important}
+.about-number{border-radius:12px!important}
+@media(max-width:640px){.about-hero,.about-block,.about-cta,.sample-insight-grid>article,.chart-panel,.dashboard-panel{border-radius:17px!important}.about-block{padding:18px!important}}
