@@ -68,6 +68,17 @@ main.choice-main>.quick-pulse{left:auto!important;right:auto!important;transform
 @media(max-width:700px){
  main.choice-main>.choice-cards{grid-template-columns:minmax(0,1fr)!important}
 }
+</style><style>
+/* Make the entire top hero share the same outer grid as the sections below.
+   The previous max-width on .choice-hero was making its title and choice cards narrower. */
+main.choice-main>.choice-hero{width:100%!important;max-width:none!important;margin:0!important;box-sizing:border-box!important}
+main.choice-main>.choice-hero>.choice-cards{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important}
+main.choice-main>.choice-hero>.privacy-note{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important}
+main.choice-main>.choice-hero>.eyebrow,
+main.choice-main>.choice-hero>h1,
+main.choice-main>.choice-hero>p:not(.privacy-note),
+main.choice-main>.choice-hero>.overview-trends{max-width:none!important;box-sizing:border-box!important}
+@media(max-width:700px){main.choice-main>.choice-hero>.choice-cards{grid-template-columns:minmax(0,1fr)!important}}
 </style></head><body><header class="site-header"><a class="brand" href="./index.html"><span class="brand-mark">B</span><span>Behind the <strong>Paycheck</strong></span></a><nav aria-label="Main navigation"><a href="./index.html" class="nav-link">Overview</a><a href="./about.html" class="nav-link">About</a><a href="./dashboard.html" class="nav-link nav-cta">View trends ↗</a></nav></header><main class="choice-main wrap"><section class="choice-hero"><div class="eyebrow"><span class="live-dot"></span> INDIA'S IT EMPLOYEE REALITY INDEX</div><h1>Behind every salary,<br><span>there is a story.</span></h1><p>Behind the paycheck are people navigating 90-day notice periods, uncertain offers, low salary hikes, unpaid extra hours and pressure that follows them home. This project aims to make those experiences visible—without pretending one story speaks for everyone.</p><section class="overview-trends" id="overview-trends" aria-labelledby="overview-trends-title">
 <div class="overview-trends-heading"><div><span class="eyebrow">THE REALITY AT A GLANCE</span><h2 id="overview-trends-title">Every report can reveal a pattern.</h2><p>Explore which issues appear most often and how experiences vary across groups.</p></div><a class="trend-explore-link" href="./dashboard.html">Explore employee trends ↗</a></div>
 <div class="overview-trend-cards">
