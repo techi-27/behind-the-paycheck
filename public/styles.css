@@ -448,3 +448,38 @@
 .sample-mode-link:hover{background:#f4f8ff;border-color:#b9cde8}
 .dashboard-hero-pills{flex-wrap:wrap}
 @media(max-width:640px){.sample-mode-link{width:100%;box-sizing:border-box}}
+
+
+/* Overview redesign: compact analytics tiles instead of tall dashboard cards */
+.overview-trends{padding:24px 25px 18px!important;background:#f8faff!important;border:1px solid #e3eaf4!important;border-radius:22px!important;box-shadow:none!important}
+.overview-trends-heading{align-items:center!important;margin-bottom:18px!important}
+.overview-trend-cards{grid-template-columns:repeat(4,minmax(0,1fr))!important;align-items:stretch!important;gap:12px!important}
+.overview-trend-card{position:relative!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:9px!important;box-sizing:border-box!important;height:222px!important;min-height:222px!important;padding:17px 16px 14px!important;border:1px solid #e1e8f3!important;border-radius:16px!important;background:#fff!important;box-shadow:0 3px 10px rgba(23,39,71,.025)!important}
+.overview-trend-card:before{display:none!important}
+.overview-trend-card .trend-card-label{font-size:9px!important;line-height:1.35!important;letter-spacing:.075em!important;color:#74839a!important;min-height:0!important}
+.overview-trend-card>strong{font-size:30px!important;line-height:1.1!important;letter-spacing:-.7px!important;color:#172747!important}
+.overview-trend-card .trend-issue-name{font-size:17px!important;line-height:1.25!important;min-height:43px!important;max-width:100%!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
+.trend-mini-line{height:22px!important;margin:0!important;gap:4px!important}
+.trend-mini-line i{width:11px!important;height:8px!important}
+.trend-mini-line i:nth-child(2){height:13px!important}.trend-mini-line i:nth-child(3){height:10px!important}.trend-mini-line i:nth-child(4){height:21px!important}.trend-mini-line i:nth-child(5){height:14px!important}.trend-mini-line i:nth-child(6){height:17px!important}.trend-mini-line i:nth-child(7){height:11px!important}
+.trend-bar-stack{height:20px!important;gap:5px!important;margin:0!important}
+.trend-bar-stack i{width:12px!important;height:16px!important}.trend-bar-stack i:nth-child(2){height:13px!important}.trend-bar-stack i:nth-child(3){height:10px!important}
+.overview-trend-card>small{margin-top:auto!important;padding-top:4px!important;font-size:9px!important;line-height:1.4!important;color:#8290a4!important}
+.trend-demographic-pills{display:flex!important;gap:5px!important;flex-wrap:wrap!important}
+.trend-demographic-pills span{padding:5px 7px!important;font-size:9px!important;line-height:1.2!important;border:1px solid #e5ebf4!important;border-radius:8px!important;background:#f9fbff!important;color:#5e7089!important}
+.company-trend-card{gap:7px!important;background:#fff!important}
+.company-card-top{width:100%!important;align-items:center!important;min-height:0!important}
+.company-top-badge{font-size:8px!important;padding:4px 7px!important}
+.company-card-title{font-size:15px!important;line-height:1.2!important;min-height:0!important;margin:0!important}
+.company-card-subtitle{font-size:9px!important;line-height:1.35!important;min-height:0!important;margin:0!important}
+.overview-company-ranking{gap:5px!important;margin:0!important}
+.overview-company-row{padding:5px 7px!important;border-radius:8px!important;gap:6px!important;background:#f9fbff!important;border:1px solid #edf1f7!important}
+.overview-company-rank{width:19px!important;height:19px!important;border-radius:6px!important;font-size:9px!important}
+.overview-company-name{font-size:9px!important;line-height:1.2!important}
+.overview-company-count{font-size:9px!important;white-space:nowrap!important}
+.overview-company-count small{font-size:8px!important}
+.company-ranking-empty{padding:7px!important;font-size:9px!important}
+.company-trend-card>small{margin-top:auto!important;padding-top:2px!important;font-size:8px!important;line-height:1.3!important}
+.overview-data-note{margin-top:12px!important;font-size:9px!important;line-height:1.5!important}
+@media(max-width:1100px){.overview-trend-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}.overview-trend-card{height:205px!important;min-height:205px!important}}
+@media(max-width:620px){.overview-trends{padding:17px!important}.overview-trend-cards{grid-template-columns:1fr!important;gap:9px!important}.overview-trend-card{height:auto!important;min-height:0!important;padding:16px!important}.overview-trend-card>small{margin-top:0!important}.overview-trend-card .trend-issue-name{min-height:0!important}.company-trend-card>small{margin-top:0!important}}
