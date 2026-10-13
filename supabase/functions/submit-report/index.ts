@@ -20,6 +20,9 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  let company:string|null=null;if(company_name!==undefined&&company_name!==null){if(typeof company_name!=="string"||company_name.trim().length>100)return json({error:"Invalid company name"},400,origin);company=company_name.trim().replace(/\s+/g," ")||null}
  if(!company)return json({error:"Company name is required for IT employee reports"},400,origin);
  const db=ctx.supabaseAdmin,tokenHash=await hashToken(client_token);
+ // Opportunistically purge expired anti-abuse hashes on each submission.
+ const purge=await db.from("submission_guard").delete().lt("created_at",new Date(Date.now()-30*86400000).toISOString());
+ if(purge.error){console.error("Expired submission guard cleanup failed:",purge.error.message);return json({error:"Submission protection unavailable"},503,origin)}
  const old=await db.from("submission_guard").select("created_at").eq("client_token_hash",tokenHash).eq("report_group",report_group).maybeSingle();
  if(old.error){console.error("Submission guard lookup failed:",old.error.message);return json({error:"Submission protection unavailable"},503,origin)}
  if(old.data&&Date.now()-new Date(old.data.created_at).getTime()<30*86400000)return json({error:"This browser has already submitted this report type recently. Please wait 30 days before submitting it again."},429,origin);
