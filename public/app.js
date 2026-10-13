@@ -117,12 +117,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!byId("consent")?.checked) { message.className = "form-message error"; message.textContent = "Please confirm you understand the local-reporting terms."; return; }
     submit.disabled = true;
     const company = byId("company-name")?.value.trim() || "";
-    const story = { id: `demo-${Date.now()}`, categoryIds: categories, text, company, createdAt: new Date().toISOString() };
+    const story = { id: `report-${Date.now()}`, categoryIds: categories, text, company, createdAt: new Date().toISOString() };
     const stories = readStories();
     stories.push(story);
     if (!writeStories(stories)) {
       message.className = "form-message error";
-      message.textContent = "This browser couldn't save the demo. Check local storage settings and try again.";
+      message.textContent = "This browser couldn't save the report. Check local storage settings and try again.";
       submit.disabled = false;
       return;
     }
