@@ -35,14 +35,14 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  if(!needsHike&&hike_percent!=null)return json({error:"Hike percentage is only accepted for salary-related issues."},400,origin);
  if(needsOfferDelay&&(!isInt(offer_delay_days,0,730)||offer_delay_days==null))return json({error:"Enter the offer-letter delay in days."},400,origin);
  if(!needsOfferDelay&&offer_delay_days!=null)return json({error:"Offer delay is only accepted for offer-letter issues."},400,origin);
- const db=ctx.supabaseAdmin,tokenHash=await hashToken(client_token);
- // Opportunistically purge expired anti-abuse hashes on each submission.
- const purge=await db.from("submission_guard").delete().lt("created_at",new Date(Date.now()-30*86400000).toISOString());
+ const db=ctx.supabaseAdmin,tokenHash=await hashToken(client_token+"|"+company.toLowerCase().replace(/\\s+/g," "));
+ // Keep only short-lived hashes. The token hash is scoped to normalized company name; no IP or raw device token is stored.
+ const purge=await db.from("submission_guard").delete().lt("created_at",new Date(Date.now()-7*86400000).toISOString());
  if(purge.error){console.error("Expired submission guard cleanup failed:",purge.error.message);return json({error:"Submission protection unavailable"},503,origin)}
  const old=await db.from("submission_guard").select("created_at").eq("client_token_hash",tokenHash).eq("report_group",report_group).maybeSingle();
  if(old.error){console.error("Submission guard lookup failed:",old.error.message);return json({error:"Submission protection unavailable"},503,origin)}
- if(old.data&&Date.now()-new Date(old.data.created_at).getTime()<30*86400000)return json({error:"This browser has already submitted this report type recently. Please wait 30 days before submitting it again."},429,origin);
- if(old.data){const rm=await db.from("submission_guard").delete().eq("client_token_hash",tokenHash).eq("report_group",report_group);if(rm.error)return json({error:"Submission protection unavailable"},503,origin)}
+ if(old.data&&Date.now()-new Date(old.data.created_at).getTime()<7*86400000)return json({error:"This browser has already submitted a report for this company in the last 7 days. You can submit another company report next week."},429,origin);
+ 
  const reserve=await db.from("submission_guard").insert({client_token_hash:tokenHash,report_group}).select("client_token_hash").single();
  if(reserve.error){if(reserve.error.code==="23505")return json({error:"This browser has already submitted this report type recently."},429,origin);console.error("Submission guard insert failed:",reserve.error.message);return json({error:"Submission protection unavailable"},503,origin)}
  const fail=async(message:string,status=503)=>{await db.from("submission_guard").delete().eq("client_token_hash",tokenHash).eq("report_group",report_group);return json({error:message},status,origin)};
