@@ -8,7 +8,8 @@ const ISSUE_LABELS = {
   "unpaid-salary": "Unpaid or delayed salary", "work-pressure": "Work pressure & burnout",
   "job-insecurity": "Job insecurity", "salary-growth": "Salary growth", other: "Other struggles"
 };
-const STORAGE_KEY = "btp-ui-demo-stories";
+const STORAGE_KEY = "btp-real-reports-local";
+try { localStorage.removeItem("btp-ui-demo-stories"); } catch {}
 const EMPLOYER_ISSUES = ["notice-joining", "offer-mismatch", "no-feedback", "documents-early", "unpaid-overtime", "low-hike"];
 const numberFormat = new Intl.NumberFormat("en-IN");
 const byId = id => document.getElementById(id);
@@ -41,7 +42,7 @@ function updateStats(stories) {
   stories.forEach(story => (story.categoryIds || []).forEach(category => counts[category] = (counts[category] || 0) + 1));
   Object.keys(ISSUE_LABELS).forEach(category => {
     const element = byId(`count-${category}`);
-    if (element) element.innerHTML = `${numberFormat.format(counts[category] || 0)} <small>demo reports</small>`;
+    if (element) element.innerHTML = `${numberFormat.format(counts[category] || 0)} <small>reports saved in this browser</small>`;
   });
 }
 function renderCompanyLeaderboard() {
@@ -60,10 +61,10 @@ function renderCompanyLeaderboard() {
   });
   const ranked = [...counts.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
   if (!ranked.length) {
-    container.innerHTML = '<div class="leaderboard-empty"><strong>No company rankings for this issue yet</strong><p>Submit a browser demo report with a company name and this issue selected to preview the ranking. This is not a shared public leaderboard.</p></div>';
+    container.innerHTML = '<div class="leaderboard-empty"><strong>No company rankings for this issue yet</strong><p>Submit a report saved in this browser with a company name and this issue selected to preview the ranking. This is not a shared public leaderboard.</p></div>';
     return;
   }
-  container.innerHTML = ranked.map((item, index) => `<div class="company-rank-row"><span class="rank-number">${index + 1}</span><span class="rank-company"><strong>${escapeHTML(item.name)}</strong><small>Employee-reported demo entries</small></span><span class="rank-count"><strong>${numberFormat.format(item.count)}</strong><small>reports</small></span></div>`).join("");
+  container.innerHTML = ranked.map((item, index) => `<div class="company-rank-row"><span class="rank-number">${index + 1}</span><span class="rank-company"><strong>${escapeHTML(item.name)}</strong><small>Reports saved in this browser</small></span><span class="rank-count"><strong>${numberFormat.format(item.count)}</strong><small>reports</small></span></div>`).join("");
 }
 function renderStories() {
   const container = byId("stories-list");
@@ -71,26 +72,26 @@ function renderStories() {
   const filter = byId("story-filter")?.value || "";
   const stories = readStories().filter(story => !filter || (story.categoryIds || []).includes(filter));
   if (!stories.length) {
-    container.innerHTML = `<div class="empty-state"><span class="empty-icon">✳</span><h3>No browser demo reports yet</h3><p>Try a submission to preview how stories will appear. It will stay in this browser and won't be sent to a server.</p><a href="#share-story" class="text-link">Try the demo form ↗</a></div>`;
+    container.innerHTML = `<div class="empty-state"><span class="empty-icon">✳</span><h3>No browser reports saved in this browser yet</h3><p>Try a submission to preview how stories will appear. It will stay in this browser and won't be sent to a server.</p><a href="#share-story" class="text-link">Share an experience ↗</a></div>`;
     return;
   }
   container.innerHTML = stories.slice().reverse().map(story => {
     const labels = (story.categoryIds || []).map(id => `<span class="story-tag">${escapeHTML(ISSUE_LABELS[id] || id)}</span>`).join("");
-    const companyLine = story.company ? `<p class="story-company">Company mentioned: ${escapeHTML(story.company)} · local demo only</p>` : "";
-    return `<article class="story-card"><div class="story-card-head"><span class="anonymous-label"><span class="anon-avatar">D</span> Browser demo</span><time>${escapeHTML(formatDate(story.createdAt))}</time></div><div class="story-tags">${labels}</div>${companyLine}<p class="story-copy">${escapeHTML(story.text)}</p><div class="story-card-foot"><span>Saved only in this browser</span><span class="story-id">DEMO</span></div></article>`;
+    const companyLine = story.company ? `<p class="story-company">Company mentioned: ${escapeHTML(story.company)} · saved in this browser</p>` : "";
+    return `<article class="story-card"><div class="story-card-head"><span class="anonymous-label"><span class="anon-avatar">D</span> This browser</span><time>${escapeHTML(formatDate(story.createdAt))}</time></div><div class="story-tags">${labels}</div>${companyLine}<p class="story-copy">${escapeHTML(story.text)}</p><div class="story-card-foot"><span>Saved only in this browser</span><span class="story-id">LOCAL</span></div></article>`;
   }).join("");
 }
-function showDemoNotice() {
+function showLocalNotice() {
   const notice = document.createElement("div");
   notice.className = "demo-notice";
   notice.setAttribute("role", "status");
-  notice.innerHTML = "<strong>Prototype mode:</strong> submissions are saved only in this browser. They are not uploaded, shared publicly, or collected into a central dashboard.";
+  notice.innerHTML = "<strong>Local reporting:</strong> submissions are saved only in this browser. They are not uploaded, shared publicly, or collected into a central dashboard.";
   const header = document.querySelector(".site-header");
   if (header) header.insertAdjacentElement("afterend", notice);
 }
 document.addEventListener("DOMContentLoaded", () => {
   setText("year", String(new Date().getFullYear()));
-  showDemoNotice();
+  showLocalNotice();
   const textArea = byId("story-text");
   const form = byId("story-form");
   const message = byId("form-message");
@@ -113,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const text = textArea?.value.trim() || "";
     if (!categories.length) { message.className = "form-message error"; message.textContent = "Please select at least one issue."; return; }
     if (text.length < 20) { message.className = "form-message error"; message.textContent = "Please share at least 20 characters."; textArea?.focus(); return; }
-    if (!byId("consent")?.checked) { message.className = "form-message error"; message.textContent = "Please confirm you understand the demo submission terms."; return; }
+    if (!byId("consent")?.checked) { message.className = "form-message error"; message.textContent = "Please confirm you understand the local-reporting terms."; return; }
     submit.disabled = true;
     const company = byId("company-name")?.value.trim() || "";
     const story = { id: `demo-${Date.now()}`, categoryIds: categories, text, company, createdAt: new Date().toISOString() };
@@ -128,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     form.reset();
     setText("char-count", "0 / 3000");
     message.className = "form-message success";
-    message.textContent = "Demo saved in this browser only. It has not been uploaded or published publicly.";
+    message.textContent = "Report saved in this browser only. It has not been uploaded or published publicly.";
     refresh();
     submit.disabled = false;
   });
