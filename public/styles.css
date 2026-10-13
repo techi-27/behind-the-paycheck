@@ -753,3 +753,11 @@ body:has(.dashboard-stats) .dashboard-stats>div:nth-child(3){
     linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%) border-box!important;
 }
 body:has(.dashboard-stats) .dashboard-stats>div:after{display:none!important}
+
+/* Four-page navigation: keep every destination visible on desktop and mobile */
+.site-header{height:auto!important;min-height:66px;flex-wrap:wrap;padding-top:10px!important;padding-bottom:10px!important;row-gap:10px!important}
+.site-header nav{display:flex!important;flex-wrap:wrap!important;align-items:center;justify-content:flex-end;gap:8px!important;min-width:0;max-width:100%}
+.site-header .nav-link{display:inline-flex!important;align-items:center;justify-content:center;min-height:36px;padding:8px 10px;border-radius:9px;color:#435572;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap}
+.site-header .nav-link.active{background:#eef4ff;color:#245ba7}
+.site-header .nav-link.nav-cta{min-height:36px!important;padding:8px 11px!important;font-size:12px!important}
+@media(max-width:760px){.site-header{position:relative!important;align-items:flex-start!important;gap:10px!important;padding:12px 14px!important}.site-header .brand{flex:1 0 100%;min-width:0}.site-header nav{width:100%;justify-content:flex-start!important;gap:6px!important}.site-header .nav-link{font-size:11px;padding:7px 9px;white-space:normal}.site-header .nav-link.nav-cta{font-size:11px!important;padding:7px 9px!important}}
