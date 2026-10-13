@@ -46,6 +46,11 @@ This repository keeps the existing static HTML/CSS/JavaScript frontend on GitHub
 6. Configure backups and test a restore.
 7. Create a separate production Supabase project only after the development schema and functions have been reviewed.
 
+
+## Current homepage survey update
+
+The homepage now lets an employee choose up to three IT incident categories and optionally share their experience range. The additional category IDs are defined in `supabase/migrations/202610130004_it_incident_categories.sql`. **Apply this migration to the Supabase project before using the new Offer release, Moonlighting, or PF overlap options**, otherwise the submission function may reject those categories as unknown/inactive. The public-trends function only counts approved IT reports and suppresses issue/company buckets below five reports.
+
 ## Applying future migrations
 
 Use timestamped SQL files in `supabase/migrations/`. In development, test each migration before applying it to production. For a CLI workflow, follow the official Supabase guide: https://supabase.com/docs/guides/deployment/database-migrations.
