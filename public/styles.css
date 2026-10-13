@@ -483,3 +483,35 @@
 .overview-data-note{margin-top:12px!important;font-size:9px!important;line-height:1.5!important}
 @media(max-width:1100px){.overview-trend-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}.overview-trend-card{height:205px!important;min-height:205px!important}}
 @media(max-width:620px){.overview-trends{padding:17px!important}.overview-trend-cards{grid-template-columns:1fr!important;gap:9px!important}.overview-trend-card{height:auto!important;min-height:0!important;padding:16px!important}.overview-trend-card>small{margin-top:0!important}.overview-trend-card .trend-issue-name{min-height:0!important}.company-trend-card>small{margin-top:0!important}}
+
+
+/* v26: switch the Overview from tall dashboard panels to compact KPI tiles */
+.overview-trends{padding:22px 23px 16px!important;background:#f7f9fd!important;border:1px solid #e5ebf4!important;border-radius:20px!important}
+.overview-trends-heading{margin-bottom:15px!important}
+.overview-trend-cards{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;align-items:stretch!important}
+.overview-trend-card{height:auto!important;min-height:0!important;min-width:0!important;align-self:stretch!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;gap:8px!important;padding:15px 15px 13px!important;border:1px solid #e2e8f1!important;border-radius:13px!important;background:#fff!important;box-shadow:none!important}
+.overview-trend-card:first-child,.overview-trend-card:nth-child(2),.overview-trend-card:nth-child(3),.overview-trend-card.company-trend-card{background:#fff!important}
+.overview-trend-card:before{display:none!important}
+.overview-trend-card .trend-card-label{display:block!important;min-height:0!important;font-size:9px!important;line-height:1.4!important;letter-spacing:.07em!important;color:#7a879a!important}
+.overview-trend-card>strong{display:block!important;font-size:27px!important;line-height:1.12!important;letter-spacing:-.6px!important;color:#192b49!important}
+.overview-trend-card .trend-issue-name{display:block!important;min-height:40px!important;font-size:16px!important;line-height:1.25!important;letter-spacing:-.2px!important;overflow-wrap:anywhere!important}
+.trend-mini-line,.trend-bar-stack{display:none!important}
+.overview-trend-card>small{margin:0!important;padding:0!important;font-size:10px!important;line-height:1.45!important;color:#7c899d!important}
+.trend-demographic-pills{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:5px!important;margin-top:1px!important}
+.trend-demographic-pills span{padding:5px 7px!important;font-size:9px!important;line-height:1.2!important;border-radius:7px!important;background:#f7f9fc!important;border:1px solid #e8edf5!important;white-space:normal!important}
+.company-trend-card{gap:7px!important}
+.company-card-top{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;min-height:0!important}
+.company-top-badge{font-size:8px!important;padding:4px 6px!important;white-space:nowrap!important}
+.company-card-title{font-size:15px!important;line-height:1.2!important;min-height:0!important;margin:0!important}
+.company-card-subtitle{font-size:10px!important;line-height:1.35!important;min-height:0!important;margin:0!important}
+.overview-company-ranking{display:flex!important;flex-direction:column!important;gap:4px!important;margin:0!important}
+.overview-company-row{display:grid!important;grid-template-columns:20px minmax(0,1fr) auto!important;align-items:center!important;gap:6px!important;padding:5px 6px!important;border:1px solid #edf1f6!important;border-radius:7px!important;background:#fafbfe!important}
+.overview-company-rank{width:18px!important;height:18px!important;display:grid!important;place-items:center!important;border-radius:5px!important;font-size:8px!important}
+.overview-company-name{min-width:0!important;font-size:9px!important;line-height:1.2!important;overflow-wrap:anywhere!important}
+.overview-company-count{font-size:9px!important;white-space:nowrap!important}
+.overview-company-count small{font-size:8px!important}
+.company-ranking-empty{padding:7px!important;font-size:9px!important;line-height:1.35!important}
+.company-trend-card>small{margin:0!important;padding:0!important;font-size:8px!important;line-height:1.35!important}
+.overview-data-note{margin-top:11px!important;font-size:9px!important;line-height:1.5!important}
+@media(max-width:1050px){.overview-trend-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}.overview-trend-card{height:auto!important;min-height:0!important}}
+@media(max-width:620px){.overview-trends{padding:16px!important}.overview-trend-cards{grid-template-columns:1fr!important;gap:8px!important}.overview-trend-card{padding:14px!important}.overview-trend-card .trend-issue-name{min-height:0!important}.trend-demographic-pills{flex-direction:row!important;flex-wrap:wrap!important}.company-trend-card>small{margin-top:0!important}}
