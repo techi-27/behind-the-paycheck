@@ -634,3 +634,22 @@
 .policy-profile,.policy-tracker-item,.story-card{border-radius:16px!important}
 .about-number{border-radius:12px!important}
 @media(max-width:640px){.about-hero,.about-block,.about-cta,.sample-insight-grid>article,.chart-panel,.dashboard-panel{border-radius:17px!important}.about-block{padding:18px!important}}
+
+
+/* v33: finish gradient outline on BOTH rows of Explore Reports summary cards */
+.sample-insight-grid{gap:14px!important}
+.sample-insight-grid>article{
+  position:relative!important;
+  border:1.5px solid transparent!important;
+  border-radius:22px!important;
+  background-image:linear-gradient(145deg,#fff 0%,#f7f9ff 100%),var(--btp-gradient)!important;
+  background-origin:border-box!important;
+  background-clip:padding-box,border-box!important;
+  box-shadow:0 8px 22px rgba(23,39,71,.045)!important;
+  overflow:hidden!important;
+}
+.sample-insight-grid>article:nth-child(1),
+.sample-insight-grid>article:nth-child(2){background-image:linear-gradient(145deg,#fff 0%,#fff5f2 100%),var(--btp-gradient)!important}
+.sample-insight-grid>article:nth-child(3),
+.sample-insight-grid>article:nth-child(4){background-image:linear-gradient(145deg,#fff 0%,#f2f7ff 100%),var(--btp-gradient)!important}
+@media(max-width:640px){.sample-insight-grid>article{border-radius:17px!important}}
