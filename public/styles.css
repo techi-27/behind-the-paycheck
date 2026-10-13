@@ -753,31 +753,3 @@ body:has(.dashboard-stats) .dashboard-stats>div:nth-child(3){
     linear-gradient(125deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%) border-box!important;
 }
 body:has(.dashboard-stats) .dashboard-stats>div:after{display:none!important}
-
-
-/* Behind the Paycheck — global dark editorial archive theme */
-:root{color-scheme:dark;--ink:#f5f2f1;--muted:#aaa4a4;--soft:#202020;--paper:#1b1b1b;--line:#3a3636;--coral:#ff2632;--blue:#a6a6a6;--shadow:none}
-html,body{background:#191919!important;color:#f4f1ef!important}
-body{font-family:Arial,Helvetica,sans-serif!important}
-.site-header{background:#191919!important;color:#f4f1ef!important;border-bottom:1px solid #383838!important;box-shadow:none!important}
-.site-header .brand,.site-header .nav-link,.site-header nav a{color:#f4f1ef!important}
-.site-header .nav-link:hover,.site-header nav a:hover{color:#ff2632!important}
-.site-footer{background:#171717!important;color:#a7a2a2!important;border-top:1px solid #383838!important}
-.site-footer a{color:#f4f1ef!important}
-.eyebrow,.choice-hero .eyebrow,.overview-trends .eyebrow{color:#ff2632!important;letter-spacing:2px!important}
-h1,h2,h3,h4,strong{color:#f6f4f3}
-p,.section-intro,.choice-hero>p,.overview-trends-heading p,.overview-data-note{color:#aaa5a5}
-.section-card,.choice-card,.overview-trends,.hero-visual-card,.quick-pulse,.index-stories,.privacy-section,.choice-bottom,.chart-panel,.dashboard-panel,.core-product-section,.about-card,.content-card{background:#202020!important;color:#f4f1ef!important;border:1px solid #393939!important;border-radius:8px!important;box-shadow:none!important}
-.hero-visual-item,.trend-quick-card,.hero-visual-footer,.hero-visual-top{background:#252525!important;color:#f4f1ef!important;border-color:#414141!important}
-.hero-visual-item p,.hero-visual-card p,.trend-quick-card p{color:#aaa5a5!important}
-.button,.button-primary,.nav-cta{background:#c51c26!important;color:#fff!important;border-color:#c51c26!important;border-radius:5px!important;box-shadow:none!important}
-.button-outline,.trend-explore-link,.trend-details-link{background:#202020!important;color:#ff3943!important;border:1px solid #5a3335!important}
-input,select,textarea{background:#171717!important;color:#f5f5f5!important;border-color:#494343!important}
-input::placeholder,textarea::placeholder{color:#888!important}
-.casefile-stats{background:#202020!important;border-color:#424242!important}
-.casefile-stat strong{color:#ff2632!important}
-.casefile-stat span{color:#aaa5a5!important}
-.it-issue-ribbon{background:#c51c26!important;color:#fff!important}
-a{transition:color .15s ease}
-a:hover{color:#ff4a52}
-@media(max-width:650px){.choice-main,.dashboard-main{width:calc(100% - 28px)!important}}
