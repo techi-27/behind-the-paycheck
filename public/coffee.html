@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#172747">
+<meta name="description" content="Support Behind the Paycheck and help keep IT employee experience trends accessible.">
+<title>Buy Me a Coffee — Behind the Paycheck</title>
+<link rel="stylesheet" href="./styles.css?v=45">
+<style>
+.coffee-main{width:min(900px,calc(100% - 32px));margin:0 auto;padding:clamp(38px,7vw,82px) 0 72px}
+.coffee-card{padding:clamp(24px,5vw,48px);border:1px solid #dce6f5;border-radius:24px;background:linear-gradient(145deg,#fff 0%,#f7f9ff 75%,#fff6f4 100%);box-shadow:0 18px 50px rgba(23,39,71,.07)}
+.coffee-icon{display:grid;place-items:center;width:64px;height:64px;border-radius:20px;background:#fff0ed;font-size:32px}
+.coffee-main h1{margin:22px 0 12px;color:#172747;font-size:clamp(34px,6vw,58px);line-height:1.06;letter-spacing:-1.8px}
+.coffee-main h1 span{color:#e56b75}
+.coffee-lead{max-width:650px;color:#64748b;font-size:17px;line-height:1.8}
+.coffee-reasons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:28px 0}
+.coffee-reason{padding:15px;border:1px solid #e2e9f4;border-radius:14px;background:#fff}
+.coffee-reason strong{display:block;color:#172747;font-size:13px}
+.coffee-reason p{margin:7px 0 0;color:#718198;font-size:12px;line-height:1.6}
+.coffee-note{padding:14px 16px;border-radius:12px;background:#fff7e7;color:#775b22;font-size:13px;line-height:1.7}
+.coffee-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.coffee-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:12px;text-decoration:none;font-weight:750}
+.coffee-primary{background:linear-gradient(110deg,#ff626d,#d96c9e 52%,#4e91d9);color:#fff}
+.coffee-secondary{border:1px solid #d7e2f2;background:#fff;color:#24456f}
+@media(max-width:650px){.coffee-reasons{grid-template-columns:1fr}.coffee-main h1{letter-spacing:-1px}}
+</style>
+</head>
+<body>
+<header class="site-header">
+<a class="brand" href="./index.html"><span class="brand-mark">B</span><span>Behind the <strong>Paycheck</strong></span></a>
+<nav aria-label="Main navigation"><a href="./index.html" class="nav-link">Home</a><a href="./it-employee-struggles.html" class="nav-link">Share Experience</a><a href="./about.html" class="nav-link">About</a><a href="./coffee.html" class="nav-link nav-cta active" aria-current="page">Buy Me a Coffee ☕</a></nav>
+</header>
+<main class="coffee-main">
+<section class="coffee-card">
+<div class="coffee-icon" aria-hidden="true">☕</div>
+<div class="eyebrow">SUPPORT THE PROJECT</div>
+<h1>Help keep employee<br><span>experiences visible.</span></h1>
+<p class="coffee-lead">Behind the Paycheck is built to make IT job-search and workplace experiences easier to understand through responsibly reviewed community reports. If this project helps you, you can support its upkeep.</p>
+<div class="coffee-reasons">
+<div class="coffee-reason"><strong>Hosting & maintenance</strong><p>Help keep the website reliable and accessible.</p></div>
+<div class="coffee-reason"><strong>Review & moderation</strong><p>Support careful handling of sensitive employee reports.</p></div>
+<div class="coffee-reason"><strong>Better insights</strong><p>Help improve trend summaries and policy tracking.</p></div>
+</div>
+<div class="coffee-note"><strong>Donations are optional.</strong> They do not affect report approval, company visibility, or access to trends. No payment is collected on this page yet because the creator's payment link has not been configured.</div>
+<div class="coffee-actions"><a class="coffee-primary" href="./index.html">Explore IT trends ↗</a><a class="coffee-secondary" href="./it-employee-struggles.html">Share your experience</a></div>
+</section>
+</main>
+<footer class="site-footer"><div class="wrap footer-inner"><a class="brand footer-brand" href="./index.html"><span class="brand-mark">B</span><span>Behind the <strong>Paycheck</strong></span></a><div class="footer-links"><a href="./index.html">Home</a><a href="./about.html">About</a><a href="./it-employee-struggles.html">Share Experience</a></div><span class="copyright">© <span id="year"></span> Behind the Paycheck</span></div></footer>
+<script>document.getElementById("year").textContent=new Date().getFullYear();</script>
+</body>
+</html>
