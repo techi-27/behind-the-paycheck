@@ -8,14 +8,14 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  if(origin&&!allowedOrigins.has(origin))return json({error:"Origin not allowed"},403,origin);
  if(req.method!=="GET")return json({error:"Method not allowed"},405,origin);
  const db=ctx.supabaseAdmin;
- const {data:reports,error}=await db.from("reports").select("id,report_group,company_id,created_at,gender,experience_range").eq("status","approved");
+ const {data:reports,error}=await db.from("reports").select("id,report_group,company_id,created_at,gender,experience_range").eq("status","approved").eq("report_group","it");
  if(error){console.error("Trend aggregation failed:",error.message);return json({error:"Trends unavailable"},503,origin)}
  const rows=reports||[],ids=rows.map((r:any)=>r.id),companyIds=[...new Set(rows.map((r:any)=>r.company_id).filter(Boolean))];
  let links:any[]=[];if(ids.length){const q=await db.from("report_issues").select("report_id,issue_id").in("report_id",ids);if(q.error){console.error("Issue aggregation failed:",q.error.message);return json({error:"Trends unavailable"},503,origin)}links=q.data||[]}
  const iq=await db.from("issues").select("id,label").eq("active",true);if(iq.error)return json({error:"Trends unavailable"},503,origin);
  let companies:any[]=[];if(companyIds.length){const q=await db.from("companies").select("id,display_name").in("id",companyIds);if(q.error)return json({error:"Trends unavailable"},503,origin);companies=q.data||[]}
  const labelMap=new Map((iq.data||[]).map((x:any)=>[x.id,x.label])),companyMap=new Map(companies.map((x:any)=>[x.id,x.display_name])),counts=new Map<string,{count:number;personal_count:number;it_count:number}>(),reportGroups=new Map(rows.map((r:any)=>[r.id,r.report_group]));
- for(const l of links){const v=counts.get(l.issue_id)||{count:0,personal_count:0,it_count:0};v.count++;if(reportGroups.get(l.report_id)==="personal")v.personal_count++;else if(reportGroups.get(l.report_id)==="it")v.it_count++;counts.set(l.issue_id,v)}
+ for(const l of links){const v=counts.get(l.issue_id)||{count:0,personal_count:0,it_count:0};v.count++;if(reportGroups.get(l.report_id)==="it")v.it_count++;counts.set(l.issue_id,v)}
  const issues=[...counts.entries()].filter(([,v])=>v.count>=5).map(([id,v])=>({id,label:labelMap.get(id)||id,...v})).sort((a,b)=>b.count-a.count);
  const cc=new Map<string,{company:string,count:number}>();for(const r of rows){if(r.report_group!=="it"||!r.company_id)continue;const name=companyMap.get(r.company_id);if(!name)continue;const key=String(name).toLowerCase(),v=cc.get(key)||{company:name,count:0};v.count++;cc.set(key,v)}
  const publicCompanies=[...cc.values()].filter(x=>x.count>=5).sort((a,b)=>b.count-a.count).slice(0,10);
@@ -25,5 +25,5 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
 
  let policy_changes:any[]=[];const pq=await db.from("policy_changes").select("id,title,description,evidence_url,effective_date,submitted_at,company_id").eq("status","approved").not("evidence_url","is",null).order("effective_date",{ascending:false,nullsFirst:false}).limit(20);if(pq.error){console.error("Policy tracker aggregation failed:",pq.error.message);return json({error:"Trends unavailable"},503,origin)}if((pq.data||[]).length){const pids=[...new Set((pq.data||[]).map((p:any)=>p.company_id).filter(Boolean))];let pcompanies:any[]=[];if(pids.length){const pc=await db.from("companies").select("id,display_name").in("id",pids);if(pc.error)return json({error:"Trends unavailable"},503,origin);pcompanies=pc.data||[]}const pmap=new Map(pcompanies.map((c:any)=>[c.id,c.display_name]));policy_changes=(pq.data||[]).map((p:any)=>({id:p.id,title:p.title,description:p.description,evidence_url:p.evidence_url,effective_date:p.effective_date,company:pmap.get(p.company_id)||"Company not specified"}))}
  const daily=[];for(let i=6;i>=0;i--){const d=new Date(Date.now()-i*86400000),key=d.toLocaleDateString("en-CA",{timeZone:"Asia/Kolkata"});daily.push({day:d.toLocaleDateString("en-IN",{day:"numeric",month:"short",timeZone:"Asia/Kolkata"}),count:(()=>{const c=rows.filter((r:any)=>new Date(r.created_at).toLocaleDateString("en-CA",{timeZone:"Asia/Kolkata"})===key).length;return c>=5?c:null})()})}
- return json({total_reports:rows.length,personal_reports:rows.filter((r:any)=>r.report_group==="personal").length,it_reports:rows.filter((r:any)=>r.report_group==="it").length,total_issue_selections:links.length,issues,companies:publicCompanies,gender_trends,experience_trends,policy_changes,daily},200,origin);
+ return json({total_reports:rows.length,personal_reports:0,it_reports:rows.length,total_issue_selections:links.length,issues,companies:publicCompanies,gender_trends,experience_trends,policy_changes,daily},200,origin);
 }));
