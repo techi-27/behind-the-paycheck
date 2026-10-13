@@ -598,3 +598,17 @@
 .choice-bottom{background-image:linear-gradient(112deg,#172747 0%,#244c79 58%,#4b91d7 100%),var(--btp-gradient)!important}
 .selection-switch a.selected,.tracker-filter.is-active,.select-issue-card:has(input:checked){background-image:linear-gradient(#f2f6ff,#f2f6ff),var(--btp-gradient)!important}
 .selection-switch a:not(.selected),.tracker-filter{background-image:linear-gradient(#fff,#fff),var(--btp-gradient)!important}
+
+
+/* v31: consistent rounded corners on gradient-outlined panels and cards */
+.choice-card,.overview-trend-card,.experience-card,.section-card,.support-section,.privacy-section,
+.choice-bottom,.chart-panel,.dashboard-panel,.core-product-section,.policy-profile,.policy-tracker-item,
+.story-card,.feedback-context,.privacy-card,.select-issue-card,.selection-switch a,.tracker-filter,
+.story-tag,.company-leaderboard-panel,.support-qr-panel{
+  border-radius:20px!important;
+}
+.overview-trend-card,.policy-profile,.policy-tracker-item,.select-issue-card,.selection-switch a,
+.tracker-filter,.story-tag{border-radius:14px!important}
+.support-section,.privacy-section,.choice-bottom,.chart-panel,.dashboard-panel,.core-product-section,
+.company-leaderboard-panel{border-radius:24px!important}
+.choice-card:before{border-radius:inherit!important}
