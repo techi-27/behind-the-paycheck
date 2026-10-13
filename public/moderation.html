@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Private moderation — Behind the Paycheck</title>
+<style>
+:root{color-scheme:light;--ink:#172747;--muted:#667796;--line:#dfe6f1;--bg:#f4f7fc;--coral:#ff625e;--blue:#4d91d9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}header{background:#fff;border-bottom:1px solid var(--line);padding:18px 24px}header div,main{max-width:980px;margin:auto}.brand{font-weight:800;letter-spacing:-.03em}.brand span{color:var(--coral)}main{padding:28px 18px 64px}.subtle{color:var(--muted)}.panel,.report{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 10px 30px #1727470b}.panel{max-width:460px;margin:28px auto}.grid{display:grid;gap:16px}.report{margin:16px 0}.report-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:start}.pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#edf3fb;color:#355c8d;font-size:12px;font-weight:700;text-transform:uppercase}.story{white-space:pre-wrap;overflow-wrap:anywhere;background:#f8faff;border:1px solid var(--line);padding:15px;border-radius:12px;margin:14px 0}.meta{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:13px}.tag{background:#f1f4f9;border-radius:8px;padding:4px 8px;font-size:13px}label{display:block;font-size:14px;font-weight:650;margin:12px 0 5px}input,textarea{width:100%;border:1px solid #cdd7e7;border-radius:10px;padding:11px;font:inherit;color:var(--ink);background:#fff}button{border:0;border-radius:10px;padding:11px 15px;font:inherit;font-weight:700;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.primary{background:linear-gradient(110deg,var(--coral),var(--blue));color:#fff}.secondary{background:#f1f4f9;color:var(--ink)}.danger{background:#fff0ef;color:#a82e2b}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}.notice{padding:12px 14px;border-radius:10px;background:#eef5ff;color:#355c8d;margin:14px 0}.error{background:#fff0ef;color:#a82e2b}.success{background:#eaf8ef;color:#216b40}.hidden{display:none!important}h1{font-size:clamp(26px,4vw,36px);letter-spacing:-.04em;margin:0 0 8px}h2{font-size:19px;margin:0}small{color:var(--muted)}.top-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}@media(max-width:600px){header{padding:14px}main{padding:20px 12px}.panel,.report{padding:16px}}
+</style>
+</head>
+<body>
+<header><div class="brand">Behind the Paycheck<span>.</span> <span style="color:#667796;font-weight:500;letter-spacing:0"> / Private moderation</span></div></header>
+<main>
+<section id="login-panel" class="panel">
+<h1>Moderator sign in</h1><p class="subtle">This page is for authorized reviewers only. Report text stays private and is never shown on the public dashboard.</p>
+<form id="login-form"><label for="email">Authorized email</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required><div class="actions"><button class="primary" id="login-button" type="submit">Sign in</button></div></form>
+<div id="login-message" class="notice hidden" role="status"></div>
+<p><small>You must already have a Supabase Auth account, and your email must be added to the server-side moderator allowlist.</small></p>
+</section>
+<section id="queue-panel" class="hidden">
+<div class="top-actions"><div><h1>Pending reports</h1><p class="subtle">Review each submission. Approve only credible, non-identifying reports. Reject spam, private information, or unsupported personal allegations.</p></div><div class="actions"><button id="refresh-button" class="secondary" type="button">Refresh queue</button><button id="signout-button" class="secondary" type="button">Sign out</button></div></div>
+<div id="queue-message" class="notice hidden" role="status"></div><div id="report-list"></div>
+</section>
+</main>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const SUPABASE_URL="https://udfyvxigvaoftgjbhcki.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_gth6QGoCqdrqNhpg0LaU3A_KgmYlbn-";
+const supabase=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const fn=SUPABASE_URL+"/functions/v1/moderate-report";
+const $=id=>document.getElementById(id);
+let busy=false;
+function message(id,text,type="notice"){const el=$(id);el.textContent=text;el.className="notice "+type}
+async function call(action,extra={}){const {data:{session}}=await supabase.auth.getSession();if(!session)throw Error("Your session expired. Sign in again.");const r=await fetch(fn,{method:action==="queue"?"GET":"POST",headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:"Bearer "+session.access_token,"Content-Type":"application/json"},...(action==="queue"?{}:{body:JSON.stringify(extra)})});let body={};try{body=await r.json()}catch{}if(!r.ok)throw Error(body.error||"Request failed ("+r.status+")");return body}
+function safe(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function field(r,key,label){return r[key]?'<span class="tag">'+label+': '+safe(r[key])+'</span>':""}
+function render(rows){const root=$("report-list");if(!rows.length){root.innerHTML='<div class="panel"><h2>No pending reports</h2><p class="subtle">You are all caught up. New submissions will appear here after refresh.</p></div>';return}root.innerHTML=rows.map(r=>{const company=Array.isArray(r.companies)?r.companies[0]?.display_name:r.companies?.display_name;const issues=(r.report_issues||[]).map(x=>x.issues?.label||x.issue_id).join(", ");return '<article class="report" data-id="'+safe(r.id)+'"><div class="report-head"><div><span class="pill">'+safe(r.report_group)+'</span> <small>Submitted '+safe(new Date(r.created_at).toLocaleString("en-IN",{timeZone:"Asia/Kolkata"}))+'</small><h2 style="margin-top:8px">'+safe(company|| (r.report_group==="personal"?"Personal report":"Company not recorded"))+'</h2></div><div class="meta">'+field(r,"gender","Gender")+field(r,"experience_range","Experience")+'</div></div><p><strong>Selected issues</strong>: '+safe(issues||"Not available")+'</p><div class="story">'+safe(r.story_text)+'</div><label for="reason-'+safe(r.id)+'">Review note (optional, max 500 characters)</label><textarea id="reason-'+safe(r.id)+'" maxlength="500" rows="2" placeholder="Brief internal reason for approval or rejection"></textarea><div class="actions"><button class="primary" data-action="approved" type="button">Approve report</button><button class="danger" data-action="rejected" type="button">Reject report</button></div></article>'}).join("");root.querySelectorAll("button[data-action]").forEach(btn=>btn.addEventListener("click",async()=>{if(busy)return;const card=btn.closest("[data-id]"),id=card.dataset.id,action=btn.dataset.action,reason=$("reason-"+id).value.trim();if(action==="rejected"&&!reason&&!confirm("Reject this report without an internal reason?"))return;if(action==="approved"&&!confirm("Approve this report? Its category counts may appear publicly. The story itself will remain private."))return;busy=true;card.querySelectorAll("button").forEach(b=>b.disabled=true);try{const result=await call("moderate",{report_id:id,action,reason});card.remove();message("queue-message",result.warning||("Report "+action+". The public trends endpoint will count it on its next refresh."),result.warning?"error":"success");if(!root.querySelector("[data-id]"))render([])}catch(e){message("queue-message",e.message,"error");card.querySelectorAll("button").forEach(b=>b.disabled=false)}finally{busy=false}}))}
+async function loadQueue(){message("queue-message","Loading pending reports…");try{const d=await call("queue");render(d.reports||[]);$("queue-message").className="notice hidden"}catch(e){message("queue-message",e.message,"error")}}
+$("login-form").addEventListener("submit",async e=>{e.preventDefault();const btn=$("login-button");btn.disabled=true;try{const {error}=await supabase.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;$("login-panel").classList.add("hidden");$("queue-panel").classList.remove("hidden");await loadQueue()}catch(e){message("login-message",e.message,"error")}finally{btn.disabled=false}});
+$("refresh-button").addEventListener("click",loadQueue);
+$("signout-button").addEventListener("click",async()=>{await supabase.auth.signOut();$("queue-panel").classList.add("hidden");$("login-panel").classList.remove("hidden")});
+supabase.auth.onAuthStateChange((_event,session)=>{if(session){$("login-panel").classList.add("hidden");$("queue-panel").classList.remove("hidden");loadQueue()}});
+</script>
+</body></html>
