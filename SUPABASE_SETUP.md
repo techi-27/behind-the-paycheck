@@ -51,6 +51,28 @@ This repository keeps the existing static HTML/CSS/JavaScript frontend on GitHub
 
 The homepage now lets an employee choose up to three IT incident categories and optionally share their experience range. The additional category IDs are defined in `supabase/migrations/202610130004_it_incident_categories.sql`. **Apply this migration to the Supabase project before using the new Offer release, Moonlighting, or PF overlap options**, otherwise the submission function may reject those categories as unknown/inactive. The public-trends function only counts approved IT reports and suppresses issue/company buckets below five reports.
 
+## Company policy profiles and policy tracker
+
+The homepage now includes a searchable Company Policy Profiles section and a Policy Change Tracker. The frontend reads only aggregate data from the `public-trends` Edge Function:
+
+- Company profiles appear only after at least five approved IT reports for that company.
+- A company's issue breakdown appears only after at least five approved reports for that issue.
+- Policy changes appear only when the entry is approved and has an evidence URL.
+- Company responses appear only after approval and are shown only for companies that meet the report threshold.
+- Employee-reported patterns are not presented as proof of misconduct or as a verified company rating.
+
+### Deploy the updated aggregate function
+
+The source change in `supabase/functions/public-trends/index.ts` does not deploy automatically when committed to GitHub. After linking the Supabase CLI to the correct project, deploy the function:
+
+```bash
+supabase login
+supabase link --project-ref YOUR_PROJECT_REF
+supabase functions deploy public-trends
+```
+
+Do not put a Supabase service-role key in frontend code or commit it to GitHub. Confirm the deployed function returns `company_profiles`, `policy_changes`, and `company_responses` before considering the feature live. Policy changes and company responses must be reviewed and approved in the database before they become public; add only evidence-backed policy updates and avoid publishing confidential company information.
+
 ## Applying future migrations
 
 Use timestamped SQL files in `supabase/migrations/`. In development, test each migration before applying it to production. For a CLI workflow, follow the official Supabase guide: https://supabase.com/docs/guides/deployment/database-migrations.
