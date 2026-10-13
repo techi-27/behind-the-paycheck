@@ -653,3 +653,37 @@
 .sample-insight-grid>article:nth-child(3),
 .sample-insight-grid>article:nth-child(4){background-image:linear-gradient(145deg,#fff 0%,#f2f7ff 100%),var(--btp-gradient)!important}
 @media(max-width:640px){.sample-insight-grid>article{border-radius:17px!important}}
+
+
+/* v34: enforce full-perimeter gradient borders on every Explore Reports panel */
+:root{--btp-card-gradient:linear-gradient(120deg,#ff6264 0%,#d66b91 48%,#4b91d7 100%)}
+body:has(.dashboard-charts) .sample-insight-grid>article,
+body:has(.dashboard-charts) .chart-panel,
+body:has(.dashboard-charts) .dashboard-panel,
+body:has(.dashboard-charts) .core-product-section,
+body:has(.dashboard-charts) .stories-panel,
+body:has(.dashboard-charts) .company-leaderboard-panel,
+body:has(.dashboard-charts) .demographic-panel,
+body:has(.dashboard-charts) .trend-panel{
+  border:1.5px solid transparent!important;
+  border-radius:22px!important;
+  background:linear-gradient(145deg,#fff 0%,#f7f9ff 100%) padding-box,var(--btp-card-gradient) border-box!important;
+  box-shadow:0 9px 26px rgba(23,39,71,.045)!important;
+}
+body:has(.dashboard-charts) .sample-insight-grid>article:nth-child(1),
+body:has(.dashboard-charts) .sample-insight-grid>article:nth-child(2){
+  background:linear-gradient(145deg,#fff 0%,#fff5f2 100%) padding-box,var(--btp-card-gradient) border-box!important;
+}
+body:has(.dashboard-charts) .sample-insight-grid>article:nth-child(3),
+body:has(.dashboard-charts) .sample-insight-grid>article:nth-child(4){
+  background:linear-gradient(145deg,#fff 0%,#f2f7ff 100%) padding-box,var(--btp-card-gradient) border-box!important;
+}
+body:has(.dashboard-charts) .chart-panel,
+body:has(.dashboard-charts) .dashboard-panel,
+body:has(.dashboard-charts) .core-product-section,
+body:has(.dashboard-charts) .stories-panel,
+body:has(.dashboard-charts) .company-leaderboard-panel,
+body:has(.dashboard-charts) .demographic-panel,
+body:has(.dashboard-charts) .trend-panel{padding:clamp(20px,2.5vw,30px)!important}
+body:has(.dashboard-charts) .dashboard-hero{border-radius:22px!important}
+@media(max-width:640px){body:has(.dashboard-charts) .sample-insight-grid>article,body:has(.dashboard-charts) .chart-panel,body:has(.dashboard-charts) .dashboard-panel,body:has(.dashboard-charts) .core-product-section,body:has(.dashboard-charts) .stories-panel{border-radius:17px!important}}
