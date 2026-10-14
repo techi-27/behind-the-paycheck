@@ -1,3 +1,4 @@
+import { groupMeetsPublicThreshold, tierForApprovedReportCount } from "../_shared/reality-thresholds.ts";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "npm:@supabase/server@1";
 const allowedOrigins=new Set(["https://behindthepaycheck.in","https://www.behindthepaycheck.in","http://localhost:5500","http://127.0.0.1:5500"]);
@@ -98,10 +99,10 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  let company_responses:any[]=[];if(!companyQ.error){company_responses=(companyQ.data||[]).map((x:any)=>({company:companyMap.get(x.company_id)||null,response_text:x.response_text,submitted_at:x.submitted_at})).filter((x:any)=>x.company&&companyProfiles.some(c=>c.company===x.company))}
  const currentMonth=new Date().toISOString().slice(0,7),currentMonthRows=problemRows.filter((r:any)=>String(r.event_month||"").slice(0,7)===currentMonth);
  const approvedCount=rows.length;
- const tier=approvedCount>=200?200:approvedCount>=25?25:approvedCount>=15?15:approvedCount>=5?5:0;
+ const tier=tierForApprovedReportCount(approvedCount);
  const weekAgo=Date.now()-7*24*60*60*1000;
  const reports_this_week=rows.filter((r:any)=>{const t=Date.parse(String(r.created_at||""));return Number.isFinite(t)&&t>=weekAgo}).length;
- const chartEligible=(count:number)=>Number.isFinite(count)&&count>=MIN;
+ const chartEligible=(count:number)=>groupMeetsPublicThreshold(count);
  const safeIssues=tier>=5?issueCounts.filter((x:any)=>chartEligible(Number(x.count))):[];
  const safeStageIssues=tier>=15?stage_issue_trends.filter((x:any)=>x.issues.some((it:any)=>chartEligible(Number(it.count)))):[];
  const safeMonthly=tier>=15?monthly_trends.filter((x:any)=>chartEligible(Number(x.count))):[];
