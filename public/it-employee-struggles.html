@@ -106,7 +106,8 @@
   <div id="withdrawal-result" class="withdrawal-result" hidden></div>
   <section class="government-poll-card"><p class="flow-kicker">SEPARATE COMMUNITY POLL</p><h2>What support should the government prioritise?</h2><p class="flow-help">This anonymous poll is not linked to a company report.</p><form id="government-poll-form"><div class="flow-chip-grid"><label class="poll-option"><input type="radio" name="poll-option" value="layoff-insurance" required><span>Layoff insurance</span></label><label class="poll-option"><input type="radio" name="poll-option" value="notice-regulation"><span>Notice-period regulation</span></label><label class="poll-option"><input type="radio" name="poll-option" value="severance-tax-relief"><span>Tax relief on severance</span></label><label class="poll-option"><input type="radio" name="poll-option" value="faster-grievance-portal"><span>Faster grievance portal</span></label><label class="poll-option"><input type="radio" name="poll-option" value="other"><span>Other</span></label></div><label for="poll-other">If Other, describe briefly (optional)</label><input id="poll-other" maxlength="120" placeholder="Up to 120 characters"><button class="button button-primary" type="submit">Submit anonymous vote</button></form><div id="poll-message" class="flow-message" role="status"></div><div id="poll-results" class="poll-results"></div></section>
   <p class="selection-privacy">No account is required. Posts are labelled “Anonymous, user-submitted, not verified”. Save your one-time withdrawal code after submission if you may want to remove your post later.</p>
-</main><footer class="site-footer"><div class="wrap footer-inner"><a class="brand footer-brand" href="./index.html"><span class="brand-mark">B</span><span>Behind the <strong>Paycheck</strong></span></a><p>Employee experiences, handled thoughtfully.</p><div class="footer-links"><a href="./index.html">Index</a><a href="./about.html">About</a><a href="./dashboard.html">Report dashboard</a></div><span class="copyright">© <span id="year"></span> Behind the Paycheck</span></div></footer><script>document.getElementById("year").textContent=new Date().getFullYear();</script><script id="btp-share-experience-app">
+</main><footer class="site-footer"><div class="wrap footer-inner"><a class="brand footer-brand" href="./index.html"><span class="brand-mark">B</span><span>Behind the <strong>Paycheck</strong></span></a><p>Employee experiences, handled thoughtfully.</p><div class="footer-links"><a href="./index.html">Index</a><a href="./about.html">About</a><a href="./dashboard.html">Report dashboard</a></div><span class="copyright">© <span id="year"></span> Behind the Paycheck</span></div></footer><script>document.getElementById("year").textContent=new Date().getFullYear();</script><script src="./btp-config.js"></script>
+<script id="btp-share-experience-app">
 (() => {
   "use strict";
   const $ = (s, root=document) => root.querySelector(s);
@@ -374,7 +375,7 @@
     return p;
   }
   function renderTurnstile() {
-    const sitekey=document.documentElement.dataset.turnstileSitekey||"";
+    const sitekey=(window.BTP_CONFIG&&window.BTP_CONFIG.turnstileSiteKey)||document.documentElement.dataset.turnstileSitekey||"";
     if(!sitekey){$("#turnstile-message").textContent="Security verification is not configured yet. Reports cannot be published until the site security key is configured.";return;}
     if(!window.turnstile){$("#turnstile-message").textContent="Loading security check…";setTimeout(renderTurnstile,500);return;}
     if(state.turnstileId!==null)return;
