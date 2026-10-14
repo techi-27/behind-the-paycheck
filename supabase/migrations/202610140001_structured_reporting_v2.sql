@@ -459,6 +459,23 @@ where report_type='good' and company_id is not null
 group by company_id
 having count(distinct id)>=5;
 
+create or replace view public.stage_issue_counts_min5
+with (security_invoker=true)
+as
+with issue_rows as (
+  select e.id,e.stage,e.primary_issue_id as issue_id
+  from public.trend_eligible_reports e
+  where e.report_type='problem' and e.stage is not null and e.primary_issue_id is not null
+  union
+  select e.id,e.stage,unnest(e.secondary_issue_ids) as issue_id
+  from public.trend_eligible_reports e
+  where e.report_type='problem' and e.stage is not null and cardinality(e.secondary_issue_ids)>0
+)
+select stage,issue_id,count(distinct id)::bigint as report_count
+from issue_rows
+group by stage,issue_id
+having count(distinct id)>=5;
+
 create or replace view public.company_counts_min5
 with (security_invoker=true)
 as
@@ -475,9 +492,9 @@ alter table public.post_flags enable row level security;
 alter table public.moderator_roles enable row level security;
 alter table public.government_poll enable row level security;
 revoke all on public.stage_issue_map,public.legacy_issue_map,public.post_flags,public.moderator_roles,public.government_poll from anon,authenticated;
-revoke all on public.trend_eligible_reports,public.company_issue_counts_min5,public.company_counts_min5,public.issue_counts_min5,public.company_positive_counts_min5 from anon,authenticated;
+revoke all on public.trend_eligible_reports,public.company_issue_counts_min5,public.company_counts_min5,public.issue_counts_min5,public.company_positive_counts_min5,public.stage_issue_counts_min5 from anon,authenticated;
 grant select,insert,update,delete on public.stage_issue_map,public.legacy_issue_map,public.post_flags,public.moderator_roles,public.government_poll to service_role;
-grant select on public.trend_eligible_reports,public.company_issue_counts_min5,public.company_counts_min5,public.issue_counts_min5,public.company_positive_counts_min5 to service_role;
+grant select on public.trend_eligible_reports,public.company_issue_counts_min5,public.company_counts_min5,public.issue_counts_min5,public.company_positive_counts_min5,public.stage_issue_counts_min5 to service_role;
 
 
 -- Extend the audit vocabulary for the new flagged/hidden moderation queue.
