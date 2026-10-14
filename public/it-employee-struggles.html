@@ -424,7 +424,7 @@
   }
   $("#btp-report-form").addEventListener("input",updateContributionPreview);
   $("#btp-report-form").addEventListener("change",updateContributionPreview);
-  $(".roast-prompt").forEach(btn=>btn.addEventListener("click",()=>{
+  $$(".roast-prompt").forEach(btn=>btn.addEventListener("click",()=>{
     const field=$("#roast-text");if(!field)return;
     field.value=btn.dataset.roastPrompt||"";
     field.dispatchEvent(new Event("input",{bubbles:true}));
