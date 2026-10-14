@@ -75,7 +75,8 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  const offerRows=problemRows.filter((r:any)=>Number.isFinite(r.offer_days_waited)||Number.isFinite(r.offer_delay_days));
  const offerDelay=offerRows.length>=MIN?{report_count:offerRows.length,median_delay_days:median(offerRows.map((r:any)=>Number.isFinite(r.offer_days_waited)?r.offer_days_waited:r.offer_delay_days).filter(Number.isFinite)),days_waited_distribution:[...new Set(offerRows.map((r:any)=>r.offer_wait_band).filter(Boolean))].map((band:string)=>({band,count:offerRows.filter((r:any)=>r.offer_wait_band===band).length})).filter(x=>x.count>=MIN)}:null;
  const bgvRows=problemRows.filter((r:any)=>Number.isFinite(r.bgv_days_pending));
- const bgvDelay=bgvRows.length>=MIN?{report_count:bgvRows.length,median_days_pending:median(bgvRows.map((r:any)=>r.bgv_days_pending)),blocked_joining_count:bgvRows.filter((r:any)=>r.bgv_blocked_joining===true).length,blocked_joining_denominator:bgvRows.filter((r:any)=>typeof r.bgv_blocked_joining==="boolean").length}:null;
+ const bgvAnswered=bgvRows.filter((r:any)=>typeof r.bgv_blocked_joining==="boolean");
+ const bgvDelay=bgvRows.length>=MIN?{report_count:bgvRows.length,median_days_pending:median(bgvRows.map((r:any)=>r.bgv_days_pending)),blocked_joining_count:bgvAnswered.length>=MIN?bgvAnswered.filter((r:any)=>r.bgv_blocked_joining===true).length:null,blocked_joining_denominator:bgvAnswered.length>=MIN?bgvAnswered.length:null}:null;
  const moon=problemRows.filter((r:any)=>r.moonlighting_outcome).reduce((m:Map<string,Set<string>>,r:any)=>{add(m,r.moonlighting_outcome,r.id);return m},new Map());
  const moonlighting_outcomes=[...moon.entries()].filter(([,set])=>set.size>=MIN).map(([outcome,set])=>({outcome,label:labels[outcome]||outcome,count:set.size}));
  const layoffs=problemRows.filter((r:any)=>r.stage==="layoff");
