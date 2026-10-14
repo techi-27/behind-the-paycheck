@@ -106,10 +106,362 @@
   <div id="withdrawal-result" class="withdrawal-result" hidden></div>
   <section class="government-poll-card"><p class="flow-kicker">SEPARATE COMMUNITY POLL</p><h2>What support should the government prioritise?</h2><p class="flow-help">This anonymous poll is not linked to a company report.</p><form id="government-poll-form"><div class="flow-chip-grid"><label class="poll-option"><input type="radio" name="poll-option" value="layoff-insurance" required><span>Layoff insurance</span></label><label class="poll-option"><input type="radio" name="poll-option" value="notice-regulation"><span>Notice-period regulation</span></label><label class="poll-option"><input type="radio" name="poll-option" value="severance-tax-relief"><span>Tax relief on severance</span></label><label class="poll-option"><input type="radio" name="poll-option" value="faster-grievance-portal"><span>Faster grievance portal</span></label><label class="poll-option"><input type="radio" name="poll-option" value="other"><span>Other</span></label></div><label for="poll-other">If Other, describe briefly (optional)</label><input id="poll-other" maxlength="120" placeholder="Up to 120 characters"><button class="button button-primary" type="submit">Submit anonymous vote</button></form><div id="poll-message" class="flow-message" role="status"></div><div id="poll-results" class="poll-results"></div></section>
   <p class="selection-privacy">No account is required. Posts are labelled “Anonymous, user-submitted, not verified”. Save your one-time withdrawal code after submission if you may want to remove your post later.</p>
-</main><footer class="site-footer"><div class="wrap footer-inner"><a class="brand footer-brand" href="./index.html"><span class="brand-mark">B</span><span>Behind the <strong>Paycheck</strong></span></a><p>Employee experiences, handled thoughtfully.</p><div class="footer-links"><a href="./index.html">Index</a><a href="./about.html">About</a><a href="./dashboard.html">Report dashboard</a></div><span class="copyright">© <span id="year"></span> Behind the Paycheck</span></div></footer><script>document.getElementById("year").textContent=new Date().getFullYear();</script><script>
-/* UI-only demo mode: network/database integration disabled. */
-</script>
-<script id="ui-only-demo-notice">
-(()=>{function show(){const main=document.querySelector('main')||document.body;const n=document.createElement('div');n.className='ui-demo-mode-banner';n.setAttribute('role','status');n.textContent='UI DEMO MODE — sample content only. Database connections are disabled; nothing is submitted or saved.';n.style.cssText='margin:12px auto;padding:10px 14px;max-width:1100px;border:1px dashed #d5a33d;border-radius:10px;background:#fff9e8;color:#76551a;font:600 12px/1.5 system-ui,sans-serif;text-align:center;';main.prepend(n);document.querySelectorAll('form').forEach(f=>f.addEventListener('submit',e=>{e.preventDefault();let p=f.querySelector('.ui-demo-submit-notice');if(!p){p=document.createElement('p');p.className='ui-demo-submit-notice';p.setAttribute('role','status');f.appendChild(p)}p.textContent='UI demo only: nothing was submitted or saved.'},true));}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show,{once:true});else show();})();
+</main><footer class="site-footer"><div class="wrap footer-inner"><a class="brand footer-brand" href="./index.html"><span class="brand-mark">B</span><span>Behind the <strong>Paycheck</strong></span></a><p>Employee experiences, handled thoughtfully.</p><div class="footer-links"><a href="./index.html">Index</a><a href="./about.html">About</a><a href="./dashboard.html">Report dashboard</a></div><span class="copyright">© <span id="year"></span> Behind the Paycheck</span></div></footer><script>document.getElementById("year").textContent=new Date().getFullYear();</script><script id="btp-share-experience-app">
+(() => {
+  "use strict";
+  const $ = (s, root=document) => root.querySelector(s);
+  const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+  const form = $("#btp-report-form");
+  if (!form) return;
+
+  const ISSUE_GROUPS = {
+    applying: [
+      ["recruiter-ghosting","Recruiter stopped responding","No update after contact or screening."],
+      ["fake-interview-call","Misleading interview call","The role or interview details did not match."],
+      ["no-feedback","No interview feedback","No decision or feedback after a round."],
+      ["too-many-rounds","Too many interview rounds","The process kept expanding without clarity."],
+      ["documents-early","Documents requested too early","Sensitive documents requested before a credible offer."],
+      ["budget-revealed-late","Salary budget revealed late","Compensation range appeared late in the process."]
+    ],
+    interview: [
+      ["recruiter-ghosting","Recruiter stopped responding","No update after contact or screening."],
+      ["fake-interview-call","Misleading interview call","The role or interview details did not match."],
+      ["no-feedback","No interview feedback","No decision or feedback after a round."],
+      ["too-many-rounds","Too many interview rounds","The process kept expanding without clarity."],
+      ["documents-early","Documents requested too early","Sensitive documents requested before a credible offer."],
+      ["budget-revealed-late","Salary budget revealed late","Compensation range appeared late in the process."]
+    ],
+    offer: [
+      ["offer-letter-delay","Offer letter delay","Verbal confirmation but written offer delayed."],
+      ["offer-revoked","Offer revoked","An offer was withdrawn after being made."],
+      ["offer-mismatch","Offer details mismatch","Written pay, role or terms differed from what was discussed."],
+      ["counter-offer-pressure","Counter-offer pressure","Pressure to disclose or accept a counter-offer."]
+    ],
+    "notice-joining": [
+      ["immediate-joining","Immediate joining demanded","A new employer expected joining before the notice period allowed."],
+      ["notice-period-rejected","Notice period rejected","A stated notice period caused rejection or withdrawal."],
+      ["notice-buyout-refused","Notice buyout refused","Notice buyout or early release was not accepted."],
+      ["bgv-delay","Background verification delay","BGV remained pending or delayed joining."],
+      ["relieving-letter-withheld","Relieving letter withheld","Relieving or experience documentation was delayed."],
+      ["final-settlement-delay","Final settlement delay","Full-and-final settlement was delayed."]
+    ],
+    working: [
+      ["unpaid-salary","Salary delayed or unpaid","Salary was not paid on the expected date."],
+      ["low-hike","Low or no salary hike","Appraisal did not reflect expectations or performance."],
+      ["unpaid-overtime","Unpaid overtime","Extra work was expected without compensation or time off."],
+      ["work-pressure","Excessive work pressure","Workload, targets or availability expectations were unreasonable."],
+      ["moonlighting-action","Moonlighting action","An outside-work policy led to an investigation or action."],
+      ["work-location-change","Unexpected work-location change","Work location or office attendance terms changed."],
+      ["promotion-denied","Promotion denied or delayed","Promotion expectations were repeatedly deferred."]
+    ],
+    layoff: [
+      ["layoff-no-notice","Layoff without notice","Employment ended with little or no advance notice."],
+      ["layoff-severance","Severance concern","Severance or compensation terms were unclear or disputed."],
+      ["forced-resignation-pip","Forced resignation or PIP","Resignation or a performance plan felt coercive."],
+      ["layoff-access-cut","Access cut immediately","System access ended before next steps were explained."]
+    ]
+  };
+  const GOOD_TAGS = [
+    ["offer-on-time","Offer delivered on time"],["notice-respected","Notice period respected"],
+    ["fair-hike","Fair salary increase"],["supportive-layoff","Support during a layoff"],
+    ["transparent-process","Transparent hiring process"],["quick-bgv","Background check completed quickly"]
+  ];
+  const state = {step:1,type:"",stage:"",primary:"",secondary:[],positive:[],captchaToken:"",turnstileId:null};
+  const steps = $$(".flow-step",form);
+  const message = document.createElement("div");
+  message.id = "report-message";
+  message.className = "flow-message";
+  message.setAttribute("role","status");
+  message.setAttribute("aria-live","polite");
+  form.insertAdjacentElement("afterend",message);
+
+  function showMessage(text,kind="") {
+    message.textContent=text;
+    message.className="flow-message"+(kind?" "+kind:"");
+    message.hidden=!text;
+  }
+  function activeSteps() {
+    return state.type==="roast" ? [1,6] : [1,2,3,4,5,6,7];
+  }
+  function renderProgress() {
+    const active=activeSteps(), index=active.indexOf(state.step);
+    const percent=Math.round(((index+1)/active.length)*100);
+    const track=$(".flow-progress-track span");
+    if(track) track.style.width=percent+"%";
+    const meta=$(".flow-progress-meta");
+    if(meta) {
+      const spans=meta.querySelectorAll("span");
+      if(spans[0]) spans.textContent="Step "+(index+1)+" of "+active.length;
+      if(spans[1]) spans.textContent=percent+"%";
+    }
+    steps.forEach(el=>{el.hidden=Number(el.dataset.step)!==state.step;});
+    $("#back-step").hidden=index<=0;
+    $("#next-step").hidden=index===active.length-1;
+    $("#submit-report").hidden=index!==active.length-1;
+    $("#consent-wrap").hidden=index!==active.length-1;
+  }
+  function moveTo(step) {
+    state.step=step;
+    showMessage("");
+    renderProgress();
+    const heading=$('[data-step="'+step+'"] h2');
+    if(heading) heading.setAttribute("tabindex","-1"),heading.focus({preventScroll:true});
+    $("#flow-start")?.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  function validateStep(step) {
+    if(step===1 && !state.type) return "Choose whether you are sharing a problem, a good experience, or a one-line roast.";
+    if(state.type==="roast") {
+      if(step===6 && !$("#roast-text").value.trim()) return "Add your one-line roast before continuing.";
+      if(step===6 && $("#roast-text").value.trim().length>120) return "Keep the roast within 120 characters.";
+      return "";
+    }
+    if(step===2 && !state.stage) return "Choose the stage where this happened.";
+    if(step===3 && !$("#company-name").value.trim()) return "Enter the company name.";
+    if(step===4 && state.type==="problem" && !state.primary) return "Choose one primary issue.";
+    if(step===4 && state.type==="good" && !state.positive.length) return "Choose at least one positive experience tag.";
+    if(step===6) {
+      const story=$("#story-text").value.trim();
+      if(story && story.length<20) return "If you add a story, please use at least 20 characters—or leave it blank.";
+      if(story.length>600) return "Keep the story within 600 characters.";
+    }
+    if(step===7 && (!$("#event-month").value || !$("#event-year").value)) return "Choose the month and year when this happened.";
+    return "";
+  }
+  function issueMarkup() {
+    const wrap=$("#issue-options");
+    wrap.replaceChildren();
+    if(state.type==="good") {
+      $("#issue-step-title").textContent="What went well?";
+      $("#issue-step-help").textContent="Choose one or more positive tags that describe the experience.";
+      GOOD_TAGS.forEach(([id,label])=>{
+        const row=document.createElement("label"); row.className="flow-issue-card";
+        const copy=document.createElement("span"); copy.innerHTML="<strong></strong>";
+        $("strong",copy).textContent=label;
+        const control=document.createElement("input"); control.type="checkbox";control.value=id;control.checked=state.positive.includes(id);
+        control.addEventListener("change",()=>{state.positive=control.checked?[...state.positive,id]:state.positive.filter(x=>x!==id);updateIssueSummary();});
+        row.append(copy,control);wrap.append(row);
+      });
+    } else {
+      $("#issue-step-title").textContent="Choose the main issue";
+      $("#issue-step-help").textContent="Select one primary issue and up to two secondary issues.";
+      (ISSUE_GROUPS[state.stage]||[]).forEach(([id,label,desc])=>{
+        const row=document.createElement("div");row.className="flow-issue-card"+(state.primary===id?" primary":"");
+        const copy=document.createElement("div");copy.innerHTML="<strong></strong><small></small>";
+        $("strong",copy).textContent=label;$("small",copy).textContent=desc;
+        const controls=document.createElement("div");controls.className="flow-issue-controls";
+        const primary=document.createElement("button");primary.type="button";primary.textContent=state.primary===id?"Primary ✓":"Set primary";
+        primary.classList.toggle("active",state.primary===id);
+        primary.addEventListener("click",()=>{state.primary=id;state.secondary=state.secondary.filter(x=>x!==id);issueMarkup();updateIssueSummary();});
+        const secondary=document.createElement("label");const cb=document.createElement("input");cb.type="checkbox";cb.checked=state.secondary.includes(id);cb.disabled=state.primary===id;
+        cb.addEventListener("change",()=>{if(cb.checked){if(state.secondary.length>=2){cb.checked=false;showMessage("Choose no more than two secondary issues.");return;}state.secondary.push(id);}else state.secondary=state.secondary.filter(x=>x!==id);issueMarkup();updateIssueSummary();});
+        secondary.append(cb,document.createTextNode("Also applies"));
+        controls.append(primary,secondary);row.append(copy,controls);wrap.append(row);
+      });
+    }
+    updateIssueSummary();
+  }
+  function updateIssueSummary() {
+    const el=$("#issue-selection-summary"); if(!el)return;
+    el.textContent=state.type==="good" ? (state.positive.length?state.positive.length+" positive tag(s) selected.":"No positive tags selected.") : (state.primary ? "Primary selected; "+state.secondary.length+" secondary issue(s).":"No primary issue selected.");
+  }
+  function factField(id,label,options,type="select",min=null,max=null) {
+    const wrap=document.createElement("div");wrap.className="quick-fact";
+    const title=document.createElement("p");title.className="quick-fact-label";title.textContent=label;wrap.append(title);
+    let input;
+    if(type==="number"){
+      input=document.createElement("input");input.type="number";input.min=String(min??0);input.max=String(max??365);input.step="any";input.id=id;input.placeholder="Skip if unknown";
+    } else {
+      input=document.createElement("select");input.id=id;
+      const blank=document.createElement("option");blank.value="";blank.textContent="Skip";input.append(blank);
+      options.forEach(([value,text])=>{const o=document.createElement("option");o.value=value;o.textContent=text;input.append(o);});
+    }
+    wrap.append(input);return wrap;
+  }
+  const factDefinitions = {
+    "notice-joining":[
+      ["notice_period_band","Your notice period",[["0-15","0–15 days"],["30","30 days"],["60","60 days"],["90","90 days"],["other","Other"]]],
+      ["joining_demand_band","Joining time requested",[["immediate","Immediate"],["up-to-15","Within 15 days"],["up-to-30","Within 30 days"],["other","Other"]]],
+      ["notice_period_days","Notice period (days)",[],"number",0,365],
+      ["joining_time_days","Joining time requested (days)",[],"number",0,365],
+      ["notice_rejected","Was your notice period rejected?",[["true","Yes"],["false","No"]]],
+      ["company_enforces_long_notice","Did your current employer enforce a longer notice period?",[["true","Yes"],["false","No"]]]
+    ],
+    offer:[
+      ["offer_wait_band","Time waiting for written offer",[["0-7","0–7 days"],["8-15","8–15 days"],["16-30","16–30 days"],["31-60","31–60 days"],["61-90","61–90 days"],["91+","91+ days"]]],
+      ["offer_days_waited","Days waited for written offer",[],"number",0,730],
+      ["resigned_before_offer","Did you resign before receiving the offer?",[["true","Yes"],["false","No"]]],
+      ["offer_revoked_after_resignation","Was the offer revoked after you resigned?",[["true","Yes"],["false","No"]]]
+    ],
+    working:[
+      ["hike_band","Hike range",[["0","0%"],["1-5","1–5%"],["6-10","6–10%"],["11-15","11–15%"],["16+","16%+"]]],
+      ["hike_percent","Hike percentage (if known)",[],"number",-100,500],
+      ["performance_rating","Performance rating",[["exceeded","Exceeded expectations"],["met","Met expectations"],["below","Below expectations"]]],
+      ["moonlighting_outcome","Moonlighting policy outcome",[["warning","Warning"],["bgv-flag","BGV flag"],["termination","Termination"],["no-action","No action"]]]
+    ],
+    layoff:[
+      ["layoff_notice_days","Advance notice (days)",[],"number",0,365],
+      ["layoff_advance_notice","Were you given advance notice?",[["true","Yes"],["false","No"]]],
+      ["layoff_severance_weeks","Severance (weeks)",[],"number",0,104],
+      ["layoff_access_cut_same_day","Was system access cut the same day?",[["true","Yes"],["false","No"]]],
+      ["layoff_called_resignation","Was the layoff described as a resignation?",[["true","Yes"],["false","No"]]]
+    ]
+  };
+  function renderFacts() {
+    const wrap=$("#quick-facts");wrap.replaceChildren();
+    (factDefinitions[state.stage]||[]).forEach(def=>wrap.append(factField(...def)));
+    if(state.stage==="notice-joining" && state.primary==="bgv-delay"){
+      wrap.append(factField("bgv_days_pending","Days BGV has been pending",[],"number",0,730));
+      wrap.append(factField("bgv_blocked_joining","Did BGV block joining?",[["true","Yes"],["false","No"]]));
+      wrap.append(factField("bgv_check_type","Type of background check",[["education","Education"],["employment","Employment"],["address","Address"],["other","Other"]]));
+    }
+    // Restore saved quick-fact values after stage navigation.
+    if(state.facts) Object.entries(state.facts).forEach(([id,value])=>{const el=$("#"+id,wrap);if(el)el.value=value;});
+  }
+  state.facts={};
+  function collectFacts() {
+    $$("#quick-facts select,#quick-facts input").forEach(el=>{state.facts[el.id]=el.value;});
+  }
+  function fillDateOptions() {
+    const month=$("#event-month"),year=$("#event-year");
+    if(!month||!year)return;
+    const current=new Date();
+    for(let i=1;i<=12;i++){const v=String(i).padStart(2,"0");const o=document.createElement("option");o.value=v;o.textContent=new Date(2000,i-1,1).toLocaleString("en-IN",{month:"long"});month.append(o);}
+    for(let y=current.getFullYear();y>=2000;y--){const o=document.createElement("option");o.value=String(y);o.textContent=String(y);year.append(o);}
+  }
+  function setType(type) {
+    state.type=type;
+    $$(".report-type-choice").forEach(b=>{b.classList.toggle("active",b.dataset.type===type);b.setAttribute("aria-pressed",String(b.dataset.type===type));});
+    $("#company-name").required=type!=="roast";
+    $("#story-field-wrap").hidden=type==="roast";
+    $("#roast-field-wrap").hidden=type!=="roast";
+    $("#story-step-title").textContent=type==="roast"?"Write a company-neutral roast":"Add context (optional)";
+    $("#story-step-help").textContent=type==="roast"?"Keep it about a workplace pattern, not a named company or person.":"A short story is optional. You can submit structured answers without writing one.";
+    issueMarkup();renderProgress();
+  }
+  function getToken() {
+    let token=localStorage.getItem("btp-client-token");
+    if(!token){token=crypto.randomUUID();localStorage.setItem("btp-client-token",token);}
+    return token;
+  }
+  function readPayload() {
+    collectFacts();
+    const value=id=>$("#"+id)?.value?.trim()||"";
+    const boolValue=id=>value(id)===""?null:value(id)==="true";
+    const numberValue=id=>value(id)===""?null:Number(value(id));
+    const p={
+      report_type:state.type,
+      client_token:getToken(),
+      turnstile_token:state.captchaToken,
+      roast_text:state.type==="roast"?value("roast-text"):null,
+      story_text:state.type==="roast"?null:value("story-text"),
+      company_name:state.type==="roast"?"":value("company-name"),
+      stage:state.type==="roast"?null:state.stage,
+      primary_issue_id:state.type==="problem"?state.primary:null,
+      secondary_issue_ids:state.type==="problem"?state.secondary:[],
+      issue_ids:state.type==="problem"?[state.primary,...state.secondary].filter(Boolean):[],
+      positive_tags:state.type==="good"?state.positive:[],
+      event_month:state.type==="roast"?null:value("event-year")+"-"+value("event-month"),
+      company_type:value("company-type")||null,role_family:value("role-family")||null,
+      experience_band:value("experience-band")||null,city:value("city")||null,
+      hiring_source:value("hiring-source")||null,
+      hr_escalated:boolValue("hr-escalated"),has_evidence:boolValue("has-evidence"),
+      outcome:value("outcome")||null
+    };
+    ["notice_period_days","joining_time_days","offer_days_waited","bgv_days_pending","layoff_notice_days"].forEach(k=>{const v=numberValue(k);if(v!==null)p[k]=Math.round(v);});
+    ["hike_percent","layoff_severance_weeks"].forEach(k=>{const v=numberValue(k);if(v!==null)p[k]=v;});
+    ["notice_rejected","company_enforces_long_notice","resigned_before_offer","offer_revoked_after_resignation","bgv_blocked_joining","layoff_advance_notice","layoff_access_cut_same_day","layoff_called_resignation"].forEach(k=>{const v=boolValue(k);if(v!==null)p[k]=v;});
+    ["notice_period_band","joining_demand_band","offer_wait_band","hike_band","performance_rating","bgv_check_type","moonlighting_outcome"].forEach(k=>{if(value(k))p[k]=value(k);});
+    return p;
+  }
+  function renderTurnstile() {
+    const sitekey=document.documentElement.dataset.turnstileSitekey||"";
+    if(!sitekey){$("#turnstile-message").textContent="Security verification is not configured yet. Reports cannot be published until the site security key is configured.";return;}
+    if(!window.turnstile){$("#turnstile-message").textContent="Loading security check…";setTimeout(renderTurnstile,500);return;}
+    if(state.turnstileId!==null)return;
+    state.turnstileId=window.turnstile.render("#turnstile-widget",{sitekey,callback:t=>{state.captchaToken=t;$("#turnstile-message").textContent="Security check complete.";},"expired-callback":()=>{state.captchaToken="";$("#turnstile-message").textContent="Security check expired. Please complete it again.";}});
+  }
+  function resetTurnstile(){state.captchaToken="";if(window.turnstile&&state.turnstileId!==null){window.turnstile.reset(state.turnstileId);}}
+  function draftData() {
+    const fields={};
+    $$("input,select,textarea",form).forEach(el=>{if(el.id && el.type!=="checkbox" && el.type!=="radio")fields[el.id]=el.value;});
+    return {type:state.type,stage:state.stage,primary:state.primary,secondary:state.secondary,positive:state.positive,facts:state.facts,step:state.step,fields};
+  }
+  function restoreDraft() {
+    try{
+      const d=JSON.parse(localStorage.getItem("btp-report-draft")||"null");if(!d)return;
+      if(d.type)setType(d.type);if(d.stage)state.stage=d.stage;
+      state.primary=d.primary||"";state.secondary=Array.isArray(d.secondary)?d.secondary:[];state.positive=Array.isArray(d.positive)?d.positive:[];
+      state.facts=d.facts||{};
+      Object.entries(d.fields||{}).forEach(([id,v])=>{const el=$("#"+id,form);if(el)el.value=v;});
+      if(state.stage)renderFacts();issueMarkup();
+      state.step=activeSteps().includes(d.step)?d.step:1;renderProgress();
+      showMessage("Draft restored in this browser.","success");
+    }catch{showMessage("Saved draft could not be restored.","error");}
+  }
+
+  $$(".report-type-choice").forEach(btn=>btn.addEventListener("click",()=>setType(btn.dataset.type)));
+  $$("#stage-options [data-stage]").forEach(btn=>btn.addEventListener("click",()=>{
+    collectFacts();state.stage=btn.dataset.stage;
+    $$("#stage-options [data-stage]").forEach(b=>{b.classList.toggle("active",b===btn);b.setAttribute("aria-pressed",String(b===btn));});
+    state.primary="";state.secondary=[];state.positive=[];issueMarkup();renderFacts();
+  }));
+  $("#next-step").addEventListener("click",()=>{
+    const error=validateStep(state.step);if(error){showMessage(error,"error");return;}
+    const active=activeSteps(),i=active.indexOf(state.step);
+    if(i<active.length-1){if(state.step===4)renderFacts();moveTo(active[i+1]);if(state.step===6)resetTurnstile();}
+  });
+  $("#back-step").addEventListener("click",()=>{
+    const active=activeSteps(),i=active.indexOf(state.step);
+    if(i>0){collectFacts();moveTo(active[i-1]);}
+  });
+  $("#save-draft").addEventListener("click",()=>{
+    try{localStorage.setItem("btp-report-draft",JSON.stringify(draftData()));showMessage("Draft saved in this browser only. It has not been submitted.","success");}
+    catch{showMessage("This browser could not save the draft. Check your browser storage settings.","error");}
+  });
+  $("#story-text").addEventListener("input",()=>$("#story-count").textContent=String($("#story-text").value.length));
+  $("#roast-text").addEventListener("input",()=>$("#roast-count").textContent=String($("#roast-text").value.length));
+  $("#submit-report").addEventListener("click",e=>{
+    const err=validateStep(state.step);if(err){e.preventDefault();showMessage(err,"error");}
+    else if(!$("#consent").checked){e.preventDefault();showMessage("Please confirm the anonymous-report consent before publishing.","error");}
+    else renderTurnstile();
+  });
+  form.addEventListener("submit",async e=>{
+    e.preventDefault();
+    const err=validateStep(state.step);if(err){showMessage(err,"error");return;}
+    if(!$("#consent").checked){showMessage("Please confirm the anonymous-report consent before publishing.","error");return;}
+    const cfg=window.BTP_CONFIG||{};
+    if(!cfg.supabaseUrl||!cfg.publishableKey){showMessage("Publishing is not connected yet. Your answers have not been sent or saved. Configure the Supabase project URL and publishable key to enable submissions.","error");return;}
+    if(!state.captchaToken){renderTurnstile();showMessage("Complete the security check before publishing.","error");return;}
+    const submit=$("#submit-report");submit.disabled=true;submit.textContent="Publishing…";showMessage("Screening and publishing your anonymous report…");
+    try{
+      const base=cfg.supabaseUrl.replace(/\/$/,"");
+      const res=await fetch(base+"/functions/v1/submit-report",{method:"POST",headers:{"Content-Type":"application/json","apikey":cfg.publishableKey,"Authorization":"Bearer "+cfg.publishableKey},body:JSON.stringify(readPayload())});
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok||!data.success)throw new Error(data.error||"Submission failed. Please try again.");
+      localStorage.removeItem("btp-report-draft");
+      $("#withdrawal-result").hidden=false;
+      $("#withdrawal-result").replaceChildren();
+      const h=document.createElement("h3");h.textContent="Your report was published";
+      const p=document.createElement("p");p.textContent=data.message||"Save your withdrawal code if you may want to remove this report later.";
+      const code=document.createElement("code");code.textContent=data.withdrawal_code||"";
+      const copy=document.createElement("button");copy.type="button";copy.className="button button-secondary";copy.textContent="Copy withdrawal code";copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(code.textContent);copy.textContent="Copied";}catch{showMessage("Select and copy the withdrawal code manually.","error");}});
+      $("#withdrawal-result").append(h,p,code,copy);
+      form.hidden=true;showMessage("Thank you. Your anonymous report has been submitted.","success");
+      $("#withdrawal-result").scrollIntoView({behavior:"smooth",block:"center"});
+    }catch(err){showMessage(err.message||"Unable to submit right now. Your report has not been confirmed as saved.","error");}
+    finally{submit.disabled=false;submit.textContent="Publish report ↗";}
+  });
+  $("#government-poll-form").addEventListener("submit",e=>{
+    e.preventDefault();
+    $("#poll-message").textContent="The community poll is not connected to the live trends database yet. No vote was saved.";
+    $("#poll-message").className="flow-message error";
+  });
+  fillDateOptions();
+  renderProgress();
+  restoreDraft();
+  if(state.stage)renderFacts();
+  if(state.type)issueMarkup();
+  renderTurnstile();
+})();
 </script>
 </body></html>
