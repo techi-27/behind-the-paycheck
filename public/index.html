@@ -1590,15 +1590,42 @@ main.choice-main>.overview-trends,main.choice-main>.reality-unlock-card,main.cho
     <div class="top-companies-heading">
       <div><span class="eyebrow">THE NAMES BEHIND THE NUMBERS</span><h3 id="top-companies-title">Top 10 companies employees are reporting</h3><p>Ranked by eligible employee-submitted workplace issue reports—not a company rating or proof of wrongdoing.</p></div>
       <a href="./dashboard.html" class="top-companies-link">Explore all trends ↗</a>
+      <button type="button" class="top-companies-preview-button" id="top-companies-preview-toggle" aria-expanded="false">Preview 10 sample reports</button>
     </div>
     <div class="top-companies-list" id="top-companies-list" aria-live="polite">
       <p class="top-companies-empty">Company names appear when enough eligible reports meet the privacy threshold.</p>
     </div>
+    <section id="top-companies-sample-preview" class="top-companies-sample-preview" hidden aria-label="Fictional sample report preview">
+      <div class="top-companies-sample-heading"><strong>UI PREVIEW · FICTIONAL DATA</strong><span>These ten rows are examples only. They are not real users or real company reports.</span></div>
+      <div class="top-companies-sample-table-wrap"><table class="top-companies-sample-table"><thead><tr><th>Sample user</th><th>Company</th><th>Reported issue</th><th>Stage</th></tr></thead><tbody>
+        <tr><td>User 01</td><td>DemoTech One</td><td>Offer letter delay</td><td>Offer</td></tr>
+        <tr><td>User 02</td><td>CloudDemo Labs</td><td>Notice-period conflict</td><td>Job switch</td></tr>
+        <tr><td>User 03</td><td>SampleWorks India</td><td>Low salary hike</td><td>Working</td></tr>
+        <tr><td>User 04</td><td>MockRail Systems</td><td>Interview ghosting</td><td>Interview</td></tr>
+        <tr><td>User 05</td><td>DemoTech One</td><td>Immediate joining demand</td><td>Offer</td></tr>
+        <tr><td>User 06</td><td>BrightMock Digital</td><td>Background-check delay</td><td>Joining</td></tr>
+        <tr><td>User 07</td><td>CloudDemo Labs</td><td>Offer revoked</td><td>Offer</td></tr>
+        <tr><td>User 08</td><td>SampleWorks India</td><td>Unpaid overtime</td><td>Working</td></tr>
+        <tr><td>User 09</td><td>MockRail Systems</td><td>Recruiter stopped responding</td><td>Interview</td></tr>
+        <tr><td>User 10</td><td>BrightMock Digital</td><td>Notice buyout refused</td><td>Exit</td></tr>
+      </tbody></table></div>
+    </section>
     <p class="top-companies-note">Only screened, published reports at least 24 hours old are eligible. A company appears only after at least five eligible issue reports. No raw stories are shown.</p>
   </section>
   <style id="top-companies-trends-styles">
     #top-companies-trends{margin:18px 0 24px;padding:clamp(20px,2.6vw,28px);border:1px solid #dce6f5;border-radius:20px;background:#fff;box-shadow:0 8px 24px rgba(23,39,71,.035)}
     #top-companies-trends .top-companies-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:18px}
+    #top-companies-trends .top-companies-preview-button{border:1px solid #dce6f5;border-radius:10px;padding:9px 12px;background:#f6f9ff;color:#2f5f9e;font-size:11px;font-weight:800;cursor:pointer}
+    #top-companies-trends .top-companies-sample-preview{margin:16px 0;padding:14px;border:1px dashed #e7b76c;border-radius:14px;background:#fffaf0}
+    #top-companies-trends .top-companies-sample-heading{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;color:#7a5a1a;font-size:11px;line-height:1.5}
+    #top-companies-trends .top-companies-sample-heading strong{letter-spacing:1px}
+    #top-companies-trends .top-companies-sample-heading span{color:#806f4f}
+    #top-companies-trends .top-companies-sample-table-wrap{overflow-x:auto}
+    #top-companies-trends .top-companies-sample-table{width:100%;border-collapse:collapse;font-size:12px;text-align:left}
+    #top-companies-trends .top-companies-sample-table th{padding:9px 8px;color:#806f4f;border-bottom:1px solid #f0dfbd;white-space:nowrap}
+    #top-companies-trends .top-companies-sample-table td{padding:9px 8px;color:#35435a;border-bottom:1px solid #f5ead5}
+    #top-companies-trends .top-companies-sample-table tr:last-child td{border-bottom:0}
+
     #top-companies-trends h3{margin:7px 0 8px;color:#172747;font-size:clamp(20px,2.3vw,27px);letter-spacing:-.5px;line-height:1.2}
     #top-companies-trends .top-companies-heading p{margin:0;color:#718198;font-size:13px;line-height:1.6}
     #top-companies-trends .top-companies-link{flex:0 0 auto;color:#3675c8;font-size:12px;font-weight:800;text-decoration:none}
@@ -1612,7 +1639,7 @@ main.choice-main>.overview-trends,main.choice-main>.reality-unlock-card,main.cho
     @media(max-width:650px){#top-companies-trends .top-companies-heading{flex-direction:column}#top-companies-trends .top-companies-list{grid-template-columns:minmax(0,1fr)}}
   </style>
   <script id="top-companies-trends-renderer">
-  (()=>{const host=document.getElementById("top-companies-list");if(!host)return;const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));const fmt=v=>Number(v||0).toLocaleString("en-IN");function render(data){const companies=(data?.company_profiles||[]).filter(c=>String(c.company||"").trim()&&Number(c.report_count)>=5).sort((a,b)=>Number(b.report_count)-Number(a.report_count)).slice(0,10);if(!companies.length){host.innerHTML='<p class="top-companies-empty">No company names meet the publication threshold yet. As eligible reports accumulate, the top 10 will appear here automatically.</p>';return}host.innerHTML=companies.map((c,i)=>'<div class="top-company-row"><span class="top-company-rank">'+(i+1)+'</span><span class="top-company-name">'+esc(c.company)+'</span><span class="top-company-count">'+fmt(c.report_count)+' reports</span></div>').join("")}window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window.__approvedTrendData)render(window.__approvedTrendData)})();
+  (()=>{const host=document.getElementById("top-companies-list");if(!host)return;const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));const fmt=v=>Number(v||0).toLocaleString("en-IN");function render(data){const companies=(data?.company_profiles||[]).filter(c=>String(c.company||"").trim()&&Number(c.report_count)>=5).sort((a,b)=>Number(b.report_count)-Number(a.report_count)).slice(0,10);if(!companies.length){host.innerHTML='<p class="top-companies-empty">No company names meet the publication threshold yet. As eligible reports accumulate, the top 10 will appear here automatically.</p>';return}host.innerHTML=companies.map((c,i)=>'<div class="top-company-row"><span class="top-company-rank">'+(i+1)+'</span><span class="top-company-name">'+esc(c.company)+'</span><span class="top-company-count">'+fmt(c.report_count)+' reports</span></div>').join("")}window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window.__approvedTrendData)render(window.__approvedTrendData);const toggle=document.getElementById("top-companies-preview-toggle"),preview=document.getElementById("top-companies-sample-preview");if(toggle&&preview)toggle.addEventListener("click",()=>{const open=preview.hidden;preview.hidden=!open;toggle.setAttribute("aria-expanded",String(open));toggle.textContent=open?"Hide sample reports":"Preview 10 sample reports"})})();
   </script>
   <section class="monthly-pulse-intro-card" aria-labelledby="monthly-pulse-index-title">
  <div class="monthly-pulse-intro-copy">
