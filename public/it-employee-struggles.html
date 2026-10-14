@@ -398,7 +398,7 @@
     $("#roast-field-wrap").hidden=type!=="roast";
     $("#story-step-title").textContent=type==="roast"?"Write a company-neutral roast":"Add context (optional)";
     $("#story-step-help").textContent=type==="roast"?"Keep it about a workplace pattern, not a named company or person.":"A short story is optional. You can submit structured answers without writing one.";
-    issueMarkup();renderProgress();
+    issueMarkup();renderProgress();updateContributionPreview();
   }
 
   function updateContributionPreview() {
@@ -497,7 +497,7 @@
   $$("#stage-options [data-stage]").forEach(btn=>btn.addEventListener("click",()=>{
     collectFacts();state.stage=btn.dataset.stage;
     $$("#stage-options [data-stage]").forEach(b=>{b.classList.toggle("active",b===btn);b.setAttribute("aria-pressed",String(b===btn));});
-    state.primary="";state.secondary=[];state.positive=[];issueMarkup();renderFacts();
+    state.primary="";state.secondary=[];state.positive=[];issueMarkup();renderFacts();updateContributionPreview();
   }));
   $("#next-step").addEventListener("click",()=>{
     const error=validateStep(state.step);if(error){showMessage(error,"error");return;}
