@@ -129,7 +129,7 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
   companies_reported:[...companyRows.values()].filter(v=>v.all.size>=1).length,
   layoff_reports_90_days:layoffs.filter((r:any)=>String(r.event_month||"")>=new Date(Date.now()-90*86400000).toISOString().slice(0,7)).length,
   personal_reports:0,it_reports:rows.length,total_issue_selections:safeIssues.reduce((n:any,x:any)=>n+x.count,0),
-  tier, reports_this_week, updated_at:new Date().toISOString(),
+  tier, reports_this_week, updated_at:rows.reduce((latest:any,r:any)=>{const t=Date.parse(String(r.created_at||r.published_at||""));return Number.isFinite(t)&&(!latest||t>Date.parse(latest))?new Date(t).toISOString():latest;},null),
   issues:safeIssues,companies:tier>=200?safeCompanyProfiles.slice(0,5).map(c=>({company:c.company,count:c.report_count})):[],
   company_profiles:safeCompanyProfiles,red_flag_watchlist:safeRedFlag,green_flag_companies:safeGreenFlag,company_responses:tier>=200?company_responses:[],
   experience_trends:tier>=200?countRows("experience_band","problem"):[],stage_trends:tier>=15?stage_trends:[],stage_issue_trends:safeStageIssues,company_type_trends:safeCompanyType,city_trends:safeCity,outcome_trends:tier>=15?outcome_trends:[],monthly_trends:safeMonthly,
