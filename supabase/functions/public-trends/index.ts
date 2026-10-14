@@ -12,7 +12,7 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  if(origin&&!allowedOrigins.has(origin))return json({error:"Origin not allowed"},403,origin);
  if(req.method!=="GET")return json({error:"Method not allowed"},405,origin);
  const db=ctx.supabaseAdmin;
- const [eligible,issuesQ,companiesQ,legacyQ,pollQ,companyCountsQ,positiveCountsQ,companyIssueCountsQ,issueCountsQ,stageIssueCountsQ]=await Promise.all([
+ const [eligible,issuesQ,companiesQ,legacyQ,pollQ,companyCountsQ,positiveCountsQ,companyIssueCountsQ,issueCountsQ,stageIssueCountsQ,allCompanyCountsQ]=await Promise.all([
   db.from("trend_eligible_reports").select("*").limit(20000),
   db.from("issues").select("id,label"),
   db.from("companies").select("id,display_name"),
@@ -23,10 +23,11 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
   db.from("company_issue_counts_min5").select("company_id,issue_id,report_count"),
   db.from("issue_counts_min5").select("issue_id,report_count"),
   db.from("stage_issue_counts_min5").select("stage,issue_id,report_count"),
+  db.from("company_all_counts_min5").select("company_id,report_count"),
  ]);
- if(eligible.error||issuesQ.error||companiesQ.error||legacyQ.error||pollQ.error||companyCountsQ.error||positiveCountsQ.error||companyIssueCountsQ.error||issueCountsQ.error||stageIssueCountsQ.error){console.error("Public trend read failed",eligible.error?.message,issuesQ.error?.message,companiesQ.error?.message,legacyQ.error?.message,pollQ.error?.message,companyCountsQ.error?.message,positiveCountsQ.error?.message,companyIssueCountsQ.error?.message,issueCountsQ.error?.message,stageIssueCountsQ.error?.message);return json({error:"Trends unavailable"},503,origin)}
+ if(eligible.error||issuesQ.error||companiesQ.error||legacyQ.error||pollQ.error||companyCountsQ.error||positiveCountsQ.error||companyIssueCountsQ.error||issueCountsQ.error||stageIssueCountsQ.error||allCompanyCountsQ.error){console.error("Public trend read failed",eligible.error?.message,issuesQ.error?.message,companiesQ.error?.message,legacyQ.error?.message,pollQ.error?.message,companyCountsQ.error?.message,positiveCountsQ.error?.message,companyIssueCountsQ.error?.message,issueCountsQ.error?.message,stageIssueCountsQ.error?.message,allCompanyCountsQ.error?.message);return json({error:"Trends unavailable"},503,origin)}
  const rows=eligible.data||[], labelMap=new Map((issuesQ.data||[]).map((x:any)=>[x.id,x.label])),companyMap=new Map((companiesQ.data||[]).map((x:any)=>[x.id,x.display_name])),legacyMap=new Map((legacyQ.data||[]).map((x:any)=>[x.legacy_issue_id,x.canonical_issue_id]));
- const dbCompanyIds=new Set((companyCountsQ.data||[]).map((x:any)=>x.company_id)),dbPositiveCompanyIds=new Set((positiveCountsQ.data||[]).map((x:any)=>x.company_id));
+ const dbCompanyIds=new Set((companyCountsQ.data||[]).map((x:any)=>x.company_id)),dbPositiveCompanyIds=new Set((positiveCountsQ.data||[]).map((x:any)=>x.company_id)),dbAllCompanyIds=new Set((allCompanyCountsQ.data||[]).map((x:any)=>x.company_id));
  const dbIssueCounts=new Map((issueCountsQ.data||[]).map((x:any)=>[x.issue_id,Number(x.report_count)]));
  const dbCompanyIssueCounts=new Map((companyIssueCountsQ.data||[]).map((x:any)=>[x.company_id+"|"+x.issue_id,Number(x.report_count)]));
  const dbStageIssueCounts=new Map((stageIssueCountsQ.data||[]).map((x:any)=>[x.stage+"|"+x.issue_id,Number(x.report_count)]));
@@ -89,7 +90,7 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  const government_poll={total:(pollQ.data||[]).length>=MIN?(pollQ.data||[]).length:null,results:pollOptions.map(option=>({option,label:({ "layoff-insurance":"Layoff insurance","notice-regulation":"Notice-period regulation","severance-tax-relief":"Tax relief on severance","faster-grievance-portal":"Faster grievance portal","other":"Other"} as Record<string,string>)[option],count:(pollCounts.get(option)||0)>=MIN?pollCounts.get(option):null})),company_independent:true};
  const publicQ=await db.from("reports").select("id,report_type,company_id,public_text,roast_text,published_at,public_status,screening_result,flag_count").eq("report_group","it").eq("public_status","published").in("screening_result",["clean","masked"]).lt("flag_count",3).order("published_at",{ascending:false}).limit(40);
  if(publicQ.error){console.error("Public story query failed",publicQ.error.message);return json({error:"Trends unavailable"},503,origin)}
- const publicStories=(publicQ.data||[]).filter((r:any)=>r.public_text||r.roast_text).map((r:any)=>{const c=companyRows.get(r.company_id);return {id:r.id,report_type:r.report_type,text:r.public_text||r.roast_text,company:c&&c.problem.size>=MIN?c.name:null,published_at:r.published_at,label:"Anonymous, user-submitted, not verified"}}).filter((r:any)=>r.report_type==="roast"||r.company!==null).slice(0,24);
+ const publicStories=(publicQ.data||[]).filter((r:any)=>r.public_text||r.roast_text).map((r:any)=>{const c=companyRows.get(r.company_id);return {id:r.id,report_type:r.report_type,text:r.public_text||r.roast_text,company:c&&dbAllCompanyIds.has(r.company_id)?c.name:null,published_at:r.published_at,label:"Anonymous, user-submitted, not verified"}}).filter((r:any)=>r.report_type==="roast"||r.company!==null).slice(0,24);
  const policyQ=await db.from("policy_changes").select("id,title,description,evidence_url,effective_date,company_id").eq("status","approved").not("evidence_url","is",null).order("effective_date",{ascending:false,nullsFirst:false}).limit(30);
  let policy_changes:any[]=[];if(!policyQ.error&&(policyQ.data||[]).length){policy_changes=(policyQ.data||[]).map((p:any)=>({id:p.id,title:p.title,description:p.description,evidence_url:p.evidence_url,effective_date:p.effective_date,company:companyMap.get(p.company_id)||null})).filter((p:any)=>p.company&&companyProfiles.some(c=>c.company===p.company))}
  const companyQ=await db.from("company_responses").select("id,company_id,response_text,submitted_at").eq("status","approved").order("submitted_at",{ascending:false}).limit(30);
