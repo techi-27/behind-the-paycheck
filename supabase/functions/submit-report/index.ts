@@ -6,7 +6,7 @@ const allowedOrigins = new Set([
   "http://localhost:5500", "http://127.0.0.1:5500",
 ]);
 const ISSUE_IDS = new Set([
-  "recruiter-ghosting","no-feedback","too-many-rounds","documents-early","budget-revealed-late",
+  "recruiter-ghosting","fake-interview-call","no-feedback","too-many-rounds","documents-early","budget-revealed-late",
   "offer-letter-delay","offer-revoked","offer-mismatch","counter-offer-pressure",
   "immediate-joining","notice-period-rejected","notice-buyout-refused","bgv-delay",
   "relieving-letter-withheld","final-settlement-delay","unpaid-salary","low-hike","unpaid-overtime",
@@ -23,8 +23,8 @@ const ROLES = new Set(["engineering","devops-sre-platform","data-ai-ml","qa-test
 const HIRING = new Set(["direct","consultant","referral","portal"]);
 const OUTCOMES = new Set(["resolved","lost-job","left-company","ongoing"]);
 const ISSUE_BY_STAGE: Record<string, Set<string>> = {
-  applying: new Set(["recruiter-ghosting","no-feedback","too-many-rounds","documents-early","budget-revealed-late"]),
-  interview: new Set(["recruiter-ghosting","no-feedback","too-many-rounds","documents-early","budget-revealed-late"]),
+  applying: new Set(["recruiter-ghosting","fake-interview-call","no-feedback","too-many-rounds","documents-early","budget-revealed-late"]),
+  interview: new Set(["recruiter-ghosting","fake-interview-call","no-feedback","too-many-rounds","documents-early","budget-revealed-late"]),
   offer: new Set(["offer-letter-delay","offer-revoked","offer-mismatch","counter-offer-pressure"]),
   "notice-joining": new Set(["immediate-joining","notice-period-rejected","notice-buyout-refused","bgv-delay","relieving-letter-withheld","final-settlement-delay"]),
   working: new Set(["unpaid-salary","low-hike","unpaid-overtime","work-pressure","moonlighting-action","work-location-change","promotion-denied"]),
