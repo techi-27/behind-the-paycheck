@@ -61,11 +61,16 @@ function screen(text: string) {
   const profanity = /\b(fuck(?:ing|ed|er)?|motherfucker|cunt|bitch|asshole)\b/i;
   if (profanity.test(value)) return {result:"edit_required", text:"", reasons:["Please remove heavy profanity and submit a workplace-focused version."]};
   // Mask obvious person-identifying constructions; this heuristic is intentionally conservative.
-  const namePattern = /\b(?:HR|manager|recruiter|team lead|team leader|director)\s+(?:Mr\.?\s+|Ms\.?\s+|Mrs\.?\s+)?[A-Z][a-z]{2,}(?:\s+[A-Z][a-z]{2,})?\b/g;
-  if (namePattern.test(value)) {
-    value = value.replace(namePattern, "$&".replace(/.*/, "[individual name removed]"));
-    reasons.push("Possible individual name was masked. Check the text before publishing.");
+  const namePatterns = [
+    /\b(?:HR|manager|recruiter|team lead|team leader|director)\s+(?:Mr\.?\s+|Ms\.?\s+|Mrs\.?\s+|Dr\.?\s+)?[A-Z][a-z]{2,}(?:\s+[A-Z][a-z]{2,})?\b/g,
+    /\b(?:Mr\.?|Ms\.?|Mrs\.?|Dr\.?)\s+[A-Z][a-z]{2,}(?:\s+[A-Z][a-z]{2,})?\b/g,
+    /\b(?:name is|named|contact|reported to|spoke to|asked by)\s+[A-Z][a-z]{2,}(?:\s+[A-Z][a-z]{2,})?\b/g,
+  ];
+  let maskedName = false;
+  for (const pattern of namePatterns) {
+    if (value.match(pattern)) { value = value.replace(pattern, "[individual name removed]"); maskedName = true; }
   }
+  if (maskedName) reasons.push("Possible individual name was masked. Check the text before publishing.");
   // Reject if remaining text looks like an edit request rather than safe enough to publish.
   if (reasons.length) return {result:"masked", text:value, reasons};
   return {result:"clean", text:value, reasons:[]};
