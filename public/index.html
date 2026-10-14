@@ -1640,6 +1640,19 @@ window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window._
     });
   }
 
+  function fitParagraphText(element) {
+    element.style.fontSize = "";
+    const mobile = window.matchMedia("(max-width: 600px)").matches;
+    const maxLines = mobile ? 3 : 2;
+    const minSize = mobile ? 11 : 12;
+    let size = parseFloat(getComputedStyle(element).fontSize);
+    const lineHeight = () => parseFloat(getComputedStyle(element).lineHeight) || size * 1.65;
+    while (size > minSize && element.scrollHeight > lineHeight() * maxLines + 2) {
+      size -= 0.5;
+      element.style.fontSize = size + "px";
+    }
+  }
+
   function measureReservedHeight() {
     cancelAnimationFrame(reserveFrame);
     reserveFrame = requestAnimationFrame(() => {
