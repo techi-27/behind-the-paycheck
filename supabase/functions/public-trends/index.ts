@@ -12,15 +12,24 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  if(origin&&!allowedOrigins.has(origin))return json({error:"Origin not allowed"},403,origin);
  if(req.method!=="GET")return json({error:"Method not allowed"},405,origin);
  const db=ctx.supabaseAdmin;
- const [eligible,issuesQ,companiesQ,legacyQ,pollQ]=await Promise.all([
+ const [eligible,issuesQ,companiesQ,legacyQ,pollQ,companyCountsQ,positiveCountsQ,companyIssueCountsQ,issueCountsQ,stageIssueCountsQ]=await Promise.all([
   db.from("trend_eligible_reports").select("*").limit(20000),
   db.from("issues").select("id,label"),
   db.from("companies").select("id,display_name"),
   db.from("legacy_issue_map").select("legacy_issue_id,canonical_issue_id"),
   db.from("government_poll").select("option_slug").limit(50000),
+  db.from("company_counts_min5").select("company_id,report_count"),
+  db.from("company_positive_counts_min5").select("company_id,report_count"),
+  db.from("company_issue_counts_min5").select("company_id,issue_id,report_count"),
+  db.from("issue_counts_min5").select("issue_id,report_count"),
+  db.from("stage_issue_counts_min5").select("stage,issue_id,report_count"),
  ]);
- if(eligible.error||issuesQ.error||companiesQ.error||legacyQ.error||pollQ.error){console.error("Public trend read failed",eligible.error?.message,issuesQ.error?.message,companiesQ.error?.message,legacyQ.error?.message,pollQ.error?.message);return json({error:"Trends unavailable"},503,origin)}
+ if(eligible.error||issuesQ.error||companiesQ.error||legacyQ.error||pollQ.error||companyCountsQ.error||positiveCountsQ.error||companyIssueCountsQ.error||issueCountsQ.error||stageIssueCountsQ.error){console.error("Public trend read failed",eligible.error?.message,issuesQ.error?.message,companiesQ.error?.message,legacyQ.error?.message,pollQ.error?.message,companyCountsQ.error?.message,positiveCountsQ.error?.message,companyIssueCountsQ.error?.message,issueCountsQ.error?.message,stageIssueCountsQ.error?.message);return json({error:"Trends unavailable"},503,origin)}
  const rows=eligible.data||[], labelMap=new Map((issuesQ.data||[]).map((x:any)=>[x.id,x.label])),companyMap=new Map((companiesQ.data||[]).map((x:any)=>[x.id,x.display_name])),legacyMap=new Map((legacyQ.data||[]).map((x:any)=>[x.legacy_issue_id,x.canonical_issue_id]));
+ const dbCompanyIds=new Set((companyCountsQ.data||[]).map((x:any)=>x.company_id)),dbPositiveCompanyIds=new Set((positiveCountsQ.data||[]).map((x:any)=>x.company_id));
+ const dbIssueCounts=new Map((issueCountsQ.data||[]).map((x:any)=>[x.issue_id,Number(x.report_count)]));
+ const dbCompanyIssueCounts=new Map((companyIssueCountsQ.data||[]).map((x:any)=>[x.company_id+"|"+x.issue_id,Number(x.report_count)]));
+ const dbStageIssueCounts=new Map((stageIssueCountsQ.data||[]).map((x:any)=>[x.stage+"|"+x.issue_id,Number(x.report_count)]));
  const ids=rows.map((r:any)=>r.id);
  let legacyLinks:any[]=[];
  if(ids.length){const q=await db.from("report_issues").select("report_id,issue_id").in("report_id",ids);if(q.error)return json({error:"Trends unavailable"},503,origin);legacyLinks=q.data||[]}
@@ -44,13 +53,13 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  const companyRows=new Map<string,{name:string;problem:Set<string>;good:Set<string>;all:Set<string>;score:number}>();
  for(const r of rows){if(!r.company_id)continue;const name=companyMap.get(r.company_id);if(!name)continue;const v=companyRows.get(r.company_id)||{name,problem:new Set<string>(),good:new Set<string>(),all:new Set<string>(),score:0};v.all.add(r.id);if(r.report_type==="problem")v.problem.add(r.id);if(r.report_type==="good")v.good.add(r.id);companyRows.set(r.company_id,v)}
  for(const [companyId,v] of companyRows){const byIssue=companyIssueReports.get(companyId)||new Map();let score=0;for(const [issue,set] of byIssue)score+=set.size*(issueWeights[issue]??1);v.score=Math.round(score*100)/100}
- const companyProfiles=[...companyRows.entries()].filter(([,v])=>v.problem.size>=MIN).sort((a,b)=>b[1].problem.size-a[1].problem.size).slice(0,30).map(([id,v])=>({company:v.name,report_count:v.problem.size,issues:[...(companyIssueReports.get(id)||new Map()).entries()].filter(([,set])=>set.size>=MIN).map(([issue,set])=>({id:issue,label:labelMap.get(issue)||issue,count:set.size})).sort((a,b)=>b.count-a.count).slice(0,8)}));
- const redFlag=[...companyRows.values()].filter(v=>v.problem.size>=MIN).sort((a,b)=>b.score-a.score).slice(0,5).map(v=>({company:v.name,report_count:v.problem.size,severity_weighted_score:v.score}));
- const greenFlag=[...companyRows.values()].filter(v=>v.good.size>=MIN).sort((a,b)=>b.good.size-a.good.size).slice(0,5).map(v=>({company:v.name,good_report_count:v.good.size}));
+ const companyProfiles=[...companyRows.entries()].filter(([id,v])=>v.problem.size>=MIN&&dbCompanyIds.has(id)).sort((a,b)=>b[1].problem.size-a[1].problem.size).slice(0,30).map(([id,v])=>({company:v.name,report_count:v.problem.size,issues:[...(companyIssueReports.get(id)||new Map()).entries()].filter(([issue,set])=>set.size>=MIN&&dbCompanyIssueCounts.has(id+"|"+issue)).map(([issue,set])=>({id:issue,label:labelMap.get(issue)||issue,count:dbCompanyIssueCounts.get(id+"|"+issue)||set.size})).sort((a,b)=>b.count-a.count).slice(0,8)}));
+ const redFlag=[...companyRows.entries()].filter(([id,v])=>v.problem.size>=MIN&&dbCompanyIds.has(id)).map(([,v])=>v).sort((a,b)=>b.score-a.score).slice(0,5).map(v=>({company:v.name,report_count:v.problem.size,severity_weighted_score:v.score}));
+ const greenFlag=[...companyRows.entries()].filter(([id,v])=>v.good.size>=MIN&&dbPositiveCompanyIds.has(id)).map(([,v])=>v).sort((a,b)=>b.good.size-a.good.size).slice(0,5).map(v=>({company:v.name,good_report_count:v.good.size}));
  const countRows=(field:string,kind?:string)=>{const m=new Map<string,Set<string>>();for(const r of rows){if(kind&&r.report_type!==kind)continue;const v=r[field];if(v===null||v===undefined||v==="")continue;add(m,String(v),r.id)}return [...m.entries()].filter(([,set])=>set.size>=MIN).map(([id,set])=>({id,label:labels[id]||id,count:set.size})).sort((a,b)=>b.count-a.count)};
- const issueCounts=[...issueReportIds.entries()].filter(([,set])=>set.size>=MIN).map(([id,set])=>({id,label:labelMap.get(id)||id,count:set.size})).sort((a,b)=>b.count-a.count);
+ const issueCounts=[...dbIssueCounts.entries()].map(([id,count])=>({id,label:labelMap.get(id)||id,count})).sort((a,b)=>b.count-a.count);
  const stage_trends=countRows("stage","problem");
- const stage_issue_trends=[...stageIssueReports.entries()].map(([stage,m])=>({stage,label:labels[stage]||stage,issues:[...m.entries()].filter(([,set])=>set.size>=MIN).map(([id,set])=>({id,label:labelMap.get(id)||id,count:set.size})).sort((a,b)=>b.count-a.count)})).filter(x=>x.issues.length);
+ const stage_issue_trends=[...stageIssueReports.entries()].map(([stage,m])=>({stage,label:labels[stage]||stage,issues:[...m.entries()].filter(([id,set])=>set.size>=MIN&&dbStageIssueCounts.has(stage+"|"+id)).map(([id,set])=>({id,label:labelMap.get(id)||id,count:dbStageIssueCounts.get(stage+"|"+id)||set.size})).sort((a,b)=>b.count-a.count)})).filter(x=>x.issues.length);
  const company_type_trends=countRows("company_type","problem"),city_trends=countRows("city","problem"),outcome_trends=countRows("outcome","problem");
  const monthlyMap=new Map<string,Set<string>>();for(const r of problemRows){const m=String(r.event_month||"").slice(0,7);if(m)add(monthlyMap,m,r.id)}
  const monthly_trends=[...monthlyMap.entries()].filter(([,set])=>set.size>=MIN).sort(([a],[b])=>a.localeCompare(b)).slice(-18).map(([month,set])=>({month,count:set.size,issues:[...(monthlyIssueReports.get(month)||new Map()).entries()].filter(([,ids])=>ids.size>=MIN).map(([id,ids])=>({id,label:labelMap.get(id)||id,count:ids.size})).sort((a,b)=>b.count-a.count).slice(0,8)}));
