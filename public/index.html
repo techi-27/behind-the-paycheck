@@ -1632,7 +1632,7 @@ window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window._
     [line1, line2].forEach((line) => {
       line.style.whiteSpace = "nowrap";
       let size = parseFloat(getComputedStyle(heading).fontSize);
-      const minSize = 25;
+      const minSize = 16;
       while (size > minSize && line.scrollWidth > available) {
         size -= 1;
         line.style.fontSize = size + "px";
@@ -1657,13 +1657,13 @@ window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window._
       probe.style.gridRow = "auto";
       probe.style.display = "block";
       probe.style.boxSizing = "border-box";
-      document.body.appendChild(probe);
+      root.parentElement.appendChild(probe);
       const probeHeading = probe.querySelector("h1");
       const probeLine1 = probe.querySelector(".hero-copy-line1");
       const probeLine2 = probe.querySelector(".hero-copy-line2");
       const probeParagraph = probe.querySelector("p");
       let maxHeight = 0;
-      SLIDES.forEach((slide) => {
+      const slidesToMeasure = reduceMotion.matches ? [SLIDES[0]] : SLIDES;\n      slidesToMeasure.forEach((slide) => {
         probeLine1.textContent = slide.line1;
         probeLine2.textContent = slide.line2;
         probeParagraph.textContent = slide.text;
@@ -1675,7 +1675,7 @@ window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window._
           [probeLine1, probeLine2].forEach((line) => {
             line.style.whiteSpace = "nowrap";
             let size = parseFloat(getComputedStyle(probeHeading).fontSize);
-            while (size > 25 && line.scrollWidth > probeHeading.clientWidth) {
+            while (size > 16 && line.scrollWidth > probeHeading.clientWidth) {
               size -= 1;
               line.style.fontSize = size + "px";
             }
