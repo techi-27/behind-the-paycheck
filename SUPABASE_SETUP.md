@@ -110,7 +110,7 @@ Deploy `submit-report` as well if its latest source has not already been deploye
 supabase functions deploy submit-report
 ```
 
-The migration to apply is `supabase/migrations/202610150001_reality_index_polls.sql`. Review the migration plan and run it against development first. Do not paste database passwords or service-role keys into GitHub or frontend files. The frontend uses only the publishable key; Edge Functions use server-side privileges.
+The migration to apply is `supabase/migrations/202610140002_reality_index_polls.sql`. Review the migration plan and run it against development first. Do not paste database passwords or service-role keys into GitHub or frontend files. The frontend uses only the publishable key; Edge Functions use server-side privileges.
 
 ### Threshold tests
 
