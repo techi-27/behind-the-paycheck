@@ -97,6 +97,26 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  const companyQ=await db.from("company_responses").select("id,company_id,response_text,submitted_at").eq("status","approved").order("submitted_at",{ascending:false}).limit(30);
  let company_responses:any[]=[];if(!companyQ.error){company_responses=(companyQ.data||[]).map((x:any)=>({company:companyMap.get(x.company_id)||null,response_text:x.response_text,submitted_at:x.submitted_at})).filter((x:any)=>x.company&&companyProfiles.some(c=>c.company===x.company))}
  const currentMonth=new Date().toISOString().slice(0,7),currentMonthRows=problemRows.filter((r:any)=>String(r.event_month||"").slice(0,7)===currentMonth);
+ const approvedCount=rows.length;
+ const tier=approvedCount>=200?200:approvedCount>=25?25:approvedCount>=15?15:approvedCount>=5?5:0;
+ const weekAgo=Date.now()-7*24*60*60*1000;
+ const reports_this_week=rows.filter((r:any)=>{const t=Date.parse(String(r.created_at||""));return Number.isFinite(t)&&t>=weekAgo}).length;
+ const chartEligible=(count:number)=>Number.isFinite(count)&&count>=MIN;
+ const safeIssues=tier>=5?issueCounts.filter((x:any)=>chartEligible(Number(x.count))):[];
+ const safeStageIssues=tier>=15?stage_issue_trends.filter((x:any)=>x.issues.some((it:any)=>chartEligible(Number(it.count)))):[];
+ const safeMonthly=tier>=15?monthly_trends.filter((x:any)=>chartEligible(Number(x.count))):[];
+ const safeNotice=tier>=25&&noticeRows.length>=MIN?noticeGap:null;
+ const safeHypocrisy=tier>=25&&hypocrisyRows.length>=MIN?hypocrisy:null;
+ const safeHike=tier>=25&&hikeRows.length>=MIN?{...hikeMeter,distribution:hikeDistribution.filter((x:any)=>chartEligible(Number(x.count)))}:null;
+ const safeOffer=tier>=25&&offerRows.length>=MIN?offerDelay:null;
+ const safeBgv=tier>=25&&bgvRows.length>=MIN?bgvDelay:null;
+ const safeLayoff=tier>=200?layoff_pulse:{report_count:null,monthly:[],no_advance_notice:null,access_cut_same_day:null,median_severance_weeks:null};
+ const safeCity=tier>=200?city_trends:[];
+ const safeCompanyType=tier>=200?company_type_trends:[];
+ const safeCompanyProfiles=tier>=200?companyProfiles:[];
+ const safeRedFlag=tier>=200?redFlag:[];
+ const safeGreenFlag=tier>=200?greenFlag:[];
+
  const currentMonthIssueMap=new Map<string,Set<string>>();for(const r of currentMonthRows){for(const issue of [r.primary_issue_id,...(r.secondary_issue_ids||[])].filter(Boolean))add(currentMonthIssueMap,String(issue),r.id)}
  const topIssuesThisMonth=[...currentMonthIssueMap.entries()].filter(([,set])=>set.size>=MIN).map(([id,set])=>({id,label:labelMap.get(id)||id,count:set.size})).sort((a,b)=>b.count-a.count).slice(0,5);
  const lastQuarterStart=new Date();lastQuarterStart.setMonth(lastQuarterStart.getMonth()-2);const quarterKey=lastQuarterStart.toISOString().slice(0,7);
@@ -104,17 +124,18 @@ Deno.serve(withSupabase({auth:"publishable"},async(req:Request,ctx)=>{
  const quarterIssueMap=new Map<string,Set<string>>();for(const r of quarterRows){for(const issue of [r.primary_issue_id,...(r.secondary_issue_ids||[])].filter(Boolean))add(quarterIssueMap,String(issue),r.id)}
  const topIssuesQuarter=[...quarterIssueMap.entries()].filter(([,set])=>set.size>=MIN).map(([id,set])=>({id,label:labelMap.get(id)||id,count:set.size})).sort((a,b)=>b.count-a.count).slice(0,5);
  return json({
-  total_reports:rows.length,problem_reports:problemRows.length,good_reports:goodRows.length,roast_reports:roastRows.length,
-  companies_reported:[...companyRows.values()].filter(v=>v.problem.size>=MIN).length,
+  total_reports:approvedCount,problem_reports:problemRows.length,good_reports:goodRows.length,roast_reports:roastRows.length,
+  companies_reported:[...companyRows.values()].filter(v=>v.all.size>=1).length,
   layoff_reports_90_days:layoffs.filter((r:any)=>String(r.event_month||"")>=new Date(Date.now()-90*86400000).toISOString().slice(0,7)).length,
-  personal_reports:0,it_reports:rows.length,total_issue_selections:issueCounts.reduce((n:any,x:any)=>n+x.count,0),
-  issues:issueCounts,companies:companyProfiles.slice(0,5).map(c=>({company:c.company,count:c.report_count})),
-  company_profiles:companyProfiles,red_flag_watchlist:redFlag,green_flag_companies:greenFlag,company_responses,
-  experience_trends:countRows("experience_band","problem"),stage_trends,stage_issue_trends,company_type_trends,city_trends,outcome_trends,monthly_trends,
+  personal_reports:0,it_reports:rows.length,total_issue_selections:safeIssues.reduce((n:any,x:any)=>n+x.count,0),
+  tier, reports_this_week, updated_at:new Date().toISOString(),
+  issues:safeIssues,companies:tier>=200?safeCompanyProfiles.slice(0,5).map(c=>({company:c.company,count:c.report_count})):[],
+  company_profiles:safeCompanyProfiles,red_flag_watchlist:safeRedFlag,green_flag_companies:safeGreenFlag,company_responses:tier>=200?company_responses:[],
+  experience_trends:tier>=200?countRows("experience_band","problem"):[],stage_trends:tier>=15?stage_trends:[],stage_issue_trends:safeStageIssues,company_type_trends:safeCompanyType,city_trends:safeCity,outcome_trends:tier>=15?outcome_trends:[],monthly_trends:safeMonthly,
   top_issues_this_month:topIssuesThisMonth,top_issues_latest_quarter:topIssuesQuarter,
-  notice_gap:noticeGap,notice_hypocrisy_meter:hypocrisy,hike_meter:hikeMeter,offer_delay:offerDelay,bgv_delay:bgvDelay,
-  moonlighting_outcomes,layoff_pulse,resolution_rate,government_poll,public_stories:publicStories,
-  policy_changes,scoring_rules:{red_flag:"Sum of issue report counts multiplied by the published issue severity weights; not an employer verdict.",green_flag:"Count of approved positive-experience reports; absence of complaints is not a positive rating.",minimum_reports:MIN,trend_eligibility:"Screened and published, unflagged for at least 24 hours."},
+  notice_gap:safeNotice,notice_hypocrisy_meter:safeHypocrisy,hike_meter:safeHike,offer_delay:safeOffer,bgv_delay:safeBgv,
+  moonlighting_outcomes:tier>=25?moonlighting_outcomes:[],layoff_pulse:safeLayoff,resolution_rate:tier>=25?resolution_rate:null,government_poll,public_stories:tier>=200?publicStories:[],
+  policy_changes,scoring_rules:{red_flag:"Sum of issue report counts multiplied by the published issue severity weights; not an employer verdict.",green_flag:"Count of approved positive-experience reports; absence of complaints is not a positive rating.",minimum_reports:MIN,tier_thresholds:{issues:5,stage_and_monthly:15,structured_metrics:25,company_and_layoff_comparisons:200},trend_eligibility:"Screened and published, unflagged for at least 24 hours."},
   methodology:"Counts use screened, published, unflagged reports at least 24 hours old. Each chart and named company bucket requires at least five eligible reports. Stories are user-submitted and not verified; no raw submission text is returned."
  },200,origin);
 }));
