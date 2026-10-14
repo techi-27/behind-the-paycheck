@@ -1619,10 +1619,13 @@ window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window._
   const SESSION_SLIDE_KEY = "btp-hero-copy-slide";
   if (!reduceMotion.matches) {
     try {
-      const previous = Number.parseInt(sessionStorage.getItem(SESSION_SLIDE_KEY) || "0", 10);
-      current = Number.isInteger(previous) && previous >= 0 && previous < SLIDES.length
-        ? (previous + 1) % SLIDES.length
-        : 0;
+      const savedSlide = sessionStorage.getItem(SESSION_SLIDE_KEY);
+      const previous = savedSlide === null ? -1 : Number.parseInt(savedSlide, 10);
+      current = previous === -1
+        ? 0
+        : Number.isInteger(previous) && previous >= 0 && previous < SLIDES.length
+          ? (previous + 1) % SLIDES.length
+          : 0;
       if (current !== 0) {
         const initialSlide = SLIDES[current];
         line1.textContent = initialSlide.line1;
