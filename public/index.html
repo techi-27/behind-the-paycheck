@@ -1616,6 +1616,24 @@ window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window._
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let current = 0;
+  const SESSION_SLIDE_KEY = "btp-hero-copy-slide";
+  if (!reduceMotion.matches) {
+    try {
+      const previous = Number.parseInt(sessionStorage.getItem(SESSION_SLIDE_KEY) || "0", 10);
+      current = Number.isInteger(previous) && previous >= 0 && previous < SLIDES.length
+        ? (previous + 1) % SLIDES.length
+        : 0;
+      if (current !== 0) {
+        const initialSlide = SLIDES[current];
+        line1.textContent = initialSlide.line1;
+        line2.textContent = initialSlide.line2;
+        paragraph.textContent = initialSlide.text;
+      }
+      sessionStorage.setItem(SESSION_SLIDE_KEY, String(current));
+    } catch (_) {
+      current = 0;
+    }
+  }
   let hovered = false;
   let fading = false;
   let reserveFrame = 0;
@@ -1676,7 +1694,8 @@ window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window._
       const probeLine2 = probe.querySelector(".hero-copy-line2");
       const probeParagraph = probe.querySelector("p");
       let maxHeight = 0;
-      const slidesToMeasure = reduceMotion.matches ? [SLIDES[0]] : SLIDES;\n      slidesToMeasure.forEach((slide) => {
+      const slidesToMeasure = reduceMotion.matches ? [SLIDES[0]] : SLIDES;
+      slidesToMeasure.forEach((slide) => {
         probeLine1.textContent = slide.line1;
         probeLine2.textContent = slide.line2;
         probeParagraph.textContent = slide.text;
@@ -1712,6 +1731,7 @@ window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window._
       line2.textContent = slide.line2;
       paragraph.textContent = slide.text;
       current = index;
+      try { sessionStorage.setItem(SESSION_SLIDE_KEY, String(current)); } catch (_) { /* storage may be unavailable */ }
       fitDesktopHeading();
       root.classList.remove("hero-copy-fading");
       fading = false;
