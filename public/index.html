@@ -1858,12 +1858,13 @@ main.choice-main>.choice-hero p{max-width:68ch;overflow-wrap:anywhere}
 </style>
 
 <style id="hero-rotation-and-stats-spacing-fix">
-/* Stable hero copy: allow every rotating headline to wrap inside its own column. */
+/* Let the rotating hero copy determine its height; reserve a clear gap before stats. */
 @media (min-width: 901px) {
   html body main.choice-main > section.choice-hero {
     height: auto !important;
-    min-height: min(590px, calc(100svh - 250px)) !important;
+    min-height: 0 !important;
     max-height: none !important;
+    margin-bottom: 34px !important;
     align-items: center !important;
     overflow: visible !important;
   }
@@ -1874,10 +1875,12 @@ main.choice-main>.choice-hero p{max-width:68ch;overflow-wrap:anywhere}
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
+    position: relative !important;
+    z-index: 2 !important;
   }
   html body main.choice-main > section.choice-hero > .hero-copy-rotator h1 {
-    font-size: clamp(2.35rem, 4.1vw, 3.9rem) !important;
-    line-height: 1.04 !important;
+    font-size: clamp(2.15rem, 3.6vw, 3.45rem) !important;
+    line-height: 1.06 !important;
     letter-spacing: -.045em !important;
     overflow-wrap: anywhere !important;
     margin-bottom: 16px !important;
@@ -1888,7 +1891,7 @@ main.choice-main>.choice-hero p{max-width:68ch;overflow-wrap:anywhere}
     overflow-wrap: anywhere !important;
   }
   html body main.choice-main > section.choice-hero > .hero-copy-rotator p {
-    font-size: clamp(1rem, 1.35vw, 1.2rem) !important;
+    font-size: clamp(1rem, 1.3vw, 1.15rem) !important;
     line-height: 1.45 !important;
   }
   html body main.choice-main > section.hero-report-stats {
@@ -1898,11 +1901,13 @@ main.choice-main>.choice-hero p{max-width:68ch;overflow-wrap:anywhere}
     min-height: 0 !important;
     max-height: none !important;
     grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-    column-gap: 12px !important;
+    column-gap: 8px !important;
     row-gap: 4px !important;
     align-content: start !important;
-    padding: 16px 0 8px !important;
+    padding: 14px 0 8px !important;
     margin: 0 auto !important;
+    position: relative !important;
+    z-index: 1 !important;
   }
   html body main.choice-main > section.hero-report-stats > div.hero-report-stat,
   html body main.choice-main > section.hero-report-stats > div.hero-report-stat:nth-child(5) {
@@ -1913,13 +1918,13 @@ main.choice-main>.choice-hero p{max-width:68ch;overflow-wrap:anywhere}
     padding: 0 2px !important;
   }
   html body main.choice-main > section.hero-report-stats > div.hero-report-stat strong {
-    font-size: clamp(1.45rem, 2.15vw, 2rem) !important;
+    font-size: clamp(1.35rem, 1.9vw, 1.8rem) !important;
     line-height: 1.05 !important;
   }
   html body main.choice-main > section.hero-report-stats > div.hero-report-stat span {
-    font-size: 9px !important;
+    font-size: 8px !important;
     line-height: 1.35 !important;
-    letter-spacing: .25px !important;
+    letter-spacing: .2px !important;
     overflow-wrap: normal !important;
     word-break: normal !important;
   }
