@@ -30,7 +30,7 @@ Deno.serve(withSupabase({ auth: "publishable" }, async (req: Request, ctx) => {
     if (origin && !allowedOrigins.has(origin)) return response({ error: "Origin not allowed" }, 403, origin);
     const headers = new Headers({
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-device-token",
       "Vary": "Origin",
     });
     if (origin) headers.set("Access-Control-Allow-Origin", origin);
@@ -50,8 +50,8 @@ Deno.serve(withSupabase({ auth: "publishable" }, async (req: Request, ctx) => {
   }
   const url = new URL(req.url);
   const requestedPoll = req.method === "POST" ? String(body.poll_id) : url.searchParams.get("poll_id");
-  const deviceHash = validToken(req.method === "POST" ? body.device_token : url.searchParams.get("device_token"))
-    ? await hashToken(String(req.method === "POST" ? body.device_token : url.searchParams.get("device_token")))
+  const deviceHash = validToken(req.method === "POST" ? body.device_token : req.headers.get("x-device-token"))
+    ? await hashToken(String(req.method === "POST" ? body.device_token : req.headers.get("x-device-token")))
     : null;
 
   if (req.method === "POST") {
