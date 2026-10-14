@@ -114,8 +114,8 @@ const endpoint=name=>SUPABASE_URL+"/functions/v1/"+name;
 const $=id=>document.getElementById(id);
 const form=$("btp-report-form"),DRAFT_KEY="btp-report-draft-v2",TOKEN_KEY="btp-report-token-v2",POLL_TOKEN_KEY="btp-government-poll-token-v1";
 const issues={
- applying:[["recruiter-ghosting","No response or ghosting"],["no-feedback","No interview feedback"],["too-many-rounds","Too many rounds"],["documents-early","Documents asked too early"],["budget-revealed-late","Budget revealed late"]],
- interview:[["recruiter-ghosting","No response or ghosting"],["no-feedback","No interview feedback"],["too-many-rounds","Too many rounds"],["documents-early","Documents asked too early"],["budget-revealed-late","Budget revealed late"]],
+ applying:[["recruiter-ghosting","No response or ghosting"],["fake-interview-call","Fake interview calls / recruiter no-show"],["no-feedback","No interview feedback"],["too-many-rounds","Too many rounds"],["documents-early","Documents asked too early"],["budget-revealed-late","Budget revealed late"]],
+ interview:[["recruiter-ghosting","No response or ghosting"],["fake-interview-call","Fake interview calls / recruiter no-show"],["no-feedback","No interview feedback"],["too-many-rounds","Too many rounds"],["documents-early","Documents asked too early"],["budget-revealed-late","Budget revealed late"]],
  offer:[["offer-letter-delay","Offer letter delayed or withheld"],["offer-revoked","Offer revoked"],["offer-mismatch","Offer lower than discussed"],["counter-offer-pressure","Counter-offer pressure"]],
  "notice-joining":[["immediate-joining","Immediate joining demanded"],["notice-period-rejected","Notice period rejected"],["notice-buyout-refused","Notice buyout refused"],["bgv-delay","BGV delay"],["relieving-letter-withheld","Relieving or experience letter withheld"],["final-settlement-delay","Final settlement delayed"]],
  working:[["unpaid-salary","Salary delayed or unpaid"],["low-hike","Low or zero hike"],["unpaid-overtime","Unpaid extra hours"],["work-pressure","Burnout"],["moonlighting-action","Moonlighting action"],["work-location-change","RTO or WFH change"],["promotion-denied","Promotion denied"]],
