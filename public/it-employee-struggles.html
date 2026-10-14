@@ -340,6 +340,18 @@
     wrap.append(input);return wrap;
   }
   const factDefinitions = {
+    applying:[
+      ["hiring_source","How did you apply?",[["direct","Company website"],["consultant","Recruiter / consultant"],["referral","Employee referral"],["portal","Job portal"]]],
+      ["outcome","Application outcome",[["resolved","Got a response / progressed"],["ongoing","Still waiting"],["lost-job","Rejected"],["left-company","Withdrew application"]]],
+      ["offer_days_waited","Days waiting for a response",[],"number",0,730],
+      ["hr_escalated","Did you follow up with the recruiter?",[["true","Yes"],["false","No"]]]
+    ],
+    interview:[
+      ["hiring_source","How did you apply?",[["direct","Company website"],["consultant","Recruiter / consultant"],["referral","Employee referral"],["portal","Job portal"]]],
+      ["outcome","Interview outcome",[["resolved","Selected / moved forward"],["ongoing","Waiting for feedback"],["lost-job","Rejected"],["left-company","Withdrew"]]],
+      ["offer_days_waited","Days waiting for feedback",[],"number",0,730],
+      ["hr_escalated","Did you follow up for feedback?",[["true","Yes"],["false","No"]]]
+    ],
     "notice-joining":[
       ["notice_period_band","Your notice period",[["0-15","0–15 days"],["30","30 days"],["60","60 days"],["90","90 days"],["other","Other"]]],
       ["joining_demand_band","Joining time requested",[["immediate","Immediate"],["up-to-15","Within 15 days"],["up-to-30","Within 30 days"],["other","Other"]]],
