@@ -431,5 +431,11 @@ revoke all on public.trend_eligible_reports,public.company_issue_counts_min5,pub
 grant select,insert,update,delete on public.stage_issue_map,public.legacy_issue_map,public.post_flags,public.moderator_roles,public.government_poll to service_role;
 grant select on public.trend_eligible_reports,public.company_issue_counts_min5,public.company_counts_min5 to service_role;
 
+
+-- Extend the audit vocabulary for the new flagged/hidden moderation queue.
+alter table public.moderation_events drop constraint if exists moderation_events_action_check;
+alter table public.moderation_events add constraint moderation_events_action_check
+  check (action in ('approved','rejected','removed','returned-to-pending','hidden','restored','withdrawn'));
+
 -- The migration intentionally does not publish legacy pending/rejected/removed reports.
 commit;
