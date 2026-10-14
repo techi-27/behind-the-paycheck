@@ -1814,6 +1814,48 @@ main.choice-main>.choice-hero p{max-width:68ch;overflow-wrap:anywhere}
   }
 }
 </style>
+
+<style id="hero-stats-100-percent-final">
+/* At normal desktop zoom, explicitly place each stat in its own numbered column. */
+@media screen and (min-width: 1100px) {
+  html body main.choice-main > section.hero-report-stats {
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    grid-template-rows:auto auto!important;
+    grid-auto-flow:row!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    gap:10px!important;
+    padding:20px 0 0!important;
+    margin:18px 0 0!important;
+    align-content:start!important;
+    overflow:visible!important;
+  }
+  html body main.choice-main > section.hero-report-stats > div.hero-report-stat:nth-child(1) {grid-column:1!important;grid-row:1!important}
+  html body main.choice-main > section.hero-report-stats > div.hero-report-stat:nth-child(2) {grid-column:2!important;grid-row:1!important}
+  html body main.choice-main > section.hero-report-stats > div.hero-report-stat:nth-child(3) {grid-column:3!important;grid-row:1!important}
+  html body main.choice-main > section.hero-report-stats > div.hero-report-stat:nth-child(4) {grid-column:4!important;grid-row:1!important}
+  html body main.choice-main > section.hero-report-stats > div.hero-report-stat:nth-child(5) {grid-column:5!important;grid-row:1!important;justify-self:stretch!important;width:auto!important}
+  html body main.choice-main > section.hero-report-stats > div.hero-report-stat {
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    justify-content:flex-start!important;position:static!important;transform:none!important;
+    min-width:0!important;max-width:100%!important;margin:0!important;padding:0 2px!important;
+  }
+  html body main.choice-main > section.hero-report-stats > div.hero-report-stat strong {
+    font-size:clamp(20px,1.9vw,32px)!important;line-height:1!important;white-space:nowrap!important;
+  }
+  html body main.choice-main > section.hero-report-stats > div.hero-report-stat span {
+    font-size:9px!important;line-height:1.35!important;letter-spacing:.15px!important;
+    text-align:center!important;overflow-wrap:normal!important;word-break:normal!important;hyphens:none!important;
+  }
+  html body main.choice-main > section.hero-report-stats > p.hero-report-disclaimer {
+    grid-column:1/-1!important;grid-row:2!important;margin:6px 0 0!important;
+    white-space:normal!important;text-align:center!important;
+  }
+}
+</style>
 </head><body><header class="site-header"><a class="brand" href="./index.html" aria-label="Behind the Paycheck home"><span class="brand-mark">B</span><span>Behind the <strong>Paycheck</strong></span></a><nav aria-label="Main navigation"><a href="./index.html" class="nav-link active" aria-current="page">Home</a><a href="./index.html#overview-trends" class="nav-link">Employee Trends</a><a href="./it-employee-struggles.html" class="nav-link">Share Experience</a><a href="./index.html#corporate-bingo" class="nav-link">Satire Lab</a><a href="./index.html#employee-rights" class="nav-link">Employee Rights</a><a href="./about.html" class="nav-link">About</a><a href="./coffee.html" class="nav-link nav-cta">Buy Me a Coffee ☕</a></nav></header><div class="btp-ticker" role="region" aria-label="Corporate satire ticker"><span class="btp-ticker-label">IT reality check</span><div class="btp-ticker-track"><div class="btp-ticker-set" id="btp-ticker-primary"><span class="btp-ticker-item">Immediate joiner needed. Our own employees serve 90 days, but rules are for others.</span><span class="btp-ticker-item">Offer letter loading... 99% for the last 45 days.</span><span class="btp-ticker-item">Hike: 2%. Inflation: 6%. Rent: 15%. Math: not mathing.</span><span class="btp-ticker-item">Competitive salary = you compete to get it.</span><span class="btp-ticker-item">BGV pending since the Stone Age.</span><span class="btp-ticker-item">Layoff mail arrives faster than the appraisal mail.</span><span class="btp-ticker-item">Bench is not a vacation.</span><span class="btp-ticker-item">IT employees pay advance tax on time. Layoff support arrives never.</span><span class="btp-ticker-item positive">Respect to companies who release offer letters on time. Both of you.</span><span class="btp-ticker-item positive">Good managers exist. May their calendars stay meeting-free.</span></div><div class="btp-ticker-set" aria-hidden="true"><span class="btp-ticker-item">Immediate joiner needed. Our own employees serve 90 days, but rules are for others.</span><span class="btp-ticker-item">Offer letter loading... 99% for the last 45 days.</span><span class="btp-ticker-item">Hike: 2%. Inflation: 6%. Rent: 15%. Math: not mathing.</span><span class="btp-ticker-item">Competitive salary = you compete to get it.</span><span class="btp-ticker-item">BGV pending since the Stone Age.</span><span class="btp-ticker-item">Layoff mail arrives faster than the appraisal mail.</span><span class="btp-ticker-item">Bench is not a vacation.</span><span class="btp-ticker-item">IT employees pay advance tax on time. Layoff support arrives never.</span><span class="btp-ticker-item positive">Respect to companies who release offer letters on time. Both of you.</span><span class="btp-ticker-item positive">Good managers exist. May their calendars stay meeting-free.</span></div></div></div><main class="choice-main wrap"><section class="choice-hero"><div class="eyebrow"><span class="live-dot"></span> INDIA'S IT PAIN-IN-THE-ASS ARCHIVE</div><div class="hero-copy-rotator" id="hero-copy-rotator" aria-live="off"><h1 id="hero-copy-heading"><span class="hero-copy-line1">Welcome to IT.</span><span class="hero-copy-line2">Now enjoy the nonsense.</span></h1><p id="hero-copy-paragraph">Six interview rounds. Zero feedback. A 7% hike that needs a standing ovation. Share the nonsense you survived, anonymously.</p></div><div class="hero-visual" aria-label="Preview of the IT employee experience dashboard"><div class="hero-visual-card" tabindex="0" aria-label="IT: Pain in the Ass preview card. Focus to straighten the card."><div class="hero-visual-top"><div><span class="hero-visual-kicker">BEHIND THE PAYCHECK</span><h2>IT: Pain in the Ass</h2><p>Real pain. Ridiculous patterns.</p></div><span class="hero-visual-pill">Anonymous</span></div><div class="hero-visual-rule"></div><div class="hero-visual-item"><span class="hero-visual-icon coral">↗</span><div><strong>Interview circus &amp; recruiter magic</strong><p>Five rounds. Then they ghost you. Iconic.</p></div><span class="hero-visual-tag">Share</span></div><div class="hero-visual-item"><span class="hero-visual-icon yellow">₹</span><div><strong>Salary trauma &amp; offer-letter fiction</strong><p>Big promises. Tiny hikes. Mystery CTC.</p></div><span class="hero-visual-tag">Track</span></div><div class="hero-visual-item"><span class="hero-visual-icon blue">⇄</span><div><strong>Job-switching gymnastics</strong><p>90-day notice. New job starts yesterday.</p></div><span class="hero-visual-tag">Compare</span></div><div class="hero-visual-footer"><span><i></i> Employee reports. Corporate plot twists.</span><span>Bring receipts ↗</span></div></div></div></section>
 <section class="hero-report-stats" aria-label="Anonymous IT report counters"><div class="hero-report-stat"><strong id="hero-stat-total" aria-live="polite">—</strong><span>Reports on site</span></div><div class="hero-report-stat"><strong id="hero-stat-harassment" aria-live="polite">—</strong><span>Harassment reports</span></div><div class="hero-report-stat"><strong id="hero-stat-layoff" aria-live="polite">—</strong><span>Laid off by Indian IT companies</span></div><div class="hero-report-stat"><strong id="hero-stat-offer" aria-live="polite">—</strong><span>Offer delayed or offer letter not sent reports</span></div><div class="hero-report-stat"><strong id="hero-stat-interview" aria-live="polite">—</strong><span>Interview cancellations &amp; ghosting</span></div><p class="hero-report-disclaimer">Counts of anonymous, user-submitted reports. Not proof of wrongdoing.</p></section>
 <section class="overview-trends" id="overview-trends" aria-labelledby="overview-trends-title">
