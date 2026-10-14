@@ -550,7 +550,7 @@
       localStorage.removeItem("btp-report-draft");
       $("#withdrawal-result").hidden=false;
       $("#withdrawal-result").replaceChildren();
-      const h=document.createElement("h3");h.textContent="Your report was published";
+      const h=document.createElement("h3");h.textContent="Your report was submitted";
       const p=document.createElement("p");p.textContent=data.message||"Save your withdrawal code if you may want to remove this report later.";
       const code=document.createElement("code");code.textContent=data.withdrawal_code||"";
       const copy=document.createElement("button");copy.type="button";copy.className="button button-secondary";copy.textContent="Copy withdrawal code";copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(code.textContent);copy.textContent="Copied";}catch{showMessage("Select and copy the withdrawal code manually.","error");}});
