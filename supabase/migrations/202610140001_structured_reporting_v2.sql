@@ -405,11 +405,51 @@ where r.report_group='it'
 create or replace view public.company_issue_counts_min5
 with (security_invoker=true)
 as
-select e.company_id,e.primary_issue_id as issue_id,count(*)::bigint as report_count
-from public.trend_eligible_reports e
-where e.report_type='problem' and e.company_id is not null and e.primary_issue_id is not null
-group by e.company_id,e.primary_issue_id
-having count(*) >= 5;
+with issue_rows as (
+  select e.id,e.company_id,e.primary_issue_id as issue_id
+  from public.trend_eligible_reports e
+  where e.report_type='problem' and e.company_id is not null and e.primary_issue_id is not null
+  union
+  select e.id,e.company_id,unnest(e.secondary_issue_ids) as issue_id
+  from public.trend_eligible_reports e
+  where e.report_type='problem' and e.company_id is not null and cardinality(e.secondary_issue_ids)>0
+)
+select company_id,issue_id,count(distinct id)::bigint as report_count
+from issue_rows
+group by company_id,issue_id
+having count(distinct id) >= 5;
+
+create or replace view public.issue_counts_min5
+with (security_invoker=true)
+as
+with issue_rows as (
+  select e.id,e.primary_issue_id as issue_id
+  from public.trend_eligible_reports e
+  where e.report_type='problem' and e.primary_issue_id is not null
+  union
+  select e.id,unnest(e.secondary_issue_ids) as issue_id
+  from public.trend_eligible_reports e
+  where e.report_type='problem' and cardinality(e.secondary_issue_ids)>0
+  union
+  select r.id,coalesce(l.canonical_issue_id,ri.issue_id) as issue_id
+  from public.trend_eligible_reports r
+  join public.report_issues ri on ri.report_id=r.id
+  left join public.legacy_issue_map l on l.legacy_issue_id=ri.issue_id
+  where r.report_type='problem' and r.primary_issue_id is null
+)
+select issue_id,count(distinct id)::bigint as report_count
+from issue_rows
+group by issue_id
+having count(distinct id)>=5;
+
+create or replace view public.company_positive_counts_min5
+with (security_invoker=true)
+as
+select company_id,count(distinct id)::bigint as report_count
+from public.trend_eligible_reports
+where report_type='good' and company_id is not null
+group by company_id
+having count(distinct id)>=5;
 
 create or replace view public.company_counts_min5
 with (security_invoker=true)
@@ -427,9 +467,9 @@ alter table public.post_flags enable row level security;
 alter table public.moderator_roles enable row level security;
 alter table public.government_poll enable row level security;
 revoke all on public.stage_issue_map,public.legacy_issue_map,public.post_flags,public.moderator_roles,public.government_poll from anon,authenticated;
-revoke all on public.trend_eligible_reports,public.company_issue_counts_min5,public.company_counts_min5 from anon,authenticated;
+revoke all on public.trend_eligible_reports,public.company_issue_counts_min5,public.company_counts_min5,public.issue_counts_min5,public.company_positive_counts_min5 from anon,authenticated;
 grant select,insert,update,delete on public.stage_issue_map,public.legacy_issue_map,public.post_flags,public.moderator_roles,public.government_poll to service_role;
-grant select on public.trend_eligible_reports,public.company_issue_counts_min5,public.company_counts_min5 to service_role;
+grant select on public.trend_eligible_reports,public.company_issue_counts_min5,public.company_counts_min5,public.issue_counts_min5,public.company_positive_counts_min5 to service_role;
 
 
 -- Extend the audit vocabulary for the new flagged/hidden moderation queue.
