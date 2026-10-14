@@ -80,6 +80,7 @@
 @media(prefers-reduced-motion:reduce){.contribution-preview *{scroll-behavior:auto}}
 </style>
 
+<style id="btp-quick-facts-empty-state">.quick-facts-empty{grid-column:1/-1;border:1px dashed #cbd8ea;border-radius:14px;padding:18px;background:#f8faff}.quick-facts-empty strong{display:block;color:#16264d;font:800 15px/1.4 Inter,sans-serif}.quick-facts-empty p{margin:7px 0 12px;color:#64748b;font-size:13px;line-height:1.6}.quick-facts-stage-choices{display:flex;flex-wrap:wrap;gap:8px}.quick-facts-stage-choices .flow-chip{min-height:40px}@media(max-width:560px){.quick-facts-stage-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}</style>
 </head><body><header class="site-header"><a class="brand" href="./index.html" aria-label="Behind the Paycheck home"><span class="brand-mark">B</span><span>Behind the <strong>Paycheck</strong></span></a><nav aria-label="Main navigation"><a href="./index.html" class="nav-link">Home</a><a href="./index.html#overview-trends" class="nav-link">Employee Trends</a><a href="./it-employee-struggles.html" class="nav-link active" aria-current="page">Share Experience</a><a href="./index.html#corporate-bingo" class="nav-link">Satire Lab</a><a href="./index.html#employee-rights" class="nav-link">Employee Rights</a><a href="./about.html" class="nav-link">About</a><a href="./coffee.html" class="nav-link nav-cta">Buy Me a Coffee ☕</a></nav></header><div class="btp-ticker" role="region" aria-label="Corporate satire ticker"><span class="btp-ticker-label">IT reality check</span><div class="btp-ticker-track"><div class="btp-ticker-set" id="btp-ticker-primary"><span class="btp-ticker-item">Immediate joiner needed. Our own employees serve 90 days, but rules are for others.</span><span class="btp-ticker-item">Offer letter loading... 99% for the last 45 days.</span><span class="btp-ticker-item">Hike: 2%. Inflation: 6%. Rent: 15%. Math: not mathing.</span><span class="btp-ticker-item">Competitive salary = you compete to get it.</span><span class="btp-ticker-item">BGV pending since the Stone Age.</span><span class="btp-ticker-item">Layoff mail arrives faster than the appraisal mail.</span><span class="btp-ticker-item">Bench is not a vacation.</span><span class="btp-ticker-item">IT employees pay advance tax on time. Layoff support arrives never.</span><span class="btp-ticker-item positive">Respect to companies who release offer letters on time. Both of you.</span><span class="btp-ticker-item positive">Good managers exist. May their calendars stay meeting-free.</span></div><div class="btp-ticker-set" aria-hidden="true"><span class="btp-ticker-item">Immediate joiner needed. Our own employees serve 90 days, but rules are for others.</span><span class="btp-ticker-item">Offer letter loading... 99% for the last 45 days.</span><span class="btp-ticker-item">Hike: 2%. Inflation: 6%. Rent: 15%. Math: not mathing.</span><span class="btp-ticker-item">Competitive salary = you compete to get it.</span><span class="btp-ticker-item">BGV pending since the Stone Age.</span><span class="btp-ticker-item">Layoff mail arrives faster than the appraisal mail.</span><span class="btp-ticker-item">Bench is not a vacation.</span><span class="btp-ticker-item">IT employees pay advance tax on time. Layoff support arrives never.</span><span class="btp-ticker-item positive">Respect to companies who release offer letters on time. Both of you.</span><span class="btp-ticker-item positive">Good managers exist. May their calendars stay meeting-free.</span></div></div></div><main class="selection-main wrap btp-report-flow">
   <div class="eyebrow">SHARE ANONYMOUSLY · NO ACCOUNT REQUIRED</div>
   <h1>Share what happened.<br><span>Help make the patterns count.</span></h1>
@@ -382,7 +383,24 @@
   };
   function renderFacts() {
     const wrap=$("#quick-facts");wrap.replaceChildren();
-    (factDefinitions[state.stage]||[]).forEach(def=>wrap.append(factField(...def)));
+    const definitions=factDefinitions[state.stage]||[];
+    if(!state.stage || !definitions.length) {
+      const prompt=document.createElement("div");prompt.className="quick-facts-empty";
+      const title=document.createElement("strong");title.textContent="Choose a career stage to see relevant questions";
+      const help=document.createElement("p");help.textContent="Select the stage where this happened. The questions below will change to match your experience. All answers are optional.";
+      const choices=document.createElement("div");choices.className="quick-facts-stage-choices";
+      [["applying","Applying"],["interview","Interview"],["offer","Offer"],["notice-joining","Notice / Joining"],["working","Working"],["layoff","Layoff"]].forEach(([value,label])=>{
+        const button=document.createElement("button");button.type="button";button.className="flow-chip";button.textContent=label;
+        button.addEventListener("click",()=>{
+          collectFacts();state.stage=value;state.primary="";state.secondary=[];state.positive=[];
+          $("#stage-options [data-stage]").forEach(b=>{b.classList.toggle("active",b.dataset.stage===value);b.setAttribute("aria-pressed",String(b.dataset.stage===value));});
+          issueMarkup();renderFacts();updateContributionPreview();
+        });
+        choices.append(button);
+      });
+      prompt.append(title,help,choices);wrap.append(prompt);return;
+    }
+    definitions.forEach(def=>wrap.append(factField(...def)));
     if(state.stage==="notice-joining" && state.primary==="bgv-delay"){
       wrap.append(factField("bgv_days_pending","Days BGV has been pending",[],"number",0,730));
       wrap.append(factField("bgv_blocked_joining","Did BGV block joining?",[["true","Yes"],["false","No"]]));
