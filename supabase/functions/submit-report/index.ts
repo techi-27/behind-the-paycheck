@@ -179,6 +179,16 @@ Deno.serve(withSupabase({auth:"publishable"}, async (req: Request, ctx) => {
 
   const db = ctx.supabaseAdmin;
   const normalizedCompany = companyName.toLowerCase().replace(/\s+/g," ");
+  // Keep posts attached to a single company. Company-neutral roasts cannot name a company.
+  const knownCompanies = await db.from("companies").select("display_name").limit(5000);
+  if (knownCompanies.error) return json({error:"Automatic screening is temporarily unavailable."},503,origin);
+  const mentionText = (roast ? roastText : story).toLowerCase();
+  const mentionedCompany = (knownCompanies.data || []).find((row:any) => {
+    const name=String(row.display_name||"").trim().toLowerCase();
+    if(name.length<4 || !mentionText.includes(name)) return false;
+    return roast || name !== normalizedCompany;
+  });
+  if (mentionedCompany) return json({error:roast?"One-line roasts must be company-neutral. Remove the company name and try again.":"Keep the story focused on the selected company. Remove other company names and try again.",screening:"edit_required"},422,origin);
   const tokenHash = await hash(b.client_token + "|" + (roast ? "company-neutral-roast" : normalizedCompany));
   const cutoff = new Date(Date.now()-7*86400000).toISOString();
   const purge = await db.from("submission_guard").delete().lt("created_at",cutoff);
