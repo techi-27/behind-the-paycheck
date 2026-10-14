@@ -1995,10 +1995,10 @@ main.choice-main>.choice-hero p{max-width:68ch;overflow-wrap:anywhere}
     <article class="reality-stat"><strong id="reality-layoff-count">—</strong><span>LAYOFF REPORTS · LAST 90 DAYS</span></article>
     <article class="reality-stat"><strong id="reality-good-count">—</strong><span>CORPORATE “GREAT PLACE” CLAIMS</span></article>
   </div>
-  <div class="reality-freshness" aria-live="polite"><strong id="reality-week-count">Reports this week: —</strong><span id="reality-updated-at">Updated —</span></div>
+  
   <section class="top-companies-trends" id="top-companies-trends" aria-labelledby="top-companies-title">
     <div class="top-companies-heading">
-      <div><span class="eyebrow">THE NAMES BEHIND THE NUMBERS</span><h3 id="top-companies-title">Top 10 companies employees are reporting</h3><p>Ranked by eligible employee-submitted workplace issue reports—not a company rating or proof of wrongdoing.</p></div>
+      <div><span class="eyebrow">THE NAMES BEHIND THE NUMBERS</span><h3 id="top-companies-title">Top 10 companies employees are reporting</h3><p>Illustrative preview rankings using fictional sample data—not real company reports or ratings.</p></div>
       <a href="./dashboard.html" class="top-companies-link">Explore all trends ↗</a>
 
     </div>
@@ -2006,7 +2006,7 @@ main.choice-main>.choice-hero p{max-width:68ch;overflow-wrap:anywhere}
       <p class="top-companies-empty">Company names appear when enough eligible reports meet the privacy threshold.</p>
     </div>
 
-    <p class="top-companies-note">Only screened, published reports at least 24 hours old are eligible. A company appears only after at least five eligible issue reports. No raw stories are shown.</p>
+    
   </section>
   <style id="top-companies-trends-styles">
     #top-companies-trends{margin:18px 0 24px;padding:clamp(20px,2.6vw,28px);border:1px solid #dce6f5;border-radius:20px;background:#fff;box-shadow:0 8px 24px rgba(23,39,71,.035)}
@@ -2512,12 +2512,12 @@ window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window._
     set("reality-company-count",fmt(companies.length));
     set("reality-layoff-count",fmt(927));
     set("reality-good-count",fmt(412));
-    set("reality-week-count","DEMO preview: +248 this week");
-    set("reality-updated-at","Fictional sample data");
+    set("reality-week-count","");
+    set("reality-updated-at","");
     set("reality-updated","Fictional sample data");
     set("reality-total-reports-note","UI DEMO — fictional data only");
     const top = document.getElementById("top-companies-list");
-    if(top) top.innerHTML='<p class="top-companies-empty"><strong>UI DEMO — FICTIONAL DATA ONLY</strong><br>10,000 simulated records generated in this browser. Nothing is uploaded or saved.</p><div class="top-companies-demo-ranking">'+counts.map((c,i)=>'<div class="top-companies-demo-item"><b>#'+(i+1)+'</b><span>'+esc(c.company)+'</span><small>'+fmt(c.count)+' demo reports</small></div>').join("")+'</div><div class="top-companies-sample-table-wrap"><table class="top-companies-sample-table"><thead><tr><th>Demo user ID</th><th>Fictional company</th><th>Simulated issue</th><th>Stage</th></tr></thead><tbody>'+demo.slice(0,10).map(u=>'<tr><td>'+u.id+'</td><td>'+esc(u.company)+'</td><td>'+esc(u.issue)+'</td><td>'+esc(u.stage)+'</td></tr>').join("")+'</tbody></table></div>';
+    if(top) top.innerHTML='<div class="top-companies-demo-ranking">'+counts.map((c,i)=>'<div class="top-companies-demo-item"><b>#'+(i+1)+'</b><span>'+esc(c.company)+'</span><small>'+fmt(c.count)+' sample reports</small></div>').join("")+'</div><div class="top-companies-sample-table-wrap"><table class="top-companies-sample-table"><thead><tr><th>Sample ID</th><th>Fictional company</th><th>Illustrative issue</th><th>Stage</th></tr></thead><tbody>'+demo.slice(0,10).map(u=>'<tr><td>'+u.id+'</td><td>'+esc(u.company)+'</td><td>'+esc(u.issue)+'</td><td>'+esc(u.stage)+'</td></tr>').join("")+'</tbody></table></div>';
     const recent = document.getElementById("recent-experience-list");
     if(recent) recent.innerHTML=demo.slice(10,16).map(u=>'<article class="experience-card"><span class="eyebrow">FICTIONAL UI DEMO</span><h4>'+esc(u.issue)+'</h4><p>'+esc(u.company)+' · '+esc(u.stage)+'</p><small>Sample only — not a real employee report.</small></article>').join("");
     const structured = document.getElementById("homepage-structured-trends");
