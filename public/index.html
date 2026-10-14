@@ -2074,8 +2074,8 @@ main.choice-main>.choice-hero p{max-width:68ch;overflow-wrap:anywhere}
       host.innerHTML = liveMarkup +
         '<div class="top-companies-demo-panel"><p class="top-companies-empty"><strong>UI DEMO — FICTIONAL DATA ONLY</strong><br>10,000 fictional demo users generated in this browser · 0 uploaded · 0 saved.</p>' +
         '<div class="top-companies-demo-ranking">' + counts.slice(0,10).map((c,i) => '<div class="top-companies-demo-item"><b>#'+(i+1)+'</b><span>'+esc(c.name)+'</span><small>'+fmt(c.count)+' demo records</small></div>').join("") + '</div>' +
-        '<div class="top-companies-sample-table-wrap"><table class="top-companies-sample-table"><thead><tr><th>Demo user ID</th><th>Fictional company</th><th>Simulated issue</th><th>Stage</th></tr></thead><tbody>' +
-        users.slice(0,10).map(u => '<tr><td>'+u.id+'</td><td>'+esc(u.company)+'</td><td>'+esc(u.issue)+'</td><td>'+esc(u.stage)+'</td></tr>').join("") +
+        '<div class="top-companies-sample-table-wrap"><table class="top-companies-sample-table"><thead><tr><th>S.No</th><th>Company Name</th><th>Issue</th><th>Stage</th></tr></thead><tbody>' +
+        users.slice(0,10).map((u,i) => '<tr><td>'+(i+1)+'</td><td>'+esc(u.company)+'</td><td>'+esc(u.issue)+'</td><td>'+esc(u.stage)+'</td></tr>').join("") +
         '</tbody></table></div></div>';
     }
     function init() {
@@ -2517,7 +2517,7 @@ window.addEventListener("approved-trends-ready",e=>render(e.detail));if(window._
     set("reality-updated","Fictional sample data");
     set("reality-total-reports-note","UI DEMO — fictional data only");
     const top = document.getElementById("top-companies-list");
-    if(top) top.innerHTML='<div class="top-companies-demo-ranking">'+counts.map((c,i)=>'<div class="top-companies-demo-item"><b>#'+(i+1)+'</b><span>'+esc(c.company)+'</span><small>'+fmt(c.count)+' sample reports</small></div>').join("")+'</div><div class="top-companies-sample-table-wrap"><table class="top-companies-sample-table"><thead><tr><th>Sample ID</th><th>Fictional company</th><th>Illustrative issue</th><th>Stage</th></tr></thead><tbody>'+demo.slice(0,10).map(u=>'<tr><td>'+u.id+'</td><td>'+esc(u.company)+'</td><td>'+esc(u.issue)+'</td><td>'+esc(u.stage)+'</td></tr>').join("")+'</tbody></table></div>';
+    if(top) top.innerHTML='<div class="top-companies-demo-ranking">'+counts.map((c,i)=>'<div class="top-companies-demo-item"><b>#'+(i+1)+'</b><span>'+esc(c.company)+'</span><small>'+fmt(c.count)+' sample reports</small></div>').join("")+'</div><div class="top-companies-sample-table-wrap"><table class="top-companies-sample-table"><thead><tr><th>S.No</th><th>Company Name</th><th>Issue</th><th>Stage</th></tr></thead><tbody>'+demo.slice(0,10).map((u,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(u.company)+'</td><td>'+esc(u.issue)+'</td><td>'+esc(u.stage)+'</td></tr>').join("")+'</tbody></table></div>';
     const recent = document.getElementById("recent-experience-list");
     if(recent) recent.innerHTML=demo.slice(10,16).map(u=>'<article class="experience-card"><span class="eyebrow">FICTIONAL UI DEMO</span><h4>'+esc(u.issue)+'</h4><p>'+esc(u.company)+' · '+esc(u.stage)+'</p><small>Sample only — not a real employee report.</small></article>').join("");
     const structured = document.getElementById("homepage-structured-trends");
