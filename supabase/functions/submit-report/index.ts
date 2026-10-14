@@ -104,10 +104,14 @@ Deno.serve(withSupabase({auth:"publishable"}, async (req: Request, ctx) => {
   if (!captcha.ok) return json({error:captcha.reason},403,origin);
 
   const roast = reportType === "roast";
+  if (b.story_text != null && typeof b.story_text !== "string") return json({error:"Story must be text."},400,origin);
+  if (typeof b.story_text === "string" && b.story_text.trim() && (b.story_text.trim().length < 20 || b.story_text.trim().length > 600)) return json({error:"If provided, the story must be 20–600 characters."},400,origin);
+  if (roast && (typeof b.roast_text !== "string" || b.roast_text.trim().length < 1 || b.roast_text.trim().length > 120)) return json({error:"A one-line roast must be 1–120 characters."},400,origin);
+  if (!roast && (typeof b.company_name !== "string" || b.company_name.trim().length < 1 || b.company_name.trim().length > 100)) return json({error:"Company name must be 1–100 characters."},400,origin);
   const stage = b.stage;
   const companyName = cleanText(b.company_name,100).replace(/\s+/g," ");
-  const story = cleanText(b.story_text,600);
-  const roastText = cleanText(b.roast_text,120);
+  const story = typeof b.story_text === "string" ? b.story_text.trim() : "";
+  const roastText = typeof b.roast_text === "string" ? b.roast_text.trim() : "";
   const issueIds = Array.isArray(b.issue_ids) ? b.issue_ids : [];
   const primaryIssue = cleanText(b.primary_issue_id,100);
   const secondary = Array.isArray(b.secondary_issue_ids) ? b.secondary_issue_ids : [];
