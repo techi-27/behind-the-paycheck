@@ -127,7 +127,7 @@ alter table public.reports add constraint reports_primary_issue_required_check
     (report_type = 'roast' and primary_issue_id is null and company_id is null and roast_text is not null
       and char_length(trim(roast_text)) between 1 and 120)
     or
-    (report_type in ('problem','good') and (primary_issue_id is not null or public_status = 'hidden'))
+    (report_type = 'problem' and (primary_issue_id is not null or public_status = 'hidden')) or (report_type = 'good' and primary_issue_id is null)
   ) not valid;
 
 -- 2) Canonical issue catalogue. Do not delete or rename historical issue IDs.
@@ -296,7 +296,7 @@ begin
     return new;
   end if;
 
-  if report_kind in ('problem','good') and new.primary_issue_id is null then
+  if report_kind = 'problem' and new.primary_issue_id is null then
     if new.screened_at is not null or new.public_status = 'published' then raise exception 'Primary issue is required'; end if;
     return new;
   end if;
