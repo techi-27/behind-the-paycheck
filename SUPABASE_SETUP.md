@@ -76,3 +76,48 @@ Do not put a Supabase service-role key in frontend code or commit it to GitHub. 
 ## Applying future migrations
 
 Use timestamped SQL files in `supabase/migrations/`. In development, test each migration before applying it to production. For a CLI workflow, follow the official Supabase guide: https://supabase.com/docs/guides/deployment/database-migrations.
+
+## Employee Reality Index tiers and quick polls
+
+The Employee Reality Index reads live, approved, screened and eligible reports from `public-trends`. It uses server-side thresholds:
+
+- 0–4 reports: unlock progress and quick polls; no issue chart.
+- 5–14: issue breakdowns where each issue group has at least five usable reports.
+- 15–24: stage issue breakdown and monthly trend buckets, each thresholded independently.
+- 25–199: notice-period medians and long-notice comparison, hike bands/median, offer-letter wait median, and BGV delay, each only when its own usable group has at least five reports.
+- 200+: layoff pulse, city/company-type comparisons, and named company lists; every individual group still needs at least five usable reports.
+- Company count in the stat strip counts every company represented by at least one eligible approved report. Named company lists require at least five problem reports per company and the 200-report site tier.
+
+The `quick-poll` function stores only a SHA-256 hash of the browser-generated device token in `poll_votes`; it does not store an IP address or raw token. The unique key `(poll_id, device_token_hash)` enforces one vote per device token per poll. Poll results are withheld server-side until five votes exist for that poll. This is a practical device-level limit, not a guarantee that one person cannot vote from another browser/device.
+
+### Deploy these Supabase changes
+
+GitHub Pages publishes only the static website. Committing these files does not apply SQL or deploy Edge Functions.
+
+From the repository root, after verifying the linked project is the intended **development** project:
+
+```bash
+supabase login
+supabase link --project-ref YOUR_DEV_PROJECT_REF
+supabase db push
+supabase functions deploy public-trends
+supabase functions deploy quick-poll
+```
+
+Deploy `submit-report` as well if its latest source has not already been deployed:
+
+```bash
+supabase functions deploy submit-report
+```
+
+The migration to apply is `supabase/migrations/202610150001_reality_index_polls.sql`. Review the migration plan and run it against development first. Do not paste database passwords or service-role keys into GitHub or frontend files. The frontend uses only the publishable key; Edge Functions use server-side privileges.
+
+### Threshold tests
+
+Run the unit tests for the server-side tier helper with Deno:
+
+```bash
+deno test supabase/functions/_shared/reality-thresholds.test.ts
+```
+
+These tests cover 0, 4, 5, 14, 15, 24, 25, 199 and 200 reports, plus the minimum five-report group rule. They do not replace integration tests against the linked Supabase development project.
