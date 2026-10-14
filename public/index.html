@@ -1590,19 +1590,12 @@ main.choice-main>.overview-trends,main.choice-main>.reality-unlock-card,main.cho
     <div class="top-companies-heading">
       <div><span class="eyebrow">THE NAMES BEHIND THE NUMBERS</span><h3 id="top-companies-title">Top 10 companies employees are reporting</h3><p>Ranked by eligible employee-submitted workplace issue reports—not a company rating or proof of wrongdoing.</p></div>
       <a href="./dashboard.html" class="top-companies-link">Explore all trends ↗</a>
-      <button type="button" class="top-companies-preview-button" id="top-companies-preview-toggle" aria-expanded="false">Generate 10K demo users</button>
+
     </div>
     <div class="top-companies-list" id="top-companies-list" aria-live="polite">
       <p class="top-companies-empty">Company names appear when enough eligible reports meet the privacy threshold.</p>
     </div>
-    <section id="top-companies-sample-preview" class="top-companies-sample-preview" hidden aria-label="Fictional sample report preview">
-      <div class="top-companies-sample-heading"><strong>UI PREVIEW · 10,000 FICTIONAL USERS</strong><span>Generated in this browser for layout testing only. No records are sent or saved; these are not real users, companies, or trends.</span></div>
-      <div class="top-companies-demo-summary" id="top-companies-demo-summary">Preparing fictional demo dataset…</div>
-      <h4 class="top-companies-demo-subtitle">Top 10 fictional companies by simulated report count</h4>
-      <div class="top-companies-demo-ranking" id="top-companies-demo-ranking"></div>
-      <h4 class="top-companies-demo-subtitle">10 sample rows from the in-memory dataset</h4>
-      <div class="top-companies-sample-table-wrap"><table class="top-companies-sample-table"><thead><tr><th>Demo user ID</th><th>Fictional company</th><th>Simulated issue</th><th>Stage</th></tr></thead><tbody id="top-companies-demo-rows"></tbody></table></div>
-    </section>
+
     <p class="top-companies-note">Only screened, published reports at least 24 hours old are eligible. A company appears only after at least five eligible issue reports. No raw stories are shown.</p>
   </section>
   <style id="top-companies-trends-styles">
@@ -1634,6 +1627,12 @@ main.choice-main>.overview-trends,main.choice-main>.reality-unlock-card,main.cho
     #top-companies-trends .top-company-rank{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:9px;background:#edf4ff;color:#3977c8;font-size:12px;font-weight:850}
     #top-companies-trends .top-company-name{min-width:0;flex:1;color:#243653;font-size:13px;font-weight:750;overflow-wrap:anywhere}
     #top-companies-trends .top-company-count{flex:0 0 auto;color:#718198;font-size:11px;font-weight:700;white-space:nowrap}
+    #top-companies-trends .top-companies-demo-ranking{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:10px 0}
+    #top-companies-trends .top-companies-demo-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid #f0dfbd;border-radius:9px;background:#fffaf0}
+    #top-companies-trends .top-companies-demo-item b{color:#97702a;font-size:11px}
+    #top-companies-trends .top-companies-demo-item span{flex:1;color:#35435a;font-size:11px;font-weight:700}
+    #top-companies-trends .top-companies-demo-item small{color:#806f4f;font-size:10px;white-space:nowrap}
+
     #top-companies-trends .top-companies-empty{grid-column:1/-1;margin:0;padding:18px;border:1px dashed #dce6f5;border-radius:12px;color:#718198;font-size:13px;line-height:1.6}
     #top-companies-trends .top-companies-note{margin:14px 0 0;color:#8290a5;font-size:10px;line-height:1.6}
     @media(max-width:650px){#top-companies-trends .top-companies-heading{flex-direction:column}#top-companies-trends .top-companies-list{grid-template-columns:minmax(0,1fr)}}
@@ -1644,43 +1643,35 @@ main.choice-main>.overview-trends,main.choice-main>.reality-unlock-card,main.cho
     if (!host) return;
     const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
     const fmt = v => Number(v || 0).toLocaleString("en-IN");
+    const names = ["DemoTech One","CloudDemo Labs","SampleWorks India","MockRail Systems","BrightMock Digital","PixelMock Solutions","TestOrbit India","FictionalStack Co","Sandbox Global","ExampleWave Tech"];
+    const issues = ["Offer letter delay","Notice-period conflict","Low salary hike","Interview ghosting","Immediate joining demand","Background-check delay","Offer revoked","Unpaid overtime","Recruiter stopped responding","Notice buyout refused"];
+    const stages = ["Applying","Interview","Offer","Joining","Working","Job switch","Exit"];
+    const counts = names.map(name => ({name,count:0}));
+    const users = [];
+    for (let i=1; i<=10000; i++) {
+      const ci = (i*37 + Math.floor(i/7)) % names.length;
+      const ii = (i*13 + Math.floor(i/11)) % issues.length;
+      const si = (i*5 + Math.floor(i/17)) % stages.length;
+      counts[ci].count++;
+      users.push({id:"DEMO-"+String(i).padStart(5,"0"),company:names[ci],issue:issues[ii],stage:stages[si]});
+    }
+    counts.sort((a,b) => b.count-a.count || a.name.localeCompare(b.name));
     function render(data) {
       const companies = (data?.company_profiles || []).filter(c => String(c.company || "").trim() && Number(c.report_count) >= 5).sort((a,b) => Number(b.report_count)-Number(a.report_count)).slice(0,10);
-      if (!companies.length) { host.innerHTML = '<p class="top-companies-empty">No company names meet the publication threshold yet. As eligible reports accumulate, the top 10 will appear here automatically.</p>'; return; }
-      host.innerHTML = companies.map((c,i) => '<div class="top-company-row"><span class="top-company-rank">'+(i+1)+'</span><span class="top-company-name">'+esc(c.company)+'</span><span class="top-company-count">'+fmt(c.report_count)+' reports</span></div>').join("");
+      if (companies.length) {
+        host.innerHTML = companies.map((c,i) => '<div class="top-company-row"><span class="top-company-rank">'+(i+1)+'</span><span class="top-company-name">'+esc(c.company)+'</span><span class="top-company-count">'+fmt(c.report_count)+' reports</span></div>').join("");
+        return;
+      }
+      host.innerHTML = '<p class="top-companies-empty">UI DEMO — fictional data below, not real employee reports.</p>' +
+        '<div class="top-companies-demo-ranking">' + counts.slice(0,10).map((c,i) => '<div class="top-companies-demo-item"><b>#'+(i+1)+'</b><span>'+esc(c.name)+'</span><small>'+fmt(c.count)+' demo reports</small></div>').join("") + '</div>' +
+        '<p class="top-companies-empty">10,000 fictional demo users generated in this browser · 0 uploaded · 0 saved.</p>' +
+        '<div class="top-companies-sample-table-wrap"><table class="top-companies-sample-table"><thead><tr><th>Demo user ID</th><th>Fictional company</th><th>Simulated issue</th><th>Stage</th></tr></thead><tbody>' +
+        users.slice(0,10).map(u => '<tr><td>'+u.id+'</td><td>'+esc(u.company)+'</td><td>'+esc(u.issue)+'</td><td>'+esc(u.stage)+'</td></tr>').join("") +
+        '</tbody></table></div>';
     }
     window.addEventListener("approved-trends-ready", e => render(e.detail));
     if (window.__approvedTrendData) render(window.__approvedTrendData);
-    const toggle = document.getElementById("top-companies-preview-toggle");
-    const preview = document.getElementById("top-companies-sample-preview");
-    let generated = false;
-    function generateDemo() {
-      if (generated) return;
-      const names = ["DemoTech One","CloudDemo Labs","SampleWorks India","MockRail Systems","BrightMock Digital","PixelMock Solutions","TestOrbit India","FictionalStack Co","Sandbox Global","ExampleWave Tech"];
-      const issues = ["Offer letter delay","Notice-period conflict","Low salary hike","Interview ghosting","Immediate joining demand","Background-check delay","Offer revoked","Unpaid overtime","Recruiter stopped responding","Notice buyout refused"];
-      const stages = ["Applying","Interview","Offer","Joining","Working","Job switch","Exit"];
-      const counts = names.map(name => ({name, count:0}));
-      const users = [];
-      for (let i=1; i<=10000; i++) {
-        const ci = (i*37 + Math.floor(i/7)) % names.length;
-        const ii = (i*13 + Math.floor(i/11)) % issues.length;
-        const si = (i*5 + Math.floor(i/17)) % stages.length;
-        counts[ci].count++;
-        users.push({id:"DEMO-"+String(i).padStart(5,"0"), company:names[ci], issue:issues[ii], stage:stages[si]});
-      }
-      counts.sort((a,b) => b.count-a.count || a.name.localeCompare(b.name));
-      document.getElementById("top-companies-demo-summary").textContent = fmt(users.length)+" fictional demo users generated in browser memory · 0 uploaded · 0 saved";
-      document.getElementById("top-companies-demo-ranking").innerHTML = counts.slice(0,10).map((c,i) => '<div class="top-companies-demo-item"><b>#'+(i+1)+'</b><span>'+esc(c.name)+'</span><small>'+fmt(c.count)+' demo reports</small></div>').join("");
-      document.getElementById("top-companies-demo-rows").innerHTML = users.slice(0,10).map(u => '<tr><td>'+u.id+'</td><td>'+esc(u.company)+'</td><td>'+esc(u.issue)+'</td><td>'+esc(u.stage)+'</td></tr>').join("");
-      generated = true;
-    }
-    if (toggle && preview) toggle.addEventListener("click", () => {
-      const open = preview.hidden;
-      preview.hidden = !open;
-      toggle.setAttribute("aria-expanded", String(open));
-      toggle.textContent = open ? "Hide 10K demo users" : "Generate 10K demo users";
-      if (open) generateDemo();
-    });
+    else render(null);
   })();
   </script>
   <section class="monthly-pulse-intro-card" aria-labelledby="monthly-pulse-index-title">
