@@ -387,7 +387,7 @@ as
 select r.id,r.report_group,r.report_type,r.company_id,r.stage,r.event_month,
        r.primary_issue_id,r.secondary_issue_ids,r.positive_tags,r.company_type,
        r.experience_band,r.city,r.notice_period_days,r.joining_time_days,
-       r.notice_rejected,r.company_enforces_long_notice,r.offer_days_waited,
+       r.notice_period_band,r.joining_demand_band,r.notice_rejected,r.company_enforces_long_notice,r.offer_days_waited,r.offer_wait_band,
        r.resigned_before_offer,r.offer_revoked_after_resignation,r.hike_band,
        r.hike_percent,r.performance_rating,r.bgv_days_pending,r.bgv_blocked_joining,
        r.bgv_check_type,r.moonlighting_outcome,r.layoff_notice_days,
