@@ -1639,8 +1639,6 @@ main.choice-main>.overview-trends,main.choice-main>.reality-unlock-card,main.cho
   </style>
   <script id="top-companies-trends-renderer">
   (() => {
-    const host = document.getElementById("top-companies-list");
-    if (!host) return;
     const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
     const fmt = v => Number(v || 0).toLocaleString("en-IN");
     const names = ["DemoTech One","CloudDemo Labs","SampleWorks India","MockRail Systems","BrightMock Digital","PixelMock Solutions","TestOrbit India","FictionalStack Co","Sandbox Global","ExampleWave Tech"];
@@ -1657,21 +1655,25 @@ main.choice-main>.overview-trends,main.choice-main>.reality-unlock-card,main.cho
     }
     counts.sort((a,b) => b.count-a.count || a.name.localeCompare(b.name));
     function render(data) {
+      const host = document.getElementById("top-companies-list");
+      if (!host) return;
       const companies = (data?.company_profiles || []).filter(c => String(c.company || "").trim() && Number(c.report_count) >= 5).sort((a,b) => Number(b.report_count)-Number(a.report_count)).slice(0,10);
-      if (companies.length) {
-        host.innerHTML = companies.map((c,i) => '<div class="top-company-row"><span class="top-company-rank">'+(i+1)+'</span><span class="top-company-name">'+esc(c.company)+'</span><span class="top-company-count">'+fmt(c.report_count)+' reports</span></div>').join("");
-        return;
-      }
-      host.innerHTML = '<p class="top-companies-empty">UI DEMO — fictional data below, not real employee reports.</p>' +
-        '<div class="top-companies-demo-ranking">' + counts.slice(0,10).map((c,i) => '<div class="top-companies-demo-item"><b>#'+(i+1)+'</b><span>'+esc(c.name)+'</span><small>'+fmt(c.count)+' demo reports</small></div>').join("") + '</div>' +
-        '<p class="top-companies-empty">10,000 fictional demo users generated in this browser · 0 uploaded · 0 saved.</p>' +
+      const liveMarkup = companies.length
+        ? '<div class="top-companies-live-label">LIVE ELIGIBLE REPORTS</div>' + companies.map((c,i) => '<div class="top-company-row"><span class="top-company-rank">'+(i+1)+'</span><span class="top-company-name">'+esc(c.company)+'</span><span class="top-company-count">'+fmt(c.report_count)+' reports</span></div>').join("")
+        : '<p class="top-companies-empty">No live company rankings are available yet. The fictional preview below is separate from real reports.</p>';
+      host.innerHTML = liveMarkup +
+        '<div class="top-companies-demo-panel"><p class="top-companies-empty"><strong>UI DEMO — FICTIONAL DATA ONLY</strong><br>10,000 fictional demo users generated in this browser · 0 uploaded · 0 saved.</p>' +
+        '<div class="top-companies-demo-ranking">' + counts.slice(0,10).map((c,i) => '<div class="top-companies-demo-item"><b>#'+(i+1)+'</b><span>'+esc(c.name)+'</span><small>'+fmt(c.count)+' demo records</small></div>').join("") + '</div>' +
         '<div class="top-companies-sample-table-wrap"><table class="top-companies-sample-table"><thead><tr><th>Demo user ID</th><th>Fictional company</th><th>Simulated issue</th><th>Stage</th></tr></thead><tbody>' +
         users.slice(0,10).map(u => '<tr><td>'+u.id+'</td><td>'+esc(u.company)+'</td><td>'+esc(u.issue)+'</td><td>'+esc(u.stage)+'</td></tr>').join("") +
-        '</tbody></table></div>';
+        '</tbody></table></div></div>';
     }
-    window.addEventListener("approved-trends-ready", e => render(e.detail));
-    if (window.__approvedTrendData) render(window.__approvedTrendData);
-    else render(null);
+    function init() {
+      render(window.__approvedTrendData || null);
+      window.addEventListener("approved-trends-ready", e => render(e.detail || null));
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, {once:true});
+    else init();
   })();
   </script>
   <section class="monthly-pulse-intro-card" aria-labelledby="monthly-pulse-index-title">
