@@ -5,7 +5,7 @@ begin;
 -- 1) Expand report model without dropping the legacy status column or report links.
 alter table public.reports
   alter column story_text drop not null,
-  add column if not exists primary_issue_id text,
+  add column if not exists primary_issue_id text references public.issues(id),
   add column if not exists secondary_issue_ids text[] not null default '{}',
   add column if not exists public_status text not null default 'hidden',
   add column if not exists screening_result text,
@@ -18,6 +18,9 @@ alter table public.reports
   add column if not exists last_flagged_at timestamptz,
   add column if not exists roast_text text,
   add column if not exists notice_rejected boolean,
+  add column if not exists notice_period_band text,
+  add column if not exists joining_demand_band text,
+  add column if not exists offer_wait_band text,
   add column if not exists company_enforces_long_notice boolean,
   add column if not exists offer_days_waited integer,
   add column if not exists resigned_before_offer boolean,
@@ -40,6 +43,9 @@ alter table public.reports
 alter table public.reports drop constraint if exists reports_report_type_check;
 alter table public.reports add constraint reports_report_type_check
   check (report_type in ('problem','good','roast'));
+alter table public.reports drop constraint if exists reports_positive_tags_check;
+alter table public.reports add constraint reports_positive_tags_check
+  check (positive_tags <@ array['offer-on-time','notice-respected','fair-hike','supportive-layoff','transparent-process','quick-bgv']::text[]);
 
 alter table public.reports drop constraint if exists reports_story_text_check;
 alter table public.reports drop constraint if exists reports_story_length_check;
@@ -70,6 +76,12 @@ alter table public.reports drop constraint if exists reports_secondary_issue_cou
 alter table public.reports add constraint reports_secondary_issue_count_check
   check (cardinality(secondary_issue_ids) <= 2 and not (primary_issue_id = any(secondary_issue_ids)));
 
+alter table public.reports drop constraint if exists reports_notice_period_band_check;
+alter table public.reports add constraint reports_notice_period_band_check check (notice_period_band is null or notice_period_band in ('0-15','30','60','90','other'));
+alter table public.reports drop constraint if exists reports_joining_demand_band_check;
+alter table public.reports add constraint reports_joining_demand_band_check check (joining_demand_band is null or joining_demand_band in ('immediate','up-to-15','up-to-30','other'));
+alter table public.reports drop constraint if exists reports_offer_wait_band_check;
+alter table public.reports add constraint reports_offer_wait_band_check check (offer_wait_band is null or offer_wait_band in ('0-7','8-15','16-30','31-60','61-90','91+'));
 alter table public.reports drop constraint if exists reports_hike_band_check;
 alter table public.reports add constraint reports_hike_band_check
   check (hike_band is null or hike_band in ('0','1-5','6-10','11-15','16+'));
@@ -323,6 +335,32 @@ create table if not exists public.post_flags (
   unique(report_id,device_hash)
 );
 create index if not exists post_flags_report_created_idx on public.post_flags(report_id,created_at desc);
+
+create index if not exists reports_withdrawal_hash_idx on public.reports(withdrawal_hash) where withdrawal_hash is not null;
+
+create or replace function public.refresh_report_flag_count()
+returns trigger language plpgsql set search_path = ''
+as $
+declare
+  target_report uuid;
+  current_count integer;
+begin
+  target_report := coalesce(new.report_id,old.report_id);
+  select count(distinct f.device_hash)::integer into current_count
+  from public.post_flags f where f.report_id=target_report;
+  update public.reports
+  set flag_count=current_count,
+      last_flagged_at=case when current_count > 0 then now() else null end,
+      public_status=case when current_count >= 3 then 'hidden' else public_status end
+  where id=target_report;
+  return coalesce(new,old);
+end $;
+
+drop trigger if exists post_flags_refresh_count on public.post_flags;
+create trigger post_flags_refresh_count
+after insert or delete on public.post_flags
+for each row execute function public.refresh_report_flag_count();
+
 
 create table if not exists public.moderator_roles (
   user_id uuid primary key references auth.users(id) on delete cascade,
