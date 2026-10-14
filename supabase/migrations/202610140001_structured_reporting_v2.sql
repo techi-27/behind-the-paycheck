@@ -311,11 +311,19 @@ begin
     if new.report_type = 'problem' and cardinality(coalesce(new.positive_tags,'{}')) > 0 then
       raise exception 'Problem reports cannot use positive tags';
     end if;
-    foreach issue in array array_prepend(new.primary_issue_id,coalesce(new.secondary_issue_ids,'{}')) loop
-      if not exists(select 1 from public.stage_issue_map m where m.stage=report_stage and m.issue_id=issue and m.report_type=report_kind) then
-        raise exception 'Issue is not valid for the selected stage and report type';
-      end if;
-    end loop;
+    if report_kind = 'problem' then
+      foreach issue in array array_prepend(new.primary_issue_id,coalesce(new.secondary_issue_ids,'{}')) loop
+        if not exists(select 1 from public.stage_issue_map m where m.stage=report_stage and m.issue_id=issue and m.report_type='problem') then
+          raise exception 'Issue is not valid for the selected stage';
+        end if;
+      end loop;
+    else
+      foreach issue in array coalesce(new.positive_tags,'{}') loop
+        if not exists(select 1 from public.stage_issue_map m where m.stage=report_stage and m.issue_id=issue and m.report_type='good') then
+          raise exception 'Positive tag is not valid for the selected stage';
+        end if;
+      end loop;
+    end if;
   end if;
   return new;
 end $$;
