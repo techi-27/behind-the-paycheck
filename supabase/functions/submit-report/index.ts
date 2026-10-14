@@ -37,6 +37,7 @@ function json(body: unknown, status = 200, origin: string | null = null) {
 }
 function hash(value: string) { return crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)).then(b => [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")); }
 function cleanText(v: unknown, max: number) { return typeof v === "string" ? v.trim().slice(0,max) : ""; }
+function maskCompanyName(text:string,name:string){const needle=name.trim();if(needle.length<3)return text;let source=text,out="",at=0;while(at<source.length){const found=source.toLowerCase().indexOf(needle.toLowerCase(),at);if(found<0){out+=source.slice(at);break}out+=source.slice(at,found)+"[company]";at=found+needle.length}return out;}
 function validMonth(v: unknown) {
   if (typeof v !== "string" || !/^\d{4}-(0[1-9]|1[0-2])$/.test(v)) return false;
   return v >= "2000-01" && v <= new Date().toISOString().slice(0,7);
@@ -180,6 +181,9 @@ Deno.serve(withSupabase({auth:"publishable"}, async (req: Request, ctx) => {
   } else {
     screeningResult = "clean";
   }
+  // Company identity is shown separately only when the database threshold is met.
+  // Mask it in the public text so a low-count company cannot leak through the story body.
+  if (!roast && companyName && publicText) publicText = maskCompanyName(publicText,companyName);
 
   const db = ctx.supabaseAdmin;
   const normalizedCompany = companyName.toLowerCase().replace(/\s+/g," ");
